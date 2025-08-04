@@ -17,7 +17,7 @@ class Location extends Equatable {
   });
 
   Location copyWith(
-      {String? id, String? name, String?? description, double?? latitude, double?? longitude}) {
+      {String? id, String? name, String? description, double? latitude, double? longitude}) {
     return Location(
       id: id ?? this.id,
       name: name ?? this.name,

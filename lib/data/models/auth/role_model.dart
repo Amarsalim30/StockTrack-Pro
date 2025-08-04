@@ -1,7 +1,7 @@
+import 'package:clean_arch_app/data/models/auth/permission_type_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/auth/role.dart';
-import 'permission_type_model.dart';
 
 part 'role_model.g.dart';
 
@@ -9,6 +9,8 @@ part 'role_model.g.dart';
 class RoleModel extends Equatable {
   final String id;
   final String name;
+
+  @JsonKey(fromJson: _permissionsFromJson, toJson: _permissionsToJson)
   final List<PermissionTypeModel> permissions;
 
   const RoleModel({
@@ -38,14 +40,24 @@ class RoleModel extends Equatable {
   Role toDomain() => Role(
     id: id,
     name: name,
-    permissions: permissions.map((p) => p.toDomain()).toList(),
+    permissions: permissions.map((p) => p.toDomain(p)).toList(),
   );
 
+  /// Convert from domain Role entity
   static RoleModel fromDomain(Role role) => RoleModel(
     id: role.id,
     name: role.name,
-    permissions: role.permissions.map(PermissionTypeModel.fromDomain).toList(),
+    permissions: role.permissions
+        .map(PermissionTypeModelExtension.fromDomain)
+        .toList(),
   );
+
+  /// Handle JSON enum conversion manually
+  static List<PermissionTypeModel> _permissionsFromJson(List<dynamic> list) =>
+      list.map((e) => PermissionTypeModel.values.byName(e as String)).toList();
+
+  static List<String> _permissionsToJson(List<PermissionTypeModel> list) =>
+      list.map((e) => e.name).toList();
 
   @override
   List<Object?> get props => [id, name, permissions];

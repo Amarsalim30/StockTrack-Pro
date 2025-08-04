@@ -11,7 +11,9 @@ class SupplierSupportSettings extends Equatable {
   });
 
   SupplierSupportSettings copyWith(
-      {bool? enabled, List<String>?? supplierRoles}) {
+    bool? enabled,
+    List<String>? supplierRoles,
+  }) {
     return SupplierSupportSettings(
       enabled: enabled ?? this.enabled,
       supplierRoles: supplierRoles ?? this.supplierRoles,

@@ -8,6 +8,7 @@ class Activity extends Equatable {
   final String entityId;
   final String userId;
   final DateTime timestamp;
+  final Map<String, dynamic> metadata;
 
   const Activity({
     required this.id,
@@ -16,10 +17,13 @@ class Activity extends Equatable {
     required this.entityId,
     required this.userId,
     required this.timestamp,
+    required this.metadata,
   });
 
   Activity copyWith(
-      {String? id, String? action, String? entityType, String? entityId, String? userId, DateTime? timestamp}) {
+      {String? id, String? action, String? entityType, String? entityId, String? userId, DateTime? timestamp, Map<
+          String,
+          dynamic>? metadata}) {
     return Activity(
       id: id ?? this.id,
       action: action ?? this.action,
@@ -27,10 +31,11 @@ class Activity extends Equatable {
       entityId: entityId ?? this.entityId,
       userId: userId ?? this.userId,
       timestamp: timestamp ?? this.timestamp,
+      metadata: metadata ?? this.metadata,
     );
   }
 
   @override
   List<Object?> get props =>
-      [id, action, entityType, entityId, userId, timestamp];
+      [id, action, entityType, entityId, userId, timestamp, metadata];
 }

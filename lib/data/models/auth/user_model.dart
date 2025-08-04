@@ -55,7 +55,7 @@ class UserModel extends Equatable {
     id: user.id,
     username: user.username,
     email: user.email,
-    roles: user.roles.map(RoleModel.fromDomain).toList(),
+    roles: user.roles.map((r) => RoleModel.fromDomain(r)).toList(),
     isActive: user.isActive,
   );
 

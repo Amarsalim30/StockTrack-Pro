@@ -25,7 +25,7 @@ class ApprovalRequest extends Equatable {
   });
 
   ApprovalRequest copyWith(
-      {String? id, String? entityType, String? entityId, String? requestedBy, String?? approvedBy, DateTime? requestedAt, DateTime?? approvedAt, String? status, String?? reason}) {
+      {String? id, String? entityType, String? entityId, String? requestedBy, String? approvedBy, DateTime? requestedAt, DateTime? approvedAt, String? status, String? reason}) {
     return ApprovalRequest(
       id: id ?? this.id,
       entityType: entityType ?? this.entityType,

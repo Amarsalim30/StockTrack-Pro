@@ -15,7 +15,7 @@ class Category extends Equatable {
   });
 
   Category copyWith(
-      {String? id, String? name, String?? description, String?? parentCategoryId}) {
+      {String? id, String? name, String? description, String? parentCategoryId}) {
     return Category(
       id: id ?? this.id,
       name: name ?? this.name,

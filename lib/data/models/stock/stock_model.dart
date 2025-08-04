@@ -79,7 +79,7 @@ class StockModel extends Stock {
     lastSoldDate: lastSoldDate,
     deadstockThreshold: deadstockThreshold,
     warehouseStock: warehouseStock,
-    movementHistory: movementHistory?.map((m) => m.toDomain()).toList(),
+    movementHistory: movementHistory,
     tags: tags,
   );
 
@@ -111,9 +111,7 @@ class StockModel extends Stock {
     lastSoldDate: ent.lastSoldDate,
     deadstockThreshold: ent.deadstockThreshold,
     warehouseStock: ent.warehouseStock,
-    movementHistory: ent.movementHistory
-        ?.map((m) => StockMovementModel.fromDomain(m))
-        .toList(),
+    movementHistory: ent.movementHistory,
     tags: ent.tags,
   );
 }

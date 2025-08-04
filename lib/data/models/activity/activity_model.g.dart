@@ -14,7 +14,7 @@ ActivityModel _$ActivityModelFromJson(Map<String, dynamic> json) =>
       entityId: json['entityId'] as String,
       userId: json['userId'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
-      metadata: json['metadata'] as Map<String, dynamic>?,
+      metadata: json['metadata'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$ActivityModelToJson(ActivityModel instance) =>

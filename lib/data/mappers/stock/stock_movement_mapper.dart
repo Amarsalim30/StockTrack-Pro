@@ -7,7 +7,7 @@ class StockMovementMapper {
     return StockMovement(
       id: model.id,
       stockId: model.stockId,
-      type: model.type,
+      type: MovementTypeMapper.toEntity(model.type!),
       quantity: model.quantity,
       reason: model.reason,
       referenceId: model.referenceId,
@@ -22,7 +22,7 @@ class StockMovementMapper {
     return StockMovementModel(
       id: entity.id,
       stockId: entity.stockId,
-      type: entity.type,
+      type: MovementTypeMapper.fromEntity(entity.type!),
       quantity: entity.quantity,
       reason: entity.reason,
       referenceId: entity.referenceId,
