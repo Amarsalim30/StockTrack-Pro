@@ -13,14 +13,14 @@ class AuditLogModel extends Equatable {
   final String action; // description of change
   final String performedBy;
   final DateTime performedAt;
-  final Map<String, dynamic>? details;
+  final Map<String, dynamic> details;
 
   const AuditLogModel({
     required this.id,
     required this.action,
     required this.performedBy,
     required this.performedAt,
-    this.details,
+    required this.details,
   });
 
   factory AuditLogModel.fromJson(Map<String, dynamic> json) =>
