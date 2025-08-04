@@ -16,13 +16,8 @@ class ReorderReport extends Equatable {
     required this.needsReorder,
   });
 
-  ReorderReport copyWith({
-    String? stockId,
-    String? name,
-    int? quantity,
-    int? minimumStock,
-    bool? needsReorder,
-  }) {
+  ReorderReport copyWith(
+      {String? stockId, String? name, int? quantity, int? minimumStock, bool? needsReorder}) {
     return ReorderReport(
       stockId: stockId ?? this.stockId,
       name: name ?? this.name,
@@ -33,11 +28,6 @@ class ReorderReport extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    stockId,
-    name,
-    quantity,
-    minimumStock,
-    needsReorder,
-  ];
+  List<Object?> get props =>
+      [stockId, name, quantity, minimumStock, needsReorder];
 }

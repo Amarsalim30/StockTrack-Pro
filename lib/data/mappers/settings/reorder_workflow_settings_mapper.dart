@@ -12,8 +12,7 @@ class ReorderWorkflowSettingsMapper {
   }
 
   static ReorderWorkflowSettingsModel fromEntity(
-    ReorderWorkflowSettings entity,
-  ) {
+      ReorderWorkflowSettings entity) {
     return ReorderWorkflowSettingsModel(
       autoReorderEnabled: entity.autoReorderEnabled,
       reorderPointMultiplier: entity.reorderPointMultiplier,

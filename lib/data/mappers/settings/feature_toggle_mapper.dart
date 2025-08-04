@@ -4,7 +4,10 @@ import 'package:clean_arch_app/domain/entities/featureToggle.dart';
 
 class FeatureToggleMapper {
   static FeatureToggle toEntity(FeatureToggleModel model) {
-    return FeatureToggle(featureKey: model.featureKey, enabled: model.enabled);
+    return FeatureToggle(
+      featureKey: model.featureKey,
+      enabled: model.enabled,
+    );
   }
 
   static FeatureToggleModel fromEntity(FeatureToggle entity) {

@@ -14,12 +14,8 @@ class BillOfMaterials extends Equatable {
     required this.scrapPercent,
   });
 
-  BillOfMaterials copyWith({
-    String? productId,
-    List<BomItemModel>? components,
-    int? yieldPerRun,
-    double? scrapPercent,
-  }) {
+  BillOfMaterials copyWith({String? productId, List<
+      BomItemModel>? components, int? yieldPerRun, double? scrapPercent}) {
     return BillOfMaterials(
       productId: productId ?? this.productId,
       components: components ?? this.components,

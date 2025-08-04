@@ -10,10 +10,8 @@ class AppSettings extends Equatable {
     required this.productionSettings,
   });
 
-  AppSettings copyWith({
-    List<FeatureToggleModel>? featureToggles,
-    ProductionSettingsModel? productionSettings,
-  }) {
+  AppSettings copyWith({List<
+      FeatureToggleModel>? featureToggles, ProductionSettingsModel? productionSettings}) {
     return AppSettings(
       featureToggles: featureToggles ?? this.featureToggles,
       productionSettings: productionSettings ?? this.productionSettings,

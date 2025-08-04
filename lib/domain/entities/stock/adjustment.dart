@@ -18,14 +18,8 @@ class Adjustment extends Equatable {
     required this.timestamp,
   });
 
-  Adjustment copyWith({
-    String? id,
-    String? stockId,
-    int? quantityChange,
-    String? reason,
-    String? performedByUserId,
-    DateTime? timestamp,
-  }) {
+  Adjustment copyWith(
+      {String? id, String? stockId, int? quantityChange, String? reason, String? performedByUserId, DateTime? timestamp}) {
     return Adjustment(
       id: id ?? this.id,
       stockId: stockId ?? this.stockId,
@@ -37,12 +31,6 @@ class Adjustment extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    id,
-    stockId,
-    quantityChange,
-    reason,
-    performedByUserId,
-    timestamp,
-  ];
+  List<Object?> get props =>
+      [id, stockId, quantityChange, reason, performedByUserId, timestamp];
 }

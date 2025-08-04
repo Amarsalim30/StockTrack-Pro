@@ -5,7 +5,10 @@ class FeatureToggle extends Equatable {
   final String featureKey;
   final bool enabled;
 
-  const FeatureToggle({required this.featureKey, required this.enabled});
+  const FeatureToggle({
+    required this.featureKey,
+    required this.enabled,
+  });
 
   FeatureToggle copyWith({String? featureKey, bool? enabled}) {
     return FeatureToggle(

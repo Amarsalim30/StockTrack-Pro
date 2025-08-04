@@ -1,6 +1,7 @@
 // lib/data/models/settings/app_settings_model.dart
 import 'package:clean_arch_app/data/models/settings/production_settings_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../../../domain/entities/settings/app_settings.dart';
 import 'feature_toggle_model.dart';
@@ -11,7 +12,8 @@ class AppSettingsModel extends Equatable {
   final ProductionSettingsModel productionSettings; // <-- new
   // … other settings
 
-  const AppSettingsModel({
+  const AppSettingsModel(
+    this.expiryDuration, {
     required this.featureToggles,
     required this.productionSettings,
     // …

@@ -5,23 +5,19 @@ import 'package:clean_arch_app/domain/entities/appSettings.dart';
 class AppSettingsMapper {
   static AppSettings toEntity(AppSettingsModel model) {
     return AppSettings(
-      featureToggles: model.featureToggles
-          .map((e) => FeatureToggleMapper.toEntity(e))
-          .toList(),
+      featureToggles: model.featureToggles.map((e) =>
+          FeatureToggleMapper.toEntity(e)).toList(),
       productionSettings: ProductionSettingsMapper.toEntity(
-        model.productionSettings!,
-      ),
+          model.productionSettings!),
     );
   }
 
   static AppSettingsModel fromEntity(AppSettings entity) {
     return AppSettingsModel(
-      featureToggles: entity.featureToggles
-          .map((e) => FeatureToggleMapper.fromEntity(e))
-          .toList(),
+      featureToggles: entity.featureToggles.map((e) =>
+          FeatureToggleMapper.fromEntity(e)).toList(),
       productionSettings: ProductionSettingsMapper.fromEntity(
-        entity.productionSettings!,
-      ),
+          entity.productionSettings!),
     );
   }
 }

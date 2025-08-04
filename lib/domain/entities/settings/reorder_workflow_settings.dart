@@ -12,23 +12,17 @@ class ReorderWorkflowSettings extends Equatable {
     required this.maxPendingOrders,
   });
 
-  ReorderWorkflowSettings copyWith({
-    bool? autoReorderEnabled,
-    int? reorderPointMultiplier,
-    int? maxPendingOrders,
-  }) {
+  ReorderWorkflowSettings copyWith(
+      {bool? autoReorderEnabled, int? reorderPointMultiplier, int? maxPendingOrders}) {
     return ReorderWorkflowSettings(
       autoReorderEnabled: autoReorderEnabled ?? this.autoReorderEnabled,
-      reorderPointMultiplier:
-          reorderPointMultiplier ?? this.reorderPointMultiplier,
+      reorderPointMultiplier: reorderPointMultiplier ??
+          this.reorderPointMultiplier,
       maxPendingOrders: maxPendingOrders ?? this.maxPendingOrders,
     );
   }
 
   @override
-  List<Object?> get props => [
-    autoReorderEnabled,
-    reorderPointMultiplier,
-    maxPendingOrders,
-  ];
+  List<Object?> get props =>
+      [autoReorderEnabled, reorderPointMultiplier, maxPendingOrders];
 }

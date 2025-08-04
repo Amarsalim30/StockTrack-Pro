@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../../../domain/entities/reorder_report.dart';
+
 import '../../../domain/entities/reporting/reorder_report.dart';
 
 part 'reorder_report_model.g.dart';

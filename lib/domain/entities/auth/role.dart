@@ -8,11 +8,8 @@ class Role extends Equatable {
 
   const Role({required this.id, required this.name, required this.permissions});
 
-  Role copyWith({
-    String? id,
-    String? name,
-    List<PermissionTypeModel>? permissions,
-  }) {
+  RRole copyWith(
+      {String? id, String? name, List<PermissionTypeModel>? permissions}) {
     return Role(
       id: id ?? this.id,
       name: name ?? this.name,

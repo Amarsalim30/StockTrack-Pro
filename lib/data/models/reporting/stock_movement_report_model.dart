@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../../domain/entities/reporting/stock_movement_report.dart';
-import '../../../domain/entities/stock_movement_report.dart';
 
 part 'stock_movement_report_model.g.dart';
 

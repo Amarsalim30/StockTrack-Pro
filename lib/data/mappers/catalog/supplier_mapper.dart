@@ -4,10 +4,16 @@ import 'package:clean_arch_app/domain/entities/supplier.dart';
 
 class SupplierMapper {
   static Supplier toEntity(SupplierModel model) {
-    return Supplier(id: model.id, name: model.name);
+    return Supplier(
+      id: model.id,
+      name: model.name,
+    );
   }
 
   static SupplierModel fromEntity(Supplier entity) {
-    return SupplierModel(id: entity.id, name: entity.name);
+    return SupplierModel(
+      id: entity.id,
+      name: entity.name,
+    );
   }
 }

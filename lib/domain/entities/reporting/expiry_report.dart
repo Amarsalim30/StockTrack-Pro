@@ -16,13 +16,8 @@ class ExpiryReport extends Equatable {
     required this.quantity,
   });
 
-  ExpiryReport copyWith({
-    String? stockId,
-    String? name,
-    DateTime? expiryDate,
-    int? daysToExpiry,
-    int? quantity,
-  }) {
+  ExpiryReport copyWith(
+      {String? stockId, String? name, DateTime? expiryDate, int? daysToExpiry, int? quantity}) {
     return ExpiryReport(
       stockId: stockId ?? this.stockId,
       name: name ?? this.name,
@@ -33,11 +28,6 @@ class ExpiryReport extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    stockId,
-    name,
-    expiryDate,
-    daysToExpiry,
-    quantity,
-  ];
+  List<Object?> get props =>
+      [stockId, name, expiryDate, daysToExpiry, quantity];
 }

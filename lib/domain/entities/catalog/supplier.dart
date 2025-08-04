@@ -5,10 +5,16 @@ class Supplier extends Equatable {
   final String id;
   final String name;
 
-  const Supplier({required this.id, required this.name});
+  const Supplier({
+    required this.id,
+    required this.name,
+  });
 
   Supplier copyWith({String? id, String? name}) {
-    return Supplier(id: id ?? this.id, name: name ?? this.name);
+    return Supplier(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
   }
 
   @override

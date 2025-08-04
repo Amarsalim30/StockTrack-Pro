@@ -12,23 +12,17 @@ class ProductionSettings extends Equatable {
     required this.defaultYieldPerRun,
   });
 
-  ProductionSettings copyWith({
-    bool? allowReservation,
-    bool? autoConsumeOnComplete,
-    int? defaultYieldPerRun,
-  }) {
+  ProductionSettings copyWith(
+      {bool? allowReservation, bool? autoConsumeOnComplete, int? defaultYieldPerRun}) {
     return ProductionSettings(
       allowReservation: allowReservation ?? this.allowReservation,
-      autoConsumeOnComplete:
-          autoConsumeOnComplete ?? this.autoConsumeOnComplete,
+      autoConsumeOnComplete: autoConsumeOnComplete ??
+          this.autoConsumeOnComplete,
       defaultYieldPerRun: defaultYieldPerRun ?? this.defaultYieldPerRun,
     );
   }
 
   @override
-  List<Object?> get props => [
-    allowReservation,
-    autoConsumeOnComplete,
-    defaultYieldPerRun,
-  ];
+  List<Object?> get props =>
+      [allowReservation, autoConsumeOnComplete, defaultYieldPerRun];
 }

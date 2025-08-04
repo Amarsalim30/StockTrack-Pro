@@ -16,13 +16,8 @@ class User extends Equatable {
     required this.isActive,
   });
 
-  User copyWith({
-    String? id,
-    String? username,
-    String? email,
-    List<RoleModel>? roles,
-    bool? isActive,
-  }) {
+  User copyWith({String? id, String? username, String? email, List<
+      RoleModel>? roles, bool? isActive}) {
     return User(
       id: id ?? this.id,
       username: username ?? this.username,
