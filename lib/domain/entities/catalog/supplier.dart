@@ -5,18 +5,27 @@ class Supplier extends Equatable {
   final String id;
   final String name;
 
+  final Map<String, String>? contactInfo; // e.g. {'email': ..., 'phone': ...}
+  final double? rating;
+  final String? paymentTerms;
   const Supplier({
     required this.id,
     required this.name,
+    required this.contactInfo,
+    required this.rating,
+    required this.paymentTerms,
   });
 
   Supplier copyWith({String? id, String? name}) {
     return Supplier(
       id: id ?? this.id,
       name: name ?? this.name,
+      contactInfo: contactInfo,
+      rating: rating,
+      paymentTerms: paymentTerms,
     );
   }
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [id, name, contactInfo, rating, paymentTerms];
 }
