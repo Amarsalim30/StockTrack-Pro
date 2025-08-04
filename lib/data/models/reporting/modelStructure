@@ -1,0 +1,55 @@
+lib/
+└── data/
+    └── models/
+        ├── activity/
+        │   ├── activity_model.dart
+        │   └── activity_model.g.dart
+        │
+        ├── audit/
+        │   ├── approval_request_model.dart
+        │   └── audit_log_model.dart
+        │
+        ├── auth/
+        │   ├── permission_type_model.dart          ← new: maps PermissionType enum
+        │   ├── role_model.dart
+        │   ├── user_model.dart
+        │   └── user_model.g.dart
+        │
+        ├── catalog/
+        │   ├── category_model.dart
+        │   ├── product_model.dart
+        │   └── supplier_model.dart
+        │
+        ├── order/
+        │   ├── purchase_order_draft_model.dart
+        │   ├── purchase_order_model.dart
+        │   ├── purchase_order_item_model.dart
+        │   ├── return_order_model.dart             ← supplier return
+        │   ├── return_order_item_model.dart
+        │   └── return_type_model.dart
+        │
+        ├── sales/
+        │   ├── customer_model.dart
+        │   ├── sales_order_model.dart
+        │   ├── sales_order_item_model.dart
+        │   └── sales_return_model.dart             ← customer return
+        │
+        ├── reporting/
+        │   ├── expiry_report_model.dart
+        │   ├── reorder_report_model.dart
+        │   ├── stock_movement_report_model.dart
+        │   ├── stock_out_report_model.dart
+        │   └── report_model.dart
+        │
+        ├── settings/
+        │   ├── adjustment_model.dart
+        │   ├── location_model.dart
+        │   ├── notification_model.dart
+        │   └── unit_model.dart
+        │
+        └── stock/
+            ├── stock_batch_model.dart
+            ├── stock_model.dart
+            ├── stock_movement_model.dart
+            ├── stock_take_model.dart
+            └── stock_take_model.g.dart

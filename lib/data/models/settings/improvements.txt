@@ -1,0 +1,13 @@
+✅ Auth	✔️ Yes	✅ Ready
+✅ Stock + Movement	✔️ Yes	⚠️ Good but tighten serialization for batch & movement
+✅ Purchase Orders	✔️ Yes	⚠️ Normalize status fields/enums
+✅ Sales	✔️ Yes	⚠️ Consider discount/tax models
+✅ Returns	✔️ Yes	⚠️ Link return to original sale
+✅ Settings	✔️ Yes	⚠️ Needs global mapping & safe defaults
+✅ Reporting	✔️ Yes	⚠️ Mostly present, needs uniformity
+✅ Notifications	✔️ Yes	⚠️ Add timestamps/read status
+✅ Users/Roles	✔️ Yes	✅ Strong base
+✅ Catalog (product, category)	✔️ Yes	⚠️ Consider rich metadata
+✅ Activities/Audit	✔️ Yes	⚠️ Ensure log completeness
+
+flutter pub run build_runner build --delete-conflicting-outputs
