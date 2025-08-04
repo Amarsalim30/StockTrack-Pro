@@ -6,6 +6,7 @@ enum StockStatus {
   damaged,
   expired,
   inTransit,
+
   inStock,
   discontinued;
 
