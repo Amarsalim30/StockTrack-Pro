@@ -41,7 +41,7 @@ class ProductionOrderModel extends Equatable {
     id: id,
     productId: productId,
     quantityToProduce: quantityToProduce,
-    status: ProductionOrderStatusMapper.toEntity(status),
+    status: ProductionOrderStatusMapper.toEntity(status.name),
     createdAt: createdAt,
     startedAt: startedAt,
     completedAt: completedAt,
