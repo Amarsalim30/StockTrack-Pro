@@ -6,6 +6,12 @@ import '../../../domain/entities/production/production_order.dart';
 
 part 'production_order_model.g.dart';
 
+enum ProductionOrderStatus {
+  pending,
+  inProgress,
+  completed,
+  cancelled,
+}
 @JsonSerializable()
 class ProductionOrderModel extends Equatable {
   final String id;
