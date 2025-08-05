@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/reporting/stock_out_report.dart';
 
-part 'stock_out_report_model.g.dart';
+part 'stock_out_report.g.dart';
 
 @JsonSerializable()
 class StockOutReportModel extends Equatable {

@@ -24,11 +24,15 @@ class AppSettingsModel extends Equatable {
     required this.featureToggles,
     required this.productionSettings,
     // TODO: Add the other settings here.
-    reorderSettings: ReorderWorkflowSettingsModel.fromDomain(d.reorderSettings),
-    stockTakeSettings: StockTakeSettingsModel.fromDomain(d.stockTakeSettings),
-    exportImportSettings: ExportImportSettingsModel.fromDomain(d.exportImportSettings),
-    passwordPolicy: PasswordPolicyModel.fromDomain(d.passwordPolicy),
-    supplierSupport: SupplierSupportSettingsModel.fromDomain(d.supplierSupport),
+        reorderSettings = ReorderWorkflowSettingsModel.fromDomain(
+            d.reorderSettings),
+        stockTakeSettings = StockTakeSettingsModel.fromDomain(
+            d.stockTakeSettings),
+        exportImportSettings = ExportImportSettingsModel.fromDomain(
+            d.exportImportSettings),
+        passwordPolicy = PasswordPolicyModel.fromDomain(d.passwordPolicy),
+        supplierSupport = SupplierSupportSettingsModel.fromDomain(
+            d.supplierSupport),
   });
 
   factory AppSettingsModel.fromJson(Map<String, dynamic> json) =>
@@ -39,11 +43,14 @@ class AppSettingsModel extends Equatable {
   AppSettings toDomain() => AppSettings(
     featureToggles: featureToggles.map((m) => m.toDomain()).toList(),
     productionSettings: productionSettings.toDomain(),
-    reorderSettings: ReorderWorkflowSettingsModel.fromDomain(e.reorderSettings),
-    stockTakeSettings: StockTakeSettingsModel.fromDomain(e.stockTakeSettings),
-    exportImportSettings: ExportImportSettingsModel.fromDomain(e.exportImportSettings),
-    passwordPolicy: PasswordPolicyModel.fromDomain(e.passwordPolicy),
-    supplierSupport: SupplierSupportSettingsModel.fromDomain(e.supplierSupport),
+    reorderSettings =
+        ReorderWorkflowSettingsModel.fromDomain(e.reorderSettings),
+    stockTakeSettings = StockTakeSettingsModel.fromDomain(e.stockTakeSettings),
+    exportImportSettings =
+        ExportImportSettingsModel.fromDomain(e.exportImportSettings),
+    passwordPolicy = PasswordPolicyModel.fromDomain(e.passwordPolicy),
+    supplierSupport =
+        SupplierSupportSettingsModel.fromDomain(e.supplierSupport),
   );
 
   static AppSettingsModel fromDomain(AppSettings d) => AppSettingsModel(

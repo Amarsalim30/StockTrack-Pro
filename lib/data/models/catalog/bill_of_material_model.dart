@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/catalog/bill_of_material.dart';
 import 'bom_item_model.dart';
 
-part 'bill_of_materials_model.g.dart';
+part 'bill_of_material_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class BillOfMaterialsModel extends Equatable {

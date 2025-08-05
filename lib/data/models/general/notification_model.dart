@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/general/notification.dart';
 
-part '../settings/notification_model.g.dart';
+part 'notification_model.g.dart';
 
 @JsonSerializable()
 class NotificationModel extends Equatable {
