@@ -1,8 +1,8 @@
 import 'dart:io';
+import 'package:clean_arch_app/domain/entities/stock/stock_take_item.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/stock/stock_take.dart';
 import '../stocktake_view_model.dart';
 
 class PhotoCountWidget extends ConsumerStatefulWidget {

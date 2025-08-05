@@ -54,8 +54,7 @@ class StockTakeState {
       filterByCountMethod: filterByCountMethod ?? this.filterByCountMethod,
     );
   }
-}
-
+}`
 class StockTakeViewModel extends StateNotifier<StockTakeState> {
   final StockTakeRepository repository;
   final ImagePicker _imagePicker = ImagePicker();

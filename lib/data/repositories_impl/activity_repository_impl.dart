@@ -65,7 +65,12 @@ class ActivityRepositoryImpl implements ActivityRepository {
     required ActivityType type,
     required String action,
     String? description,
-    Map<String, dynamic>? metadata,
+    required String entityType,
+    required String entityId,
+    required String entityName,
+    required String entityLocation,
+
+    required Map<String, dynamic> metadata,
   }) async {
     if (await networkInfo.isConnected) {
       try {
@@ -78,6 +83,8 @@ class ActivityRepositoryImpl implements ActivityRepository {
           description: description,
           metadata: metadata,
           timestamp: DateTime.now(),
+          entityType: '',
+          entityId: '',
         );
         await remoteDataSource.logActivity(activity);
         return const Right(null);
