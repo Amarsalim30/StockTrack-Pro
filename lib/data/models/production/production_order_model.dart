@@ -3,6 +3,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/production/production_order.dart';
+import 'production_order_status_model.dart';
 
 part 'production_order_model.g.dart';
 
@@ -17,7 +18,7 @@ class ProductionOrderModel extends Equatable {
   final String id;
   final String productId;
   final int quantityToProduce;
-  final String status; // use enum.name
+  final ProductionOrderStatusModel status; // use enum.name
   final DateTime createdAt;
   final DateTime? startedAt;
   final DateTime? completedAt;
