@@ -1,4 +1,5 @@
 import '../../../core/constants/api_endpoints.dart';
+import '../../../core/network/api_client.dart';
 import '../../models/auth/user_model.dart';
 
 abstract class AuthApi {

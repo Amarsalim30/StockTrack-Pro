@@ -51,6 +51,8 @@ class UserModel extends Equatable {
     isActive: isActive,
   );
 
+  User toEntity() => toDomain();
+
   static UserModel fromDomain(User user) => UserModel(
     id: user.id,
     username: user.username,
@@ -58,6 +60,8 @@ class UserModel extends Equatable {
     roles: user.roles.map((r) => RoleModel.fromDomain(r)).toList(),
     isActive: user.isActive,
   );
+
+  static UserModel fromEntity(User user) => fromDomain(user);
 
   @override
   List<Object?> get props => [id, username, email, roles, isActive];

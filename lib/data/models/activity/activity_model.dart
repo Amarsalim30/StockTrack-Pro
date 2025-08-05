@@ -14,6 +14,9 @@ class ActivityModel extends Equatable {
   final String entityType; // e.g., 'Stock', 'Order', 'User'
   final String entityId;
   final String userId;
+  final String? userName;
+  final ActivityType? type;
+  final String? description;
   final DateTime timestamp;
   final Map<String, dynamic> metadata;
 
@@ -23,6 +26,9 @@ class ActivityModel extends Equatable {
     required this.entityType,
     required this.entityId,
     required this.userId,
+    this.userName,
+    this.type,
+    this.description,
     required this.timestamp,
     required this.metadata,
   });
@@ -42,6 +48,9 @@ class ActivityModel extends Equatable {
       entityType: entityType,
       entityId: entityId,
       userId: userId,
+      userName: userName,
+      type: type,
+      description: description,
       timestamp: timestamp,
       metadata: metadata,
     );
@@ -55,6 +64,9 @@ class ActivityModel extends Equatable {
       entityType: entity.entityType,
       entityId: entity.entityId,
       userId: entity.userId,
+      userName: entity.userName,
+      type: entity.type,
+      description: entity.description,
       timestamp: entity.timestamp,
       metadata: entity.metadata,
     );
@@ -90,5 +102,59 @@ class ActivityModel extends Equatable {
       timestamp: timestamp ?? this.timestamp,
       metadata: metadata ?? this.metadata,
     );
+  }
+
+  /// Convert ActivityType to string
+  static String activityTypeToString(ActivityType type) {
+    switch (type) {
+      case ActivityType.stockIn:
+        return 'stock_in';
+      case ActivityType.stockOut:
+        return 'stock_out';
+      case ActivityType.adjustment:
+        return 'adjustment';
+      case ActivityType.transfer:
+        return 'transfer';
+      case ActivityType.return_:
+        return 'return';
+      case ActivityType.created:
+        return 'created';
+      case ActivityType.updated:
+        return 'updated';
+      case ActivityType.deleted:
+        return 'deleted';
+      case ActivityType.approved:
+        return 'approved';
+      case ActivityType.rejected:
+        return 'rejected';
+    }
+  }
+
+  /// Convert string to ActivityType
+  static ActivityType activityTypeFromString(String type) {
+    switch (type) {
+      case 'stock_in':
+        return ActivityType.stockIn;
+      case 'stock_out':
+        return ActivityType.stockOut;
+      case 'adjustment':
+        return ActivityType.adjustment;
+      case 'transfer':
+        return ActivityType.transfer;
+      case 'return':
+        return ActivityType.return_;
+      case 'created':
+        return ActivityType.created;
+      case 'updated':
+        return ActivityType.updated;
+      case 'deleted':
+        return ActivityType.deleted;
+      case 'approved':
+        return ActivityType.approved;
+      case 'rejected':
+        return ActivityType.rejected;
+      default:
+        return ActivityType.created;
+    }
   }
 }

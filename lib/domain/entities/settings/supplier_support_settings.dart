@@ -5,21 +5,26 @@ class SupplierSupportSettings extends Equatable {
   final bool enabled;
   final List<String>? supplierRoles;
 
+  final Map<String, dynamic>? config; // e.g. approvalThreshold
+
   const SupplierSupportSettings({
     required this.enabled,
     this.supplierRoles,
+    this.config,
   });
 
   SupplierSupportSettings copyWith({
     bool? enabled,
     List<String>? supplierRoles,
+    Map<String, dynamic>? config,
   }) {
     return SupplierSupportSettings(
       enabled: enabled ?? this.enabled,
       supplierRoles: supplierRoles ?? this.supplierRoles,
+      config: config ?? this.config,
     );
   }
 
   @override
-  List<Object?> get props => [enabled, supplierRoles];
+  List<Object?> get props => [enabled, supplierRoles, config];
 }

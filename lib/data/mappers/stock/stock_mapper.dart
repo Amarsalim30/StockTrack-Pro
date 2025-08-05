@@ -5,10 +5,10 @@ import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 
 class StockMapper {
   static Stock toEntity(StockModel model) {
-    return Stock();
+    return model.toEntity();
   }
 
   static StockModel fromEntity(Stock entity) {
-    return StockModel();
+    return StockModel.fromDomain(entity);
   }
 }

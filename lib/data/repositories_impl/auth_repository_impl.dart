@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/user.dart';
+import '../../domain/entities/auth/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/remote/auth_api.dart';
 import '../../core/error/exceptions.dart';

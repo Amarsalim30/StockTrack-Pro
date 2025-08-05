@@ -5,6 +5,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../../domain/entities/settings/app_settings.dart';
 import 'feature_toggle_model.dart';
+import 'reorder_workflow_settings_model.dart';
+import 'stock_take_settings_model.dart';
+import 'export_import_settings_model.dart';
+import 'password_policy_model.dart';
+import 'supplier_support_settings_model.dart';
+
+part 'app_settings_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AppSettingsModel extends Equatable {
@@ -16,7 +23,12 @@ class AppSettingsModel extends Equatable {
     this.expiryDuration, {
     required this.featureToggles,
     required this.productionSettings,
-    // …
+    // TODO: Add the other settings here.
+    reorderSettings: ReorderWorkflowSettingsModel.fromDomain(d.reorderSettings),
+    stockTakeSettings: StockTakeSettingsModel.fromDomain(d.stockTakeSettings),
+    exportImportSettings: ExportImportSettingsModel.fromDomain(d.exportImportSettings),
+    passwordPolicy: PasswordPolicyModel.fromDomain(d.passwordPolicy),
+    supplierSupport: SupplierSupportSettingsModel.fromDomain(d.supplierSupport),
   });
 
   factory AppSettingsModel.fromJson(Map<String, dynamic> json) =>
@@ -27,7 +39,11 @@ class AppSettingsModel extends Equatable {
   AppSettings toDomain() => AppSettings(
     featureToggles: featureToggles.map((m) => m.toDomain()).toList(),
     productionSettings: productionSettings.toDomain(),
-    // … map the rest
+    reorderSettings: ReorderWorkflowSettingsModel.fromDomain(e.reorderSettings),
+    stockTakeSettings: StockTakeSettingsModel.fromDomain(e.stockTakeSettings),
+    exportImportSettings: ExportImportSettingsModel.fromDomain(e.exportImportSettings),
+    passwordPolicy: PasswordPolicyModel.fromDomain(e.passwordPolicy),
+    supplierSupport: SupplierSupportSettingsModel.fromDomain(e.supplierSupport),
   );
 
   static AppSettingsModel fromDomain(AppSettings d) => AppSettingsModel(
@@ -47,7 +63,11 @@ class AppSettingsModel extends Equatable {
   }) => AppSettingsModel(
     featureToggles: featureToggles ?? this.featureToggles,
     productionSettings: productionSettings ?? this.productionSettings,
-    // … the rest
+    reorderSettings: reorderSettings ?? this.reorderSettings,
+    stockTakeSettings: stockTakeSettings ?? this.stockTakeSettings,
+    exportImportSettings: exportImportSettings ?? this.exportImportSettings,
+    passwordPolicy: passwordPolicy ?? this.passwordPolicy,
+    supplierSupport: supplierSupport ?? this.supplierSupport,
   );
 
   @override
@@ -61,11 +81,10 @@ class AppSettingsModel extends Equatable {
     supplierSupport,
   ];
 
-  int _durToJson(Duration? d) => d?.inDays;
-
-  Duration? _durFromJson(int? days) =>
-      days == null ? null : Duration(days: days);
-
-  @JsonKey(fromJson: _durFromJson, toJson: _durToJson)
   final Duration? expiryDuration;
+
+  static int? _durToJson(Duration? d) => d?.inDays;
+
+  static Duration? _durFromJson(int? days) =>
+      days == null ? null : Duration(days: days);
 }

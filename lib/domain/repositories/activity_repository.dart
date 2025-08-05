@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
-import '../entities/activity.dart';
+import '../entities/activity/activity.dart';
 
 abstract class ActivityRepository {
   Future<Either<Failure, List<Activity>>> getActivities({

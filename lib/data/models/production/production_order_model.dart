@@ -1,24 +1,22 @@
-// lib/data/models/production/production_order_model.dart
-
+import 'package:clean_arch_app/data/models/convert_helpers/production_order_status_converter.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../../domain/entities/production/production_order.dart';
-import 'production_order_status_model.dart';
+import '../../../data/models/production/production_order_status_model.dart';
+import '../../../data/mappers/production/production_order_status_mapper.dart';
 
 part 'production_order_model.g.dart';
 
-enum ProductionOrderStatus {
-  pending,
-  inProgress,
-  completed,
-  cancelled,
-}
 @JsonSerializable()
 class ProductionOrderModel extends Equatable {
   final String id;
   final String productId;
   final int quantityToProduce;
-  final ProductionOrderStatusModel status; // use enum.name
+
+  @ProductionOrderStatusModelConverter()
+  final ProductionOrderStatusModel status;
+
   final DateTime createdAt;
   final DateTime? startedAt;
   final DateTime? completedAt;
@@ -38,46 +36,28 @@ class ProductionOrderModel extends Equatable {
 
   Map<String, dynamic> toJson() => _$ProductionOrderModelToJson(this);
 
+  /// Converts this model to a domain entity
   ProductionOrder toDomain() => ProductionOrder(
     id: id,
     productId: productId,
     quantityToProduce: quantityToProduce,
-    status: ProductionOrderStatus.values.byName(status),
+    status: ProductionOrderStatusMapper.toEntity(status),
     createdAt: createdAt,
     startedAt: startedAt,
     completedAt: completedAt,
   );
 
+  /// Builds this model from a domain entity
   static ProductionOrderModel fromDomain(ProductionOrder e) =>
       ProductionOrderModel(
         id: e.id,
         productId: e.productId,
         quantityToProduce: e.quantityToProduce,
-        status: e.status.name,
+        status: ProductionOrderStatusMapper.toModel(e.status),
         createdAt: e.createdAt,
         startedAt: e.startedAt,
         completedAt: e.completedAt,
       );
-
-  ProductionOrderModel copyWith({
-    String? id,
-    String? productId,
-    int? quantityToProduce,
-    String? status,
-    DateTime? createdAt,
-    DateTime? startedAt,
-    DateTime? completedAt,
-  }) {
-    return ProductionOrderModel(
-      id: id ?? this.id,
-      productId: productId ?? this.productId,
-      quantityToProduce: quantityToProduce ?? this.quantityToProduce,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      startedAt: startedAt ?? this.startedAt,
-      completedAt: completedAt ?? this.completedAt,
-    );
-  }
 
   @override
   List<Object?> get props => [

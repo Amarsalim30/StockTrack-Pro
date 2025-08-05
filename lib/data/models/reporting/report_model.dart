@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'report_model.g.dart';
 
 /// A generic wrapper for different report payloads.
-@JsonSerializable()
+@JsonSerializable(genericArgumentFactories: true)
 class ReportModel<T> extends Equatable {
   final String reportId;
   final String type; // e.g. 'expiry', 'reorder', 'movement', 'out'

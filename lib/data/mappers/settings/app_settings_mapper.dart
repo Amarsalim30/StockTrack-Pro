@@ -2,6 +2,7 @@
 
 import 'package:clean_arch_app/data/mappers/settings/feature_toggle_mapper.dart';
 import 'package:clean_arch_app/data/models/settings/app_settings_model.dart';
+import 'package:clean_arch_app/data/models/settings/feature_toggle_model.dart';
 import 'package:clean_arch_app/domain/entities/settings/app_settings.dart';
 
 import 'production_settings_mapper.dart';
@@ -12,16 +13,17 @@ class AppSettingsMapper {
       featureToggles: model.featureToggles.map((e) =>
           FeatureToggleMapper.toEntity(e)).toList(),
       productionSettings: ProductionSettingsMapper.toEntity(
-          model.productionSettings!),
+          model.productionSettings),
     );
   }
 
   static AppSettingsModel fromEntity(AppSettings entity) {
     return AppSettingsModel(
+      null, // expiryDuration parameter - need to fix this
       featureToggles: entity.featureToggles.map((e) =>
           FeatureToggleMapper.fromEntity(e)).toList(),
       productionSettings: ProductionSettingsMapper.fromEntity(
-          entity.productionSettings!),
+          entity.productionSettings),
     );
   }
 }

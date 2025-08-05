@@ -39,7 +39,7 @@ final List<StockModel> mockStocks = [
     location: 'Aisle 3 - Shelf 1',
     createdAt: DateTime.now().subtract(const Duration(days: 12)),
     updatedAt: DateTime.now(),
-    durabilityType: StockDurabilityType.nonDurable,
+    durabilityType: StockDurabilityType.nonPerishable,
   ),
   StockModel(
     id: 'stk-003',
@@ -58,7 +58,7 @@ final List<StockModel> mockStocks = [
     location: 'Aisle 2 - Shelf 2',
     createdAt: DateTime.now().subtract(const Duration(days: 45)),
     updatedAt: DateTime.now().subtract(const Duration(days: 1)),
-    durabilityType: StockDurabilityType.nonDurable,
+    durabilityType: StockDurabilityType.nonPerishable,
   ),
   StockModel(
     id: 'stk-004',
@@ -77,7 +77,7 @@ final List<StockModel> mockStocks = [
     location: 'Aisle 4 - Shelf 5',
     createdAt: DateTime.now().subtract(const Duration(days: 30)),
     updatedAt: DateTime.now(),
-    durabilityType: StockDurabilityType.nonDurable,
+    durabilityType: StockDurabilityType.nonPerishable,
   ),
   StockModel(
     id: 'stk-004',
@@ -96,7 +96,7 @@ final List<StockModel> mockStocks = [
     location: 'Aisle 4 - Shelf 5',
     createdAt: DateTime.now().subtract(const Duration(days: 30)),
     updatedAt: DateTime.now(),
-    durabilityType: StockDurabilityType.nonDurable,
+    durabilityType: StockDurabilityType.nonPerishable,
   ),
   StockModel(
     id: 'stk-004',
@@ -115,7 +115,7 @@ final List<StockModel> mockStocks = [
     location: 'Aisle 4 - Shelf 5',
     createdAt: DateTime.now().subtract(const Duration(days: 30)),
     updatedAt: DateTime.now(),
-    durabilityType: StockDurabilityType.nonDurable,
+    durabilityType: StockDurabilityType.nonPerishable,
   ),
   StockModel(
     id: 'stk-004',
@@ -134,6 +134,6 @@ final List<StockModel> mockStocks = [
     location: 'Aisle 4 - Shelf 5',
     createdAt: DateTime.now().subtract(const Duration(days: 30)),
     updatedAt: DateTime.now(),
-    durabilityType: StockDurabilityType.nonDurable,
+    durabilityType: StockDurabilityType.nonPerishable,
   ),
 ];

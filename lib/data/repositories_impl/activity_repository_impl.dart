@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
-import '../../domain/entities/activity.dart';
+import '../../domain/entities/activity/activity.dart';
 import '../../domain/repositories/activity_repository.dart';
 import '../datasources/remote/activity_source.dart';
 import '../models/activity/activity_model.dart';

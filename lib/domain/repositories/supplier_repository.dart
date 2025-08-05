@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../entities/supplier.dart';
+import '../entities/catalog/supplier.dart';
 
 abstract class SupplierRepository {
   Future<Either<Exception, List<Supplier>>> getAllSuppliers();

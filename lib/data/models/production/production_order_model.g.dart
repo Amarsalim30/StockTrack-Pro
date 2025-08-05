@@ -12,7 +12,9 @@ ProductionOrderModel _$ProductionOrderModelFromJson(
   id: json['id'] as String,
   productId: json['productId'] as String,
   quantityToProduce: (json['quantityToProduce'] as num).toInt(),
-  status: json['status'] as String,
+  status: const ProductionOrderStatusModelConverter().fromJson(
+    json['status'] as String,
+  ),
   createdAt: DateTime.parse(json['createdAt'] as String),
   startedAt: json['startedAt'] == null
       ? null
@@ -28,7 +30,7 @@ Map<String, dynamic> _$ProductionOrderModelToJson(
   'id': instance.id,
   'productId': instance.productId,
   'quantityToProduce': instance.quantityToProduce,
-  'status': instance.status,
+  'status': const ProductionOrderStatusModelConverter().toJson(instance.status),
   'createdAt': instance.createdAt.toIso8601String(),
   'startedAt': instance.startedAt?.toIso8601String(),
   'completedAt': instance.completedAt?.toIso8601String(),

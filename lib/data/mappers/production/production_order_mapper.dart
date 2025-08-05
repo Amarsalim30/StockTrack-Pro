@@ -22,7 +22,7 @@ class ProductionOrderMapper {
       id: entity.id,
       productId: entity.productId,
       quantityToProduce: entity.quantityToProduce,
-      status: entity.status,
+      status: ProductionOrderStatusMapper.toModel(entity.status),
       createdAt: entity.createdAt,
       startedAt: entity.startedAt,
       completedAt: entity.completedAt,
