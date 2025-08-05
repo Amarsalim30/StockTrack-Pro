@@ -3,24 +3,64 @@ import 'package:equatable/equatable.dart';
 
 import 'feature_toggle.dart';
 import 'production_settings.dart';
+import 'reorder_workflow_settings.dart';
+import 'stock_take_settings.dart';
+import 'export_import_settings.dart';
+import 'password_policy.dart';
+import 'supplier_support_settings.dart';
 
 class AppSettings extends Equatable {
   final List<FeatureToggle> featureToggles;
   final ProductionSettings productionSettings;
+  final ReorderWorkflowSettings reorderSettings;
+  final StockTakeSettings stockTakeSettings;
+  final ExportImportSettings exportImportSettings;
+  final PasswordPolicy passwordPolicy;
+  final SupplierSupportSettings supplierSupport;
+  final Duration? expiryDuration;
 
   const AppSettings({
     required this.featureToggles,
     required this.productionSettings,
+    required this.reorderSettings,
+    required this.stockTakeSettings,
+    required this.exportImportSettings,
+    required this.passwordPolicy,
+    required this.supplierSupport,
+    this.expiryDuration,
   });
 
-  AppSettings copyWith({List<
-      FeatureToggle>? featureToggles, ProductionSettings? productionSettings}) {
+  AppSettings copyWith({
+    List<FeatureToggle>? featureToggles,
+    ProductionSettings? productionSettings,
+    ReorderWorkflowSettings? reorderSettings,
+    StockTakeSettings? stockTakeSettings,
+    ExportImportSettings? exportImportSettings,
+    PasswordPolicy? passwordPolicy,
+    SupplierSupportSettings? supplierSupport,
+    Duration? expiryDuration,
+  }) {
     return AppSettings(
       featureToggles: featureToggles ?? this.featureToggles,
       productionSettings: productionSettings ?? this.productionSettings,
+      reorderSettings: reorderSettings ?? this.reorderSettings,
+      stockTakeSettings: stockTakeSettings ?? this.stockTakeSettings,
+      exportImportSettings: exportImportSettings ?? this.exportImportSettings,
+      passwordPolicy: passwordPolicy ?? this.passwordPolicy,
+      supplierSupport: supplierSupport ?? this.supplierSupport,
+      expiryDuration: expiryDuration ?? this.expiryDuration,
     );
   }
 
   @override
-  List<Object?> get props => [featureToggles, productionSettings];
+  List<Object?> get props => [
+    featureToggles,
+    productionSettings,
+    reorderSettings,
+    stockTakeSettings,
+    exportImportSettings,
+    passwordPolicy,
+    supplierSupport,
+    expiryDuration,
+  ];
 }

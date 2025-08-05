@@ -72,7 +72,12 @@ class AppSettingsModel extends Equatable {
   AppSettingsModel copyWith({
     List<FeatureToggleModel>? featureToggles,
     ProductionSettingsModel? productionSettings,
-    // … other settings
+    ReorderWorkflowSettingsModel? reorderSettings,
+    StockTakeSettingsModel? stockTakeSettings,
+    ExportImportSettingsModel? exportImportSettings,
+    PasswordPolicyModel? passwordPolicy,
+    SupplierSupportSettingsModel? supplierSupport,
+    Duration? expiryDuration,
   }) => AppSettingsModel(
     featureToggles: featureToggles ?? this.featureToggles,
     productionSettings: productionSettings ?? this.productionSettings,
@@ -93,9 +98,8 @@ class AppSettingsModel extends Equatable {
     exportImportSettings,
     passwordPolicy,
     supplierSupport,
+    expiryDuration,
   ];
-
-  final Duration? expiryDuration;
 
   static int? _durToJson(Duration? d) => d?.inDays;
 

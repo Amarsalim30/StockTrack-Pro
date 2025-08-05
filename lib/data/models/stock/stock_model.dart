@@ -2,6 +2,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/stock/stock.dart';
+import '../../../domain/entities/stock/stock_movement.dart';
 import '../../../core/enums/stock_status.dart';
 import 'stock_movement_model.dart';
 import '../../mappers/stock/stock_movement_mapper.dart';

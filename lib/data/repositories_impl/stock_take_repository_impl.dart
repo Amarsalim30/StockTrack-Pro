@@ -4,6 +4,7 @@ import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/stock/stock_take.dart';
+import '../../domain/entities/stock/stock_take_item.dart';
 import '../../domain/repositories/stock_take_repository.dart';
 import '../datasources/remote/stock_take_api.dart';
 
