@@ -4,10 +4,50 @@ import 'package:clean_arch_app/domain/entities/stock/stock_take.dart';
 
 class StockTakeMapper {
   static StockTake toEntity(StockTakeModel model) {
-    return StockTake();
+    return StockTake(
+      id: model.id,
+      name: model.name,
+      description: model.description,
+      startDate: model.startDate,
+      endDate: model.endDate,
+      status: model.status,
+      createdBy: model.createdBy,
+      assignedTo: model.assignedTo,
+      locationId: model.locationId,
+      categoryFilters: model.categoryFilters,
+      totalItems: model.totalItems,
+      countedItems: model.countedItems,
+      discrepancies: model.discrepancies,
+      metadata: model.metadata,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+    );
   }
 
   static StockTakeModel fromEntity(StockTake entity) {
-    return StockTakeModel();
+    return StockTakeModel(
+      id: entity.id,
+      name: entity.name,
+      description: entity.description,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
+      status: entity.status,
+      createdBy: entity.createdBy,
+      assignedTo: entity.assignedTo,
+      locationId: entity.locationId,
+      categoryFilters: entity.categoryFilters,
+      totalItems: entity.totalItems,
+      countedItems: entity.countedItems,
+      discrepancies: entity.discrepancies,
+      metadata: entity.metadata,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    );
   }
+
+  static List<StockTake> toEntityList(List<StockTakeModel> models) =>
+      models.map(toEntity).toList();
+
+  static List<StockTakeModel> fromEntityList(List<StockTake> entities) =>
+      entities.map(fromEntity).toList();
 }
