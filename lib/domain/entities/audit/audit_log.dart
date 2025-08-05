@@ -7,23 +7,29 @@ class AuditLog extends Equatable {
   final String performedBy;
   final DateTime performedAt;
 
+  final Map<String, dynamic> details;
+
   const AuditLog({
     required this.id,
     required this.action,
     required this.performedBy,
     required this.performedAt,
+    required this.details,
   });
 
   AuditLog copyWith(
-      {String? id, String? action, String? performedBy, DateTime? performedAt}) {
+      {String? id, String? action, String? performedBy, DateTime? performedAt, Map<
+          String,
+          dynamic>? details}) {
     return AuditLog(
       id: id ?? this.id,
       action: action ?? this.action,
       performedBy: performedBy ?? this.performedBy,
       performedAt: performedAt ?? this.performedAt,
+      details: details ?? this.details,
     );
   }
 
   @override
-  List<Object?> get props => [id, action, performedBy, performedAt];
+  List<Object?> get props => [id, action, performedBy, performedAt, details];
 }
