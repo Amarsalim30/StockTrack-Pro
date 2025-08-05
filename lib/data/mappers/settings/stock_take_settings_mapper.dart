@@ -6,17 +6,17 @@ import 'package:clean_arch_app/domain/entities/settings/stock_take_settings.dart
 class StockTakeSettingsMapper {
   static StockTakeSettings toEntity(StockTakeSettingsModel model) {
     return StockTakeSettings(
-        gpsEnforced: model.gpsEnforced,
-        maxDistanceMeters: model.maxDistanceMeters,
-        allowedLocations: model.allowedLocations?.map((e) => String Mapper.
-            toEntity(e)).toList(),);
+      gpsEnforced: model.gpsEnforced,
+      maxDistanceMeters: model.maxDistanceMeters,
+      allowedLocations: model.allowedLocations,
+    );
   }
 
   static StockTakeSettingsModel fromEntity(StockTakeSettings entity) {
     return StockTakeSettingsModel(
-        gpsEnforced: entity.gpsEnforced,
-        maxDistanceMeters: entity.maxDistanceMeters,
-        allowedLocations: entity.allowedLocations?.map((e) => String Mapper.
-            fromEntity(e)).toList(),);
+      gpsEnforced: entity.gpsEnforced,
+      maxDistanceMeters: entity.maxDistanceMeters,
+      allowedLocations: entity.allowedLocations,
+    );
   }
 }

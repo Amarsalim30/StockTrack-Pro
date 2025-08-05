@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
-import '../../domain/entities/user.dart';
+import '../../domain/entities/auth/user.dart';
 import '../../domain/repositories/user_repository.dart';
-import '../models/user/user_model.dart';
+import '../models/auth/user_model.dart';
 import '../datasources/remote/user_api.dart';
 
 class UserRepositoryImpl implements UserRepository {

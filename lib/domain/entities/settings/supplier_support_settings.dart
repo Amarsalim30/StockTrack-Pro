@@ -10,7 +10,7 @@ class SupplierSupportSettings extends Equatable {
     this.supplierRoles,
   });
 
-  SupplierSupportSettings copyWith(
+  SupplierSupportSettings copyWith({
     bool? enabled,
     List<String>? supplierRoles,
   }) {

@@ -367,9 +367,8 @@ class StockViewModel extends StateNotifier<StockState> {
 
       await Future.wait(
         selectedStocks.map(
-          (stock) =>
-              _stockRepository.updateStock(stock.copyWith(status: status,
-                  price: stock.price!.toDouble(),,
+          (stock) => _stockRepository.updateStock(
+            stock.copyWith(status: status, price: stock.price?.toDouble()),
           ),
         ),
       );

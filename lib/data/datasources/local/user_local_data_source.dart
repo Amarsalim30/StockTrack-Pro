@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../models/user/user_model.dart';
+import '../../models/auth/user_model.dart';
 import '../../../core/error/exceptions.dart';
 
 abstract class UserLocalDataSource {

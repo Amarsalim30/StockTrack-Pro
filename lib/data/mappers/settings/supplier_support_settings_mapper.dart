@@ -6,16 +6,16 @@ import 'package:clean_arch_app/domain/entities/settings/supplier_support_setting
 class SupplierSupportSettingsMapper {
   static SupplierSupportSettings toEntity(SupplierSupportSettingsModel model) {
     return SupplierSupportSettings(
-        enabled: model.enabled,
-        supplierRoles: model.supplierRoles?.map((e) => String Mapper.toEntity(
-            e)).toList(),);
+      enabled: model.enabled,
+      supplierRoles: model.supplierRoles,
+    );
   }
 
   static SupplierSupportSettingsModel fromEntity(
       SupplierSupportSettings entity) {
     return SupplierSupportSettingsModel(
-        enabled: entity.enabled,
-        supplierRoles: entity.supplierRoles?.map((e) => String Mapper.fromEntity
-            (e)).toList(),);
+      enabled: entity.enabled,
+      supplierRoles: entity.supplierRoles,
+    );
   }
 }
