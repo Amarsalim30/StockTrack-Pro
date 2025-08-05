@@ -7,17 +7,17 @@ import '../../data/models/catalog/supplier_model.dart';
 import '../../data/models/general/location_model.dart';
 
 class AddProductState {
-
-  final String id;
   final String name;
-  final String sku;
-  final String? description;
-  final String categoryId;
+  final String code;
+  final String description;
+  final String price;
+  final String quantity;
+  final String reorderLevel;
+  final String reorderQuantity;
+  final String category;
   final SupplierModel? selectedSupplier;
   final LocationModel? selectedLocation;
-  final double? price;
-  final double? costPrice;
-  final List<String>? tags;
+  final List<File> productImages;
   final bool isLoading;
   final bool isSaving;
   final String? error;
@@ -27,7 +27,7 @@ class AddProductState {
 
   AddProductState({
     this.name = '',
-    this.sku = '',
+    this.code = '',
     this.description = '',
     this.price = '',
     this.quantity = '',
@@ -335,21 +335,16 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
       final product = ProductModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: state.name.trim(),
-        sku: state.,
+        sku: state.code.trim(),
         description: state.description.trim().isEmpty
             ? null
             : state.description.trim(),
         price: double.parse(state.price),
-        quantity: int.parse(state.quantity),
-        reorderLevel: int.parse(state.reorderLevel),
-        reorderQuantity: int.parse(state.reorderQuantity),
-        category: state.category.trim(),
-        supplierId: state.selectedSupplier?.id,
-        supplierName: state.selectedSupplier?.name,
-        locationId: state.selectedLocation?.id,
-        locationName: state.selectedLocation?.name,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        costPrice: null,
+        // Add cost price if needed
+        categoryId: state.category.trim(),
+        supplierId: state.selectedSupplier?.id ?? '',
+        tags: [],
       );
 
       // TODO: Implement actual API call to save product

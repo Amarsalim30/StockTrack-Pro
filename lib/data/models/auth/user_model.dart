@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/auth/user.dart';
+import '../../../domain/entities/auth/permission_type.dart';
+import 'permission_type_model.dart';
 import 'role_model.dart';
 
 part 'user_model.g.dart';
@@ -62,6 +64,11 @@ class UserModel extends Equatable {
   );
 
   static UserModel fromEntity(User user) => fromDomain(user);
+
+  bool hasPermission(PermissionType permission) {
+    final permissionModel = PermissionTypeModelExtension.fromDomain(permission);
+    return roles.any((role) => role.permissions.contains(permissionModel));
+  }
 
   @override
   List<Object?> get props => [id, username, email, roles, isActive];

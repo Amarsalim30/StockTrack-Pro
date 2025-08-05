@@ -1,7 +1,7 @@
 // Stock State
 import '../../core/enums/stock_status.dart';
 import '../../data/models/stock/stock_model.dart';
-import '../../data/models/user/user_model.dart';
+import '../../data/models/auth/user_model.dart';
 
 enum SortBy { name, sku, quantity, lastUpdated }
 

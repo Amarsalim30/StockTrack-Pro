@@ -3,12 +3,12 @@ import 'package:clean_arch_app/presentation/stock/mock_stock_data.dart';
 import 'package:clean_arch_app/presentation/stock/stock_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
+import '../../core/enums/stock_status.dart';
 import '../../data/models/stock/stock_model.dart';
-import '../../data/models/user/user_model.dart';
+import '../../data/models/auth/user_model.dart';
+import '../../domain/entities/auth/permission_type.dart';
 import '../../domain/repositories/stock_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../core/enums/stock_status.dart';
-import '../../domain/entities/permission.dart';
 
 class StockViewModel extends StateNotifier<StockState> {
   final StockRepository _stockRepository;

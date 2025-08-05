@@ -86,6 +86,17 @@ class StockModel extends Equatable {
     this.tags,
   });
 
+  // Computed properties
+  bool get isLowStock {
+    if (minimumStock == null) return false;
+    return quantity <= minimumStock!;
+  }
+
+  bool get needsReorder {
+    if (reorderPoint == null) return false;
+    return quantity <= reorderPoint!;
+  }
+
   factory StockModel.fromJson(Map<String, dynamic> json) =>
       _$StockModelFromJson(json);
 
@@ -154,6 +165,69 @@ class StockModel extends Equatable {
     movementHistory: ent.movementHistory,
     tags: ent.tags,
   );
+
+  StockModel copyWith({
+    String? id,
+    String? name,
+    String? sku,
+    int? quantity,
+    StockStatus? status,
+    StockDurabilityType? durabilityType,
+    String? description,
+    String? categoryId,
+    String? supplierId,
+    String? unit,
+    String? location,
+    int? minimumStock,
+    int? maximumStock,
+    int? averageDailyUsage,
+    int? leadTimeDays,
+    int? safetyStock,
+    int? reorderPoint,
+    int? preferredReorderQuantity,
+    double? price,
+    double? costPrice,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? expiryDate,
+    DateTime? lastSoldDate,
+    Duration? deadstockThreshold,
+    Map<String, int>? warehouseStock,
+    List<StockMovement>? movementHistory,
+    List<String>? tags,
+  }) {
+    return StockModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      sku: sku ?? this.sku,
+      quantity: quantity ?? this.quantity,
+      status: status ?? this.status,
+      durabilityType: durabilityType ?? this.durabilityType,
+      description: description ?? this.description,
+      categoryId: categoryId ?? this.categoryId,
+      supplierId: supplierId ?? this.supplierId,
+      unit: unit ?? this.unit,
+      location: location ?? this.location,
+      minimumStock: minimumStock ?? this.minimumStock,
+      maximumStock: maximumStock ?? this.maximumStock,
+      averageDailyUsage: averageDailyUsage ?? this.averageDailyUsage,
+      leadTimeDays: leadTimeDays ?? this.leadTimeDays,
+      safetyStock: safetyStock ?? this.safetyStock,
+      reorderPoint: reorderPoint ?? this.reorderPoint,
+      preferredReorderQuantity: preferredReorderQuantity ??
+          this.preferredReorderQuantity,
+      price: price ?? this.price,
+      costPrice: costPrice ?? this.costPrice,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      expiryDate: expiryDate ?? this.expiryDate,
+      lastSoldDate: lastSoldDate ?? this.lastSoldDate,
+      deadstockThreshold: deadstockThreshold ?? this.deadstockThreshold,
+      warehouseStock: warehouseStock ?? this.warehouseStock,
+      movementHistory: movementHistory ?? this.movementHistory,
+      tags: tags ?? this.tags,
+    );
+  }
 
   @override
   List<Object?> get props =>

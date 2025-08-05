@@ -17,6 +17,12 @@ enum PermissionTypeModel {
   viewReports,
   @JsonValue('processReturns')
   processReturns,
+  @JsonValue('createProduct')
+  createProduct,
+  @JsonValue('editProduct')
+  editProduct,
+  @JsonValue('deleteProduct')
+  deleteProduct,
   // Add additional permissions here...
 }
 

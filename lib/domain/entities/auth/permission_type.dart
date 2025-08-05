@@ -7,6 +7,9 @@ enum PermissionType {
   adjustStock,
   viewReports,
   processReturns,
+  createProduct,
+  editProduct,
+  deleteProduct,
   // Add additional permissions here...
 }
 
@@ -26,6 +29,12 @@ extension PermissionTypeExtension on PermissionType {
         return 'View Reports';
       case PermissionType.processReturns:
         return 'Process Returns';
+      case PermissionType.createProduct:
+        return 'Create Product';
+      case PermissionType.editProduct:
+        return 'Edit Product';
+      case PermissionType.deleteProduct:
+        return 'Delete Product';
       // Add more cases if you add permissions
     }
   }
