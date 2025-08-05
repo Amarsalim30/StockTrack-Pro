@@ -7,17 +7,17 @@ import '../../data/models/catalog/supplier_model.dart';
 import '../../data/models/general/location_model.dart';
 
 class AddProductState {
+
+  final String id;
   final String name;
-  final String code;
-  final String description;
-  final String price;
-  final String quantity;
-  final String reorderLevel;
-  final String reorderQuantity;
-  final String category;
+  final String sku;
+  final String? description;
+  final String categoryId;
   final SupplierModel? selectedSupplier;
   final LocationModel? selectedLocation;
-  final List<File> productImages;
+  final double? price;
+  final double? costPrice;
+  final List<String>? tags;
   final bool isLoading;
   final bool isSaving;
   final String? error;
@@ -27,7 +27,7 @@ class AddProductState {
 
   AddProductState({
     this.name = '',
-    this.code = '',
+    this.sku = '',
     this.description = '',
     this.price = '',
     this.quantity = '',
@@ -100,23 +100,31 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
         const SupplierModel(
           id: '1',
           name: 'Tech Supplies Inc.',
-          contactPerson: 'John Doe',
-          email: 'john@techsupplies.com',
-          phoneNumber: '+1234567890',
-        ),
-        const SupplierModel(
+          contactInfo: {
+            'email': 'john@techsupplies.com',
+            'phoneNumber': '+1234567890',
+          },
+          rating: 4.5,
+          paymentTerms: 'Net 30',
+        ), const SupplierModel(
           id: '2',
-          name: 'Global Distributors',
-          contactPerson: 'Jane Smith',
-          email: 'jane@globaldist.com',
-          phoneNumber: '+0987654321',
+          name: 'Global Supplies Inc.',
+          contactInfo: {
+            'email': 'john@techsupplies.com',
+            'phoneNumber': '+1234567890',
+          },
+          rating: 4.5,
+          paymentTerms: 'Net 30',
         ),
         const SupplierModel(
-          id: '3',
-          name: 'Premium Wholesale',
-          contactPerson: 'Bob Johnson',
-          email: 'bob@premiumwholesale.com',
-          phoneNumber: '+1122334455',
+          id: '1',
+          name: 'Tech Retails Inc.',
+          contactInfo: {
+            'email': 'john@techsupplies.com',
+            'phoneNumber': '+1234567890',
+          },
+          rating: 4.5,
+          paymentTerms: 'Net 30',
         ),
       ];
 
@@ -125,26 +133,16 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
         const LocationModel(
           id: '1',
           name: 'Main Warehouse',
-          type: 'Warehouse',
-          address: '123 Storage St',
-          city: 'New York',
-          state: 'NY',
+          description: 'Central storage facility',
+          latitude: 12.3456,
+          longitude: 11.7890,
         ),
         const LocationModel(
           id: '2',
           name: 'Store Front',
-          type: 'Retail',
-          address: '456 Main St',
-          city: 'New York',
-          state: 'NY',
-        ),
-        const LocationModel(
-          id: '3',
-          name: 'Distribution Center',
-          type: 'Distribution',
-          address: '789 Logistics Ave',
-          city: 'Los Angeles',
-          state: 'CA',
+          description: 'Central storage facility',
+          latitude: 12.3456,
+          longitude: 11.7890,
         ),
       ];
 
@@ -337,7 +335,7 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
       final product = ProductModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: state.name.trim(),
-        code: state.code.trim(),
+        sku: state.,
         description: state.description.trim().isEmpty
             ? null
             : state.description.trim(),

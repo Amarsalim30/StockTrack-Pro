@@ -35,7 +35,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           limit: limit,
           offset: offset,
         );
-        return Right(activities);
+        return Right(activities.cast<Activity>());
       } on ServerException {
         return const Left(ServerFailure(message: 'Server error occurred'));
       }
@@ -49,7 +49,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
     if (await networkInfo.isConnected) {
       try {
         final activity = await remoteDataSource.getActivityById(id);
-        return Right(activity);
+        return Right(activity as Activity);
       } on ServerException {
         return const Left(ServerFailure(message: 'Server error occurred'));
       }
@@ -124,7 +124,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           endDate: endDate,
           limit: limit,
         );
-        return Right(activities);
+        return Right(activities.cast<Activity>());
       } on ServerException {
         return const Left(
           ServerFailure(message: 'Failed to get user activities'),
