@@ -1,6 +1,6 @@
 # 📦 StockTrackPro – Stock Management System
 
-**Amarion Technologies** proudly presents **StockTrackPro**, a scalable and modular inventory management solution. Designed with clean architecture principles, this system leverages a **Flutter frontend**, **Spring Boot backend**, and **Firebase integration** to provide seamless stock control, reporting, and role-based access management.
+**Am'' Technologies** proudly presents **StockTrackPro**, a scalable and modular inventory management solution. Designed with clean architecture principles, this system leverages a **Flutter frontend**, **Spring Boot backend**, and **Firebase integration** to provide seamless stock control, reporting, and role-based access management.
 
 ---
 
@@ -89,7 +89,7 @@ flowchart TD
 
 ---
 
-> Built with ❤️ by **Amarion Technologies** — *Clarity Engineered™*
+> Built with ❤️ by **Am'' Technologies** — *Clarity Engineered™*
 
 ---
 
