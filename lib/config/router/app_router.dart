@@ -13,7 +13,7 @@ import 'route_names.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: RouteNames.dashboard,
+    initialLocation: RouteNames.stock,
     routes: [
       GoRoute(
         path: RouteNames.login,
