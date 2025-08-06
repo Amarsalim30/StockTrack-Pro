@@ -1,4 +1,6 @@
 import 'package:clean_arch_app/di/injection.dart';
+import 'package:clean_arch_app/domain/entities/auth/user.dart';
+import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/presentation/stock/mock_stock_data.dart';
 import 'package:clean_arch_app/presentation/stock/stock_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +17,7 @@ class StockViewModel extends StateNotifier<StockState> {
   final AuthRepository _authRepository;
 
   // Getters
-  List<StockModel> get stocks => state.filteredStocks;
+  List<Stock> get stocks => state.filteredStocks;
 
   Set<String> get selectedStockIds => state.selectedStockIds;
 
@@ -31,13 +33,13 @@ class StockViewModel extends StateNotifier<StockState> {
 
   SortOrder get sortOrder => state.sortOrder;
 
-  String? get error => state.error;
+  String? get error => state.errorMessage;
 
   bool get hasSelectedItems => state.selectedStockIds.isNotEmpty;
 
   int get selectedCount => state.selectedStockIds.length;
 
-  UserModel? get currentUser => state.currentUser;
+  User? get currentUser => state.currentUser;
 
   StockViewModel({
     required StockRepository stockRepository,
@@ -71,7 +73,7 @@ class StockViewModel extends StateNotifier<StockState> {
       result.fold(
         (failure) => print('Error loading current user: $failure'),
         (user) =>
-            state = state.copyWith(currentUser: UserModel.fromEntity(user)),
+        state = state.copyWith(currentUser: user),
       );
     } catch (e) {
       print('Error loading current user: $e');
@@ -80,7 +82,7 @@ class StockViewModel extends StateNotifier<StockState> {
 
   // Load stocks
   Future<void> loadStocks() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
       final result = await _stockRepository.getStocks();
@@ -90,7 +92,7 @@ class StockViewModel extends StateNotifier<StockState> {
       _applyFiltersAndSort();
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
   }
 
@@ -230,54 +232,49 @@ class StockViewModel extends StateNotifier<StockState> {
 
   void clearSelection() {
     state = state.copyWith(selectedStockIds: {});
-  }
-
-  // CRUD Operations
-  Future<void> createStock(StockModel stock) async {
+  } // CRUD Operations
+  Future<void> createStock(Stock stock) async {
     if (!canCreateStock) {
       state = state.copyWith(
-        error: 'You do not have permission to create stock items',
+        errorMessage: 'You do not have permission to create stock items',
       );
       return;
     }
-
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      await _stockRepository.createStock(stock);
+      await _stockRepository.createStock(_stockToStockModel(stock));
       await loadStocks();
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
   }
 
-  Future<void> updateStock(StockModel stock) async {
+  Future<void> updateStock(Stock stock) async {
     if (!canEditStock) {
       state = state.copyWith(
-        error: 'You do not have permission to edit stock items',
+        errorMessage: 'You do not have permission to edit stock items',
       );
       return;
     }
-
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      await _stockRepository.updateStock(stock);
+      await _stockRepository.updateStock(_stockToStockModel(stock));
       await loadStocks();
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
   }
 
   Future<void> deleteStock(String stockId) async {
     if (!canDeleteStock) {
       state = state.copyWith(
-        error: 'You do not have permission to delete stock items',
+        errorMessage: 'You do not have permission to delete stock items',
       );
       return;
     }
-
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
       await _stockRepository.deleteStock(stockId);
@@ -292,21 +289,20 @@ class StockViewModel extends StateNotifier<StockState> {
       );
       _applyFiltersAndSort();
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
   }
 
   Future<void> bulkDelete() async {
     if (!canDeleteStock) {
       state = state.copyWith(
-        error: 'You do not have permission to delete stock items',
+        errorMessage: 'You do not have permission to delete stock items',
       );
       return;
     }
 
     if (state.selectedStockIds.isEmpty) return;
-
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
       await Future.wait(
@@ -322,7 +318,7 @@ class StockViewModel extends StateNotifier<StockState> {
       );
       _applyFiltersAndSort();
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
   }
 
@@ -333,32 +329,30 @@ class StockViewModel extends StateNotifier<StockState> {
   ) async {
     if (!canAdjustStock) {
       state = state.copyWith(
-        error: 'You do not have permission to adjust stock quantities',
+        errorMessage: 'You do not have permission to adjust stock quantities',
       );
       return;
     }
-
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
       await _stockRepository.adjustStock(stockId, adjustment, reason);
       await loadStocks();
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
   }
 
   Future<void> bulkUpdateStatus(StockStatus status) async {
     if (!canEditStock) {
       state = state.copyWith(
-        error: 'You do not have permission to edit stock items',
+        errorMessage: 'You do not have permission to edit stock items',
       );
       return;
     }
 
     if (state.selectedStockIds.isEmpty) return;
-
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
       final selectedStocks = state.stocks
@@ -368,7 +362,7 @@ class StockViewModel extends StateNotifier<StockState> {
       await Future.wait(
         selectedStocks.map(
           (stock) => _stockRepository.updateStock(
-            stock.copyWith(status: status, price: stock.price?.toDouble()),
+            _stockToStockModel(stock).copyWith(status: status),
           ),
         ),
       );
@@ -376,12 +370,10 @@ class StockViewModel extends StateNotifier<StockState> {
       await loadStocks();
       state = state.copyWith(selectedStockIds: {}, isBulkSelectionMode: false);
     } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
-  }
-
-  // Get stock by ID
-  StockModel? getStockById(String id) {
+  } // Get stock by ID
+  Stock? getStockById(String id) {
     return state.stocks.firstWhereOrNull((stock) => stock.id == id);
   }
 
@@ -390,9 +382,55 @@ class StockViewModel extends StateNotifier<StockState> {
     await loadStocks();
   }
 
-  // Clear error
-  void clearError() {
-    state = state.copyWith(error: null);
+  // Clear errorvoid clearError() {
+  state
+
+  =
+
+  state.copyWith
+
+  (
+
+  errorMessage
+
+      :
+
+  null
+
+  );
+} // Helper method to convert Stock entity to StockModel
+
+StockModel _stockToStockModel(Stock stock) {
+  return StockModel(
+    id: stock.id,
+    name: stock.name,
+    sku: stock.sku,
+    quantity: stock.quantity,
+    status: stock.status,
+    durabilityType: stock.durabilityType,
+    description: stock.description,
+    categoryId: stock.categoryId,
+    supplierId: stock.supplierId,
+    unit: stock.unit,
+    location: stock.location,
+    minimumStock: stock.minimumStock,
+    maximumStock: stock.maximumStock,
+    averageDailyUsage: stock.averageDailyUsage,
+    leadTimeDays: stock.leadTimeDays,
+    safetyStock: stock.safetyStock,
+    reorderPoint: stock.reorderPoint,
+    preferredReorderQuantity: stock.preferredReorderQuantity,
+    price: stock.price,
+    costPrice: stock.costPrice,
+    createdAt: stock.createdAt,
+    updatedAt: stock.updatedAt,
+    expiryDate: stock.expiryDate,
+    lastSoldDate: stock.lastSoldDate,
+    deadstockThreshold: stock.deadstockThreshold,
+    warehouseStock: stock.warehouseStock,
+    movementHistory: stock.movementHistory,
+    tags: stock.tags,
+  );
   }
 
   @override

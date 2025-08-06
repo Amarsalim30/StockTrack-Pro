@@ -1,8 +1,8 @@
 import 'package:clean_arch_app/di/injection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/user.dart';
-import '../../data/models/user/user_model.dart';
+import '../../domain/entities/auth/user.dart';
+import '../../data/models/auth/user_model.dart';
 import '../../domain/repositories/user_repository.dart';
 
 // 📦 State class

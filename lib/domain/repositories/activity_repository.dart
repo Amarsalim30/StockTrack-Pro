@@ -20,6 +20,10 @@ abstract class ActivityRepository {
     required ActivityType type,
     required String action,
     String? description,
+    String? entityType,
+    String? entityId,
+    String? entityName,
+    String? entityLocation,
     Map<String, dynamic>? metadata,
   });
 

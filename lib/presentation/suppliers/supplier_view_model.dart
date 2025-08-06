@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/catalog/supplier_model.dart';
 import 'mock_data.dart'; // contains List<Supplier> mockSuppliers
-import '../../domain/entities/supplier.dart';
+import '../../domain/entities/catalog/supplier.dart';
 
 // Sorting & Status enums
 enum SortOption { name, recent, location }
