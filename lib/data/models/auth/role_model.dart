@@ -40,7 +40,7 @@ class RoleModel extends Equatable {
   Role toDomain() => Role(
     id: id,
     name: name,
-    permissions: permissions.map((p) => p.toDomain(p)).toList(),
+    permissions: permissions.map((p) => p.toDomain()).toList(),
   );
 
   /// Convert from domain Role entity

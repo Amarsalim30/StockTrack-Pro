@@ -11,8 +11,6 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     _initializeDashboard();
   }
 
-  get setSearchQuery => null;
-
   void _initializeDashboard() {
     loadDashboardData();
 
@@ -47,11 +45,17 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     // navigation logic (via context or routing)
   }
 
-  void createNewOrder() {}
+  void createNewOrder() {
+    // TODO: Implement create new order functionality
+  }
 
-  void openFilter() {}
+  void openFilter() {
+    // TODO: Implement filter functionality
+  }
 
-  void toggleSort() {}
+  void toggleSort() {
+    // TODO: Implement sort functionality
+  }
 
   void refreshDashboard() => loadDashboardData();
 
@@ -61,5 +65,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     super.dispose();
   }
 
-  void setFilter(String value) {}
+  void setFilter(String value) {
+    // TODO: Implement filter logic
+  }
 }

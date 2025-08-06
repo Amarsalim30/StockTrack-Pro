@@ -1,15 +1,13 @@
-import 'package:clean_arch_app/presentation/dashboard/widgets/build_action_chip.dart';
-import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
-import '../../core/constants/colors.dart';
 import '../../di/injection.dart' as di;
+import '../../di/injection.dart';
 import '../stock/stock_state.dart';
+import '../stock/stock_view_model.dart';
 import 'dashboard_view_model.dart';
-import 'dashboard_state.dart';
 import 'widgets/stock_list.dart';
 
 class DashboardPage extends ConsumerWidget {
@@ -17,15 +15,16 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dashboard = ref.watch(di.dashboardViewModelProvider);
     final viewModel = ref.watch(di.dashboardViewModelProvider.notifier);
     final stockState = ref.watch(stockViewModelProvider);
-    final stockViewModel = ref.watch(di.stockViewModelProvider.notifier);
+    final stockViewModel = ref.read(stockViewModelProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.slate[900],
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
         elevation: 0,
         titleSpacing: 16.0,
         title: Column(
@@ -82,7 +81,7 @@ class DashboardPage extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 12),
-            _buildInventoryHeader(viewModel, stockViewModel),
+            _buildInventoryHeader(viewModel, stockViewModel, stockState),
             const SizedBox(height: 12),
             Expanded(child: StockList(stocks: stockState.stocks)),
           ],
@@ -96,7 +95,8 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildInventoryHeader(DashboardViewModel vm, StockViewModel stockVm) {
+  Widget _buildInventoryHeader(DashboardViewModel vm, StockViewModel stockVm,
+      stockState) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -183,26 +183,23 @@ class DashboardPage extends ConsumerWidget {
         ),
         const SizedBox(width: 6,),
 
-        PopupMenuButton<SortBy>(
-          onSelected: (SortBy selected) {
-            final isSame = selected == stockVm.sortBy;
+        PopupMenuButton<SortBy>(onSelected: (SortBy selected) {
+          final isSame = selected == stockState.sortBy;
             stockVm.setSortBy(selected);
             if (isSame) {
-              stockVm.toggleSortOrder(
-                  selected); // If same item tapped again, toggle order
+              stockVm.toggleSortOrder(selected);
             }
           },
           itemBuilder: (context) =>
               SortBy.values.map((sortBy) {
                 return PopupMenuItem(
-                  value: sortBy,
-                  child: Row(
+                  value: sortBy, child: Row(
                     children: [
-                      Text(describeEnum(sortBy).toUpperCase()),
+                      Text(sortBy.name.toUpperCase()),
                       const Spacer(),
-                      if (stockVm.sortBy == sortBy)
+                      if (stockState.sortBy == sortBy)
                         Icon(
-                          stockVm.sortOrder == SortOrder.ascending
+                          stockState.sortOrder == SortOrder.ascending
                               ? LucideIcons.arrow_up
                               : LucideIcons.arrow_down,
                           size: 16,
@@ -222,14 +219,13 @@ class DashboardPage extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  stockVm.sortOrder == SortOrder.ascending
+                  stockState.sortOrder == SortOrder.ascending
                       ? LucideIcons.arrow_up
                       : LucideIcons.arrow_down,
                   size: 18,
                   color: Colors.black87,
-                ),
-                const SizedBox(width: 6),
-                Text(describeEnum(stockVm.sortBy).toUpperCase()),
+                ), const SizedBox(width: 6),
+                Text(stockState.sortBy.name.toUpperCase()),
                 const SizedBox(width: 6),
                 const Icon(
                   LucideIcons.chevron_down,

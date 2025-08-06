@@ -23,8 +23,7 @@ class StockTake extends Equatable {
   final int countedItems;
   final int discrepancies;
   final Map<String, dynamic>? metadata;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+
 
   const StockTake({
     required this.id,
@@ -41,8 +40,6 @@ class StockTake extends Equatable {
     required this.countedItems,
     required this.discrepancies,
     this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   StockTake copyWith({
@@ -60,8 +57,7 @@ class StockTake extends Equatable {
     int? countedItems,
     int? discrepancies,
     Map<String, dynamic>? metadata,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+
   }) {
     return StockTake(
       id: id ?? this.id,
@@ -78,10 +74,19 @@ class StockTake extends Equatable {
       countedItems: countedItems ?? this.countedItems,
       discrepancies: discrepancies ?? this.discrepancies,
       metadata: metadata ?? this.metadata,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+
     );
   }
+
+  // Computed properties
+  double get progressPercentage {
+    if (totalItems == 0) return 0.0;
+    return (countedItems / totalItems) * 100;
+  }
+
+  bool get isActive => status == StockTakeStatus.active;
+
+  bool get isPaused => status == StockTakeStatus.paused;
 
   @override
   List<Object?> get props =>
@@ -100,7 +105,6 @@ class StockTake extends Equatable {
         countedItems,
         discrepancies,
         metadata,
-        createdAt,
-        updatedAt,
+
       ];
 }

@@ -34,6 +34,7 @@ class UserModel extends Equatable {
     String? email,
     List<RoleModel>? roles,
     bool? isActive,
+    DateTime? updatedAt,
   }) {
     return UserModel(
       id: id ?? this.id,

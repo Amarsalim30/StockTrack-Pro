@@ -1,11 +1,10 @@
+import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:flutter/material.dart';
 import '../../../core/enums/stock_status.dart';
-import 'package:clean_arch_app/config/theme/app_theme.dart';
 
-import '../../../data/models/stock/stock_model.dart';
 
 class StockItemCard extends StatelessWidget {
-  final StockModel stock;
+  final Stock stock;
   final bool isSelected;
   final VoidCallback? onTap;
   final VoidCallback? onViewDetails;
@@ -120,20 +119,25 @@ class StockItemCard extends StatelessWidget {
         statusIcon = Icons.block;
         break;
       case StockStatus.available:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        statusColor = Colors.green;
+        statusIcon = Icons.check_circle;
+        break;
       case StockStatus.reserved:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        statusColor = Colors.blue;
+        statusIcon = Icons.lock;
+        break;
       case StockStatus.damaged:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        statusColor = Colors.red;
+        statusIcon = Icons.broken_image;
+        break;
       case StockStatus.expired:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        statusColor = Colors.purple;
+        statusIcon = Icons.schedule;
+        break;
       case StockStatus.inTransit:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        statusColor = Colors.orange;
+        statusIcon = Icons.local_shipping;
+        break;
     }
 
     return Container(
@@ -263,20 +267,15 @@ class StockItemCard extends StatelessWidget {
       case StockStatus.discontinued:
         return 'Discontinued';
       case StockStatus.available:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Available';
       case StockStatus.reserved:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Reserved';
       case StockStatus.damaged:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Damaged';
       case StockStatus.expired:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Expired';
       case StockStatus.inTransit:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'In Transit';
     }
   }
 }

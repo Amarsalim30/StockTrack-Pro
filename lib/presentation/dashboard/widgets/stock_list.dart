@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:clean_arch_app/core/enums/stock_status.dart';
 
-import '../../../data/models/stock/stock_model.dart';
+import '../../../domain/entities/stock/stock.dart';
 
 class StockList extends StatefulWidget {
-  final List<StockModel> stocks;
+  final List<Stock> stocks;
 
   const StockList({super.key, required this.stocks});
 
@@ -14,7 +14,7 @@ class StockList extends StatefulWidget {
 }
 
 class _StockListState extends State<StockList> {
-  final Set<StockModel> selectedStocks = {};
+  final Set<Stock> selectedStocks = {};
 
   bool get isAllSelected => selectedStocks.length == widget.stocks.length;
 
@@ -104,7 +104,7 @@ class _StockListState extends State<StockList> {
     );
   }
 
-  Widget _buildStockRow(StockModel stock) {
+  Widget _buildStockRow(Stock stock) {
     final bool isSelected = selectedStocks.contains(stock);
 
     Color statusColor;

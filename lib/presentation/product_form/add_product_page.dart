@@ -1,3 +1,5 @@
+import 'package:clean_arch_app/domain/entities/catalog/supplier.dart';
+import 'package:clean_arch_app/domain/entities/general/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +8,7 @@ import '../../data/models/catalog/supplier_model.dart';
 import '../../data/models/general/location_model.dart';
 
 class AddProductPage extends ConsumerStatefulWidget {
-  const AddProductPage({Key? key}) : super(key: key);
+  const AddProductPage({super.key});
 
   @override
   ConsumerState<AddProductPage> createState() => _AddProductPageState();
@@ -87,14 +89,14 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                     onChanged: viewModel.setCategory,
                     errorText: state.fieldErrors['category'],
                   ),
-                  _buildDropdownField<SupplierModel>(
+                  _buildDropdownField<Supplier>(
                     label: 'Supplier',
                     value: state.selectedSupplier,
                     items: state.suppliers,
                     onChanged: viewModel.setSupplier,
                     errorText: state.fieldErrors['supplier'],
                   ),
-                  _buildDropdownField<LocationModel>(
+                  _buildDropdownField<Location>(
                     label: 'Location',
                     value: state.selectedLocation,
                     items: state.locations,
@@ -251,5 +253,5 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
 }
 
 extension on ThemeData {
-  get errorColor => null;
+  Color get errorColor => colorScheme.error;
 }

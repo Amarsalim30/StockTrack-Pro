@@ -77,6 +77,39 @@ class Stock extends Equatable {
     this.tags,
   });
 
+  // Computed properties for business logic
+  bool get isLowStock {
+    if (minimumStock == null) return false;
+    return quantity <= minimumStock!;
+  }
+
+  bool get isOutOfStock => quantity <= 0;
+
+  bool get needsReorder {
+    if (reorderPoint == null) return false;
+    return quantity <= reorderPoint!;
+  }
+
+  bool get isExpired {
+    if (expiryDate == null) return false;
+    return DateTime.now().isAfter(expiryDate!);
+  }
+
+  bool get isExpiringSoon {
+    if (expiryDate == null) return false;
+    final now = DateTime.now();
+    final daysUntilExpiry = expiryDate!.difference(now).inDays;
+    return daysUntilExpiry <= 30 && daysUntilExpiry > 0;
+  }
+
+  double get totalValue {
+    return (price ?? 0.0) * quantity;
+  }
+
+  double get totalCostValue {
+    return (costPrice ?? 0.0) * quantity;
+  }
+
   Stock copyWith({
     String? id,
     String? name,

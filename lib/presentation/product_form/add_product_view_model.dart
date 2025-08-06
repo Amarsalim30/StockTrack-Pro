@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../data/models/catalog/product_model.dart';
-import '../../data/models/catalog/supplier_model.dart';
-import '../../data/models/general/location_model.dart';
+
+import '../../domain/entities/catalog/product.dart';
+import '../../domain/entities/catalog/supplier.dart';
+import '../../domain/entities/general/location.dart';
 
 class AddProductState {
   final String name;
@@ -15,15 +16,16 @@ class AddProductState {
   final String reorderLevel;
   final String reorderQuantity;
   final String category;
-  final SupplierModel? selectedSupplier;
-  final LocationModel? selectedLocation;
+  final Supplier? selectedSupplier;
+  final Location? selectedLocation;
   final List<File> productImages;
   final bool isLoading;
   final bool isSaving;
   final String? error;
   final Map<String, String> fieldErrors;
-  final List<SupplierModel> suppliers;
-  final List<LocationModel> locations;
+
+  final List<Supplier> suppliers;
+  final List<Location> locations;
 
   AddProductState({
     this.name = '',
@@ -54,15 +56,15 @@ class AddProductState {
     String? reorderLevel,
     String? reorderQuantity,
     String? category,
-    SupplierModel? selectedSupplier,
-    LocationModel? selectedLocation,
+    Supplier? selectedSupplier,
+    Location? selectedLocation,
     List<File>? productImages,
     bool? isLoading,
     bool? isSaving,
     String? error,
     Map<String, String>? fieldErrors,
-    List<SupplierModel>? suppliers,
-    List<LocationModel>? locations,
+    List<Supplier>? suppliers,
+    List<Location>? locations,
   }) {
     return AddProductState(
       name: name ?? this.name,
@@ -89,15 +91,13 @@ class AddProductState {
 class AddProductViewModel extends StateNotifier<AddProductState> {
   AddProductViewModel() : super(AddProductState());
 
-  final ImagePicker _imagePicker = ImagePicker();
-
-  // Initialize with mock data
+  final ImagePicker _imagePicker = ImagePicker(); // Initialize with mock data
   Future<void> init() async {
     state = state.copyWith(isLoading: true);
     try {
       // Mock suppliers data
       final mockSuppliers = [
-        const SupplierModel(
+        const Supplier(
           id: '1',
           name: 'Tech Supplies Inc.',
           contactInfo: {
@@ -106,7 +106,8 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
           },
           rating: 4.5,
           paymentTerms: 'Net 30',
-        ), const SupplierModel(
+        ),
+        const Supplier(
           id: '2',
           name: 'Global Supplies Inc.',
           contactInfo: {
@@ -116,8 +117,8 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
           rating: 4.5,
           paymentTerms: 'Net 30',
         ),
-        const SupplierModel(
-          id: '1',
+        const Supplier(
+          id: '3',
           name: 'Tech Retails Inc.',
           contactInfo: {
             'email': 'john@techsupplies.com',
@@ -130,14 +131,14 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
 
       // Mock locations data
       final mockLocations = [
-        const LocationModel(
+        const Location(
           id: '1',
           name: 'Main Warehouse',
           description: 'Central storage facility',
           latitude: 12.3456,
           longitude: 11.7890,
         ),
-        const LocationModel(
+        const Location(
           id: '2',
           name: 'Store Front',
           description: 'Central storage facility',
@@ -199,11 +200,11 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
     _clearFieldError('category');
   }
 
-  void setSupplier(SupplierModel? supplier) {
+  void setSupplier(Supplier? supplier) {
     state = state.copyWith(selectedSupplier: supplier);
   }
 
-  void setLocation(LocationModel? location) {
+  void setLocation(Location? location) {
     state = state.copyWith(selectedLocation: location);
   }
 
@@ -327,12 +328,11 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
     if (!_validateForm()) {
       return false;
     }
-
     state = state.copyWith(isSaving: true, error: null);
 
     try {
-      // Create product model
-      final product = ProductModel(
+      // Create product entity
+      final product = Product(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: state.name.trim(),
         sku: state.code.trim(),
@@ -357,7 +357,7 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
         await Future.delayed(const Duration(seconds: 1));
       }
 
-      debugPrint('Product saved: ${product.toJson()}');
+      debugPrint('Product saved: ${product.toString()}');
 
       state = state.copyWith(isSaving: false);
       return true;

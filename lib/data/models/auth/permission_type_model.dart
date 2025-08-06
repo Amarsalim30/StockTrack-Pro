@@ -28,8 +28,7 @@ enum PermissionTypeModel {
 
 extension PermissionTypeModelExtension on PermissionTypeModel {
   /// Convert to domain enum
-  PermissionType toDomain(PermissionTypeModel permissionModel) =>
-      PermissionType.values.byName(name);
+  PermissionType toDomain() => PermissionType.values.byName(name);
 
   static PermissionTypeModel fromDomain(PermissionType permission) =>
       PermissionTypeModel.values.byName(permission.name);

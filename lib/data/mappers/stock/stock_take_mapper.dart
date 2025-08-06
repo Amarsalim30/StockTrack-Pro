@@ -19,8 +19,6 @@ class StockTakeMapper {
       countedItems: model.countedItems,
       discrepancies: model.discrepancies,
       metadata: model.metadata,
-      createdAt: model.createdAt,
-      updatedAt: model.updatedAt,
     );
   }
 
@@ -40,8 +38,6 @@ class StockTakeMapper {
       countedItems: entity.countedItems,
       discrepancies: entity.discrepancies,
       metadata: entity.metadata,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
     );
   }
 

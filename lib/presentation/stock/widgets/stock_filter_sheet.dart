@@ -1,14 +1,16 @@
+import 'package:clean_arch_app/di/injection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../stock_state.dart';
-import '../stock_view_model.dart';
 import '../../../core/enums/stock_status.dart';
 
-class StockFilterSheet extends StatelessWidget {
+class StockFilterSheet extends ConsumerWidget {
   const StockFilterSheet({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    final viewModel = Provider.of<StockViewModel>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(stockViewModelProvider.notifier);
+    final stockState = ref.watch(stockViewModelProvider);
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -48,7 +50,7 @@ class StockFilterSheet extends StatelessWidget {
             children: [
               FilterChip(
                 label: Text('All'),
-                selected: viewModel.filterStatus == null,
+                selected: stockState.filterStatus == null,
                 onSelected: (_) {
                   viewModel.setFilterStatus(null);
                   Navigator.pop(context);
@@ -57,7 +59,7 @@ class StockFilterSheet extends StatelessWidget {
               ...StockStatus.values.map(
                 (status) => FilterChip(
                   label: Text(_getStatusDisplayText(status)),
-                  selected: viewModel.filterStatus == status,
+                  selected: stockState.filterStatus == status,
                   onSelected: (_) {
                     viewModel.setFilterStatus(status);
                     Navigator.pop(context);
@@ -83,8 +85,8 @@ class StockFilterSheet extends StatelessWidget {
             context,
             'Name',
             SortBy.name,
-            viewModel.sortBy == SortBy.name,
-            viewModel.sortOrder,
+            stockState.sortBy == SortBy.name,
+            stockState.sortOrder,
             () {
               viewModel.setSortBy(SortBy.name);
               Navigator.pop(context);
@@ -94,8 +96,8 @@ class StockFilterSheet extends StatelessWidget {
             context,
             'SKU',
             SortBy.sku,
-            viewModel.sortBy == SortBy.sku,
-            viewModel.sortOrder,
+            stockState.sortBy == SortBy.sku,
+            stockState.sortOrder,
             () {
               viewModel.setSortBy(SortBy.sku);
               Navigator.pop(context);
@@ -105,8 +107,8 @@ class StockFilterSheet extends StatelessWidget {
             context,
             'Quantity',
             SortBy.quantity,
-            viewModel.sortBy == SortBy.quantity,
-            viewModel.sortOrder,
+            stockState.sortBy == SortBy.quantity,
+            stockState.sortOrder,
             () {
               viewModel.setSortBy(SortBy.quantity);
               Navigator.pop(context);
@@ -116,8 +118,8 @@ class StockFilterSheet extends StatelessWidget {
             context,
             'Last Updated',
             SortBy.lastUpdated,
-            viewModel.sortBy == SortBy.lastUpdated,
-            viewModel.sortOrder,
+            stockState.sortBy == SortBy.lastUpdated,
+            stockState.sortOrder,
             () {
               viewModel.setSortBy(SortBy.lastUpdated);
               Navigator.pop(context);
@@ -195,20 +197,15 @@ class StockFilterSheet extends StatelessWidget {
       case StockStatus.discontinued:
         return 'Discontinued';
       case StockStatus.available:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Available';
       case StockStatus.reserved:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Reserved';
       case StockStatus.damaged:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Damaged';
       case StockStatus.expired:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Expired';
       case StockStatus.inTransit:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'In Transit';
     }
   }
 
@@ -223,20 +220,15 @@ class StockFilterSheet extends StatelessWidget {
       case StockStatus.discontinued:
         return Colors.grey;
       case StockStatus.available:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return Colors.green;
       case StockStatus.reserved:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return Colors.blue;
       case StockStatus.damaged:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return Colors.red;
       case StockStatus.expired:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return Colors.purple;
       case StockStatus.inTransit:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return Colors.orange;
     }
   }
 }

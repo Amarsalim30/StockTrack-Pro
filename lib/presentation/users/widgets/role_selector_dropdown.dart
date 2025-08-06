@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/user.dart';
+import '../../../domain/entities/auth/role.dart';
 
 class RoleSelectorDropdown extends StatelessWidget {
-  final UserRole? selectedRole;
-  final Function(UserRole?) onRoleChanged;
+  final Role? selectedRole;
+  final Function(Role?) onRoleChanged;
 
   const RoleSelectorDropdown({
     Key? key,
@@ -12,10 +12,16 @@ class RoleSelectorDropdown extends StatelessWidget {
   }) : super(key: key);
 
   // Define available roles with their permissions
-  static const List<UserRole> availableRoles = UserRole.values;
+  static const List<String> availableRoleNames = [
+    'Admin',
+    'Manager',
+    'Supervisor',
+    'Staff',
+    'Viewer'
+  ];
 
-  static const Map<UserRole, List<String>> rolePermissions = {
-    UserRole.admin: [
+  static const Map<String, List<String>> rolePermissions = {
+    'Admin': [
       'Create Users',
       'Edit Users',
       'Delete Users',
@@ -24,47 +30,51 @@ class RoleSelectorDropdown extends StatelessWidget {
       'Generate Reports',
       'System Settings',
     ],
-    UserRole.manager: [
+    'Manager': [
       'View Users',
       'View All Data',
       'Manage Inventory',
       'Generate Reports',
       'Approve Orders',
     ],
-    UserRole.supervisor: [
+    'Supervisor': [
       'View Users',
       'View Department Data',
       'Manage Department Inventory',
       'Generate Department Reports',
     ],
-    UserRole.staff: ['View Own Data', 'Create Orders', 'Update Inventory'],
-    UserRole.viewer: ['View Own Data', 'View Reports'],
+    'Staff': ['View Own Data', 'Create Orders', 'Update Inventory'],
+    'Viewer': ['View Own Data', 'View Reports'],
   };
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        DropdownButtonFormField<UserRole>(
+      children: [DropdownButtonFormField<Role>(
           value: selectedRole,
           decoration: InputDecoration(
             labelText: 'Role',
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
-          items: availableRoles.map((role) {
+        items: availableRoleNames.map((roleName) {
+          final role = Role(
+            id: roleName.toLowerCase(),
+            name: roleName,
+            permissions: [],
+          );
             return DropdownMenuItem(
               value: role,
               child: Row(
                 children: [
                   Icon(
-                    _getRoleIcon(role),
+                    _getRoleIcon(roleName),
                     size: 20,
-                    color: _getRoleColor(role),
+                    color: _getRoleColor(roleName),
                   ),
                   SizedBox(width: 8),
-                  Text(_getRoleName(role)),
+                  Text(roleName),
                 ],
               ),
             );
@@ -76,10 +86,10 @@ class RoleSelectorDropdown extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: _getRoleColor(selectedRole!).withOpacity(0.1),
+              color: _getRoleColor(selectedRole.toString()).withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: _getRoleColor(selectedRole!).withOpacity(0.3),
+                color: _getRoleColor(selectedRole.toString()).withOpacity(0.3),
               ),
             ),
             child: Column(
@@ -90,7 +100,7 @@ class RoleSelectorDropdown extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 SizedBox(height: 8),
-                ...rolePermissions[selectedRole]!.map((permission) {
+                ...rolePermissions[selectedRole!.name]!.map((permission) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 4),
                     child: Row(
@@ -98,7 +108,7 @@ class RoleSelectorDropdown extends StatelessWidget {
                         Icon(
                           Icons.check_circle,
                           size: 16,
-                          color: _getRoleColor(selectedRole!),
+                          color: _getRoleColor(selectedRole!.name),
                         ),
                         SizedBox(width: 8),
                         Expanded(
@@ -119,48 +129,37 @@ class RoleSelectorDropdown extends StatelessWidget {
     );
   }
 
-  IconData _getRoleIcon(UserRole role) {
-    switch (role) {
-      case UserRole.admin:
+  IconData _getRoleIcon(String roleName) {
+    switch (roleName) {
+      case 'Admin':
         return Icons.admin_panel_settings;
-      case UserRole.manager:
+      case 'Manager':
         return Icons.manage_accounts;
-      case UserRole.supervisor:
+      case 'Supervisor':
         return Icons.supervisor_account;
-      case UserRole.staff:
+      case 'Staff':
         return Icons.person;
-      case UserRole.viewer:
+      case 'Viewer':
         return Icons.visibility;
+      default:
+        return Icons.person;
     }
   }
 
-  Color _getRoleColor(UserRole role) {
-    switch (role) {
-      case UserRole.admin:
+  Color _getRoleColor(String roleName) {
+    switch (roleName) {
+      case 'Admin':
         return Colors.purple;
-      case UserRole.manager:
+      case 'Manager':
         return Colors.blue;
-      case UserRole.supervisor:
+      case 'Supervisor':
         return Colors.green;
-      case UserRole.staff:
+      case 'Staff':
         return Colors.orange;
-      case UserRole.viewer:
+      case 'Viewer':
         return Colors.grey;
-    }
-  }
-
-  String _getRoleName(UserRole role) {
-    switch (role) {
-      case UserRole.admin:
-        return 'Admin';
-      case UserRole.manager:
-        return 'Manager';
-      case UserRole.supervisor:
-        return 'Supervisor';
-      case UserRole.staff:
-        return 'Staff';
-      case UserRole.viewer:
-        return 'Viewer';
+      default:
+        return Colors.grey;
     }
   }
 }

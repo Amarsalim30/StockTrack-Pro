@@ -1,53 +1,23 @@
-import 'package:clean_arch_app/di/injection.dart';
-import 'package:clean_arch_app/domain/entities/auth/user.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/presentation/stock/mock_stock_data.dart';
-import 'package:clean_arch_app/presentation/stock/stock_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import '../../core/enums/stock_status.dart';
-import '../../data/models/stock/stock_model.dart';
-import '../../data/models/auth/user_model.dart';
+import '../../domain/entities/stock/stock.dart';
 import '../../domain/entities/auth/permission_type.dart';
 import '../../domain/repositories/stock_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
+import 'stock_state.dart';
 
 class StockViewModel extends StateNotifier<StockState> {
   final StockRepository _stockRepository;
   final AuthRepository _authRepository;
-
-  // Getters
-  List<Stock> get stocks => state.filteredStocks;
-
-  Set<String> get selectedStockIds => state.selectedStockIds;
-
-  bool get isLoading => state.isLoading;
-
-  bool get isBulkSelectionMode => state.isBulkSelectionMode;
-
-  String get searchQuery => state.searchQuery;
-
-  StockStatus? get filterStatus => state.filterStatus;
-
-  SortBy get sortBy => state.sortBy;
-
-  SortOrder get sortOrder => state.sortOrder;
-
-  String? get error => state.errorMessage;
-
-  bool get hasSelectedItems => state.selectedStockIds.isNotEmpty;
-
-  int get selectedCount => state.selectedStockIds.length;
-
-  User? get currentUser => state.currentUser;
 
   StockViewModel({
     required StockRepository stockRepository,
     required AuthRepository authRepository,
   }) : _stockRepository = stockRepository,
        _authRepository = authRepository,
-        super(StockState(stocks: mockStocks)) {
-    // _loadCurrentUser();
+       super(const StockState()) {
+    _loadCurrentUser();
     loadStocks();
   }
 
@@ -64,36 +34,164 @@ class StockViewModel extends StateNotifier<StockState> {
 
   bool get canAdjustStock => hasPermission(PermissionType.adjustStock);
 
-  bool get canViewStockReports => hasPermission(PermissionType.viewReports);
-
-  // Load current user
+  bool get canViewStockReports =>
+      hasPermission(PermissionType.viewReports); // Load current user
   Future<void> _loadCurrentUser() async {
     try {
       final result = await _authRepository.getCurrentUser();
       result.fold(
-        (failure) => print('Error loading current user: $failure'),
-        (user) =>
-        state = state.copyWith(currentUser: user),
+        (failure) => state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: 'Failed to load user: $failure',
+        ),
+        (user) => state = state.copyWith(currentUser: user),
       );
     } catch (e) {
-      print('Error loading current user: $e');
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to load user: $e',
+      );
     }
-  }
+  } // Load stocks
 
-  // Load stocks
   Future<void> loadStocks() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
       final result = await _stockRepository.getStocks();
-      final stocks = result.isEmpty ? mockStocks : result;
-
-      state = state.copyWith(stocks: stocks);
-      _applyFiltersAndSort();
-      state = state.copyWith(isLoading: false);
+      result.fold(
+        (failure) {
+          // Use mock data as fallback for development
+          final mockData = _getMockStocks();
+          state = state.copyWith(
+            stocks: mockData,
+            status: StockStateStatus.success,
+            errorMessage: 'Using mock data: ${failure.message}',
+          );
+          _applyFiltersAndSort();
+        },
+        (stocks) {
+          final stocksToUse = stocks.isEmpty ? _getMockStocks() : stocks;
+          state = state.copyWith(
+            stocks: stocksToUse,
+            status: StockStateStatus.success,
+          );
+          _applyFiltersAndSort();
+        },
+      );
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      // Use mock data as fallback for development
+      final mockData = _getMockStocks();
+      state = state.copyWith(
+        stocks: mockData,
+        status: StockStateStatus.success,
+        errorMessage: 'Using mock data: $e',
+      );
+      _applyFiltersAndSort();
     }
+  }
+
+  List<Stock> _getMockStocks() {
+    return [
+      Stock(
+        id: 'stk-001',
+        name: 'Surgical Gloves - Medium',
+        sku: 'GLV-MD-001',
+        quantity: 120,
+        description: 'Powder-free latex surgical gloves (Medium)',
+        status: StockStatus.available,
+        price: 5.00,
+        costPrice: 3.00,
+        categoryId: 'cat-medical',
+        supplierId: 'sup-001',
+        minimumStock: 50,
+        maximumStock: 200,
+        unit: 'Box',
+        location: 'Aisle 1 - Shelf 3',
+        createdAt: DateTime.now().subtract(const Duration(days: 20)),
+        updatedAt: DateTime.now(),
+        durabilityType: StockDurabilityType.durable,
+      ),
+      Stock(
+        id: 'stk-002',
+        name: 'Vitamin C Tablets 1000mg',
+        sku: 'VITC-1000',
+        quantity: 30,
+        description: '1000mg Vitamin C, 60 tablets per bottle',
+        status: StockStatus.available,
+        price: 12.00,
+        costPrice: 7.50,
+        categoryId: 'cat-supplements',
+        supplierId: 'sup-002',
+        minimumStock: 40,
+        maximumStock: 100,
+        unit: 'Bottle',
+        location: 'Aisle 3 - Shelf 1',
+        createdAt: DateTime.now().subtract(const Duration(days: 12)),
+        updatedAt: DateTime.now(),
+        durabilityType: StockDurabilityType.nonPerishable,
+      ),
+      Stock(
+        id: 'stk-003',
+        name: 'Infrared Thermometer',
+        sku: 'THRM-INFRA-01',
+        quantity: 0,
+        description: 'Non-contact infrared thermometer for clinical use',
+        status: StockStatus.outOfStock,
+        price: 45.00,
+        costPrice: 30.00,
+        categoryId: 'cat-devices',
+        supplierId: 'sup-003',
+        minimumStock: 10,
+        maximumStock: 50,
+        unit: 'Piece',
+        location: 'Aisle 2 - Shelf 2',
+        createdAt: DateTime.now().subtract(const Duration(days: 45)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+        durabilityType: StockDurabilityType.nonPerishable,
+      ),
+      Stock(
+        id: 'stk-004',
+        name: 'Disposable Syringes 5ml',
+        sku: 'SYR-5ML',
+        quantity: 200,
+        description: 'Sterile single-use syringes 5ml with needle',
+        status: StockStatus.available,
+        price: 0.50,
+        costPrice: 0.20,
+        categoryId: 'cat-medical',
+        supplierId: 'sup-004',
+        minimumStock: 100,
+        maximumStock: 500,
+        unit: 'Piece',
+        location: 'Aisle 4 - Shelf 5',
+        createdAt: DateTime.now().subtract(const Duration(days: 30)),
+        updatedAt: DateTime.now(),
+        durabilityType: StockDurabilityType.nonPerishable,
+      ),
+      Stock(
+        id: 'stk-005',
+        name: 'N95 Face Masks',
+        sku: 'N95-MASK-001',
+        quantity: 15,
+        description: 'N95 respiratory face masks, pack of 20',
+        status: StockStatus.lowStock,
+        price: 25.00,
+        costPrice: 18.00,
+        categoryId: 'cat-ppe',
+        supplierId: 'sup-005',
+        minimumStock: 20,
+        maximumStock: 100,
+        unit: 'Pack',
+        location: 'Aisle 1 - Shelf 1',
+        createdAt: DateTime.now().subtract(const Duration(days: 15)),
+        updatedAt: DateTime.now().subtract(const Duration(hours: 6)),
+        durabilityType: StockDurabilityType.consumable,
+      ),
+    ];
   }
 
   // Search functionality
@@ -233,92 +331,158 @@ class StockViewModel extends StateNotifier<StockState> {
   void clearSelection() {
     state = state.copyWith(selectedStockIds: {});
   } // CRUD Operations
+
   Future<void> createStock(Stock stock) async {
     if (!canCreateStock) {
       state = state.copyWith(
+        status: StockStateStatus.error,
         errorMessage: 'You do not have permission to create stock items',
       );
       return;
     }
-    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
-      await _stockRepository.createStock(_stockToStockModel(stock));
-      await loadStocks();
+      final result = await _stockRepository.createStock(stock);
+      result.fold(
+        (failure) => state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: failure.message,
+        ),
+        (_) => loadStocks(),
+      );
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to create stock: $e',
+      );
     }
   }
 
   Future<void> updateStock(Stock stock) async {
     if (!canEditStock) {
       state = state.copyWith(
+        status: StockStateStatus.error,
         errorMessage: 'You do not have permission to edit stock items',
       );
       return;
     }
-    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
-      await _stockRepository.updateStock(_stockToStockModel(stock));
-      await loadStocks();
+      final result = await _stockRepository.updateStock(stock);
+      result.fold(
+        (failure) => state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: failure.message,
+        ),
+        (_) => loadStocks(),
+      );
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to update stock: $e',
+      );
     }
   }
 
   Future<void> deleteStock(String stockId) async {
     if (!canDeleteStock) {
       state = state.copyWith(
+        status: StockStateStatus.error,
         errorMessage: 'You do not have permission to delete stock items',
       );
       return;
     }
-    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
-      await _stockRepository.deleteStock(stockId);
-      final updatedStocks = state.stocks
-          .where((stock) => stock.id != stockId)
-          .toList();
-      final updatedSelectedIds = Set<String>.from(state.selectedStockIds)
-        ..remove(stockId);
-      state = state.copyWith(
-        stocks: updatedStocks,
-        selectedStockIds: updatedSelectedIds,
+      final result = await _stockRepository.deleteStock(stockId);
+      result.fold(
+        (failure) => state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: failure.message,
+        ),
+        (_) {
+          final updatedStocks = state.stocks
+              .where((stock) => stock.id != stockId)
+              .toList();
+          final updatedSelectedIds = Set<String>.from(state.selectedStockIds)
+            ..remove(stockId);
+          state = state.copyWith(
+            stocks: updatedStocks,
+            selectedStockIds: updatedSelectedIds,
+            status: StockStateStatus.success,
+          );
+          _applyFiltersAndSort();
+        },
       );
-      _applyFiltersAndSort();
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to delete stock: $e',
+      );
     }
   }
 
   Future<void> bulkDelete() async {
     if (!canDeleteStock) {
       state = state.copyWith(
+        status: StockStateStatus.error,
         errorMessage: 'You do not have permission to delete stock items',
       );
       return;
     }
 
     if (state.selectedStockIds.isEmpty) return;
-    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
-      await Future.wait(
+      final results = await Future.wait(
         state.selectedStockIds.map((id) => _stockRepository.deleteStock(id)),
       );
-      final updatedStocks = state.stocks
-          .where((stock) => !state.selectedStockIds.contains(stock.id))
-          .toList();
-      state = state.copyWith(
-        stocks: updatedStocks,
-        selectedStockIds: {},
-        isBulkSelectionMode: false,
-      );
-      _applyFiltersAndSort();
+
+      // Check if any operations failed
+      final failures = results.where((result) => result.isLeft()).toList();
+
+      if (failures.isNotEmpty) {
+        state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: 'Some items could not be deleted',
+        );
+      } else {
+        final updatedStocks = state.stocks
+            .where((stock) => !state.selectedStockIds.contains(stock.id))
+            .toList();
+        state = state.copyWith(
+          stocks: updatedStocks,
+          selectedStockIds: {},
+          isBulkSelectionMode: false,
+          status: StockStateStatus.success,
+        );
+        _applyFiltersAndSort();
+      }
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to delete stocks: $e',
+      );
     }
   }
 
@@ -329,48 +493,86 @@ class StockViewModel extends StateNotifier<StockState> {
   ) async {
     if (!canAdjustStock) {
       state = state.copyWith(
+        status: StockStateStatus.error,
         errorMessage: 'You do not have permission to adjust stock quantities',
       );
       return;
     }
-    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
-      await _stockRepository.adjustStock(stockId, adjustment, reason);
-      await loadStocks();
-    } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      final result = await _stockRepository.adjustStock(
+        stockId,
+        adjustment,
+        reason,
+      );
+      result.fold(
+        (failure) => state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: failure.message,
+        ),
+        (_) => loadStocks(),
+      )} catch (e) {
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to adjust stock: $e',
+      );
     }
   }
 
   Future<void> bulkUpdateStatus(StockStatus status) async {
     if (!canEditStock) {
       state = state.copyWith(
+        status: StockStateStatus.error,
         errorMessage: 'You do not have permission to edit stock items',
       );
       return;
     }
 
     if (state.selectedStockIds.isEmpty) return;
-    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    state = state.copyWith(
+      status: StockStateStatus.loading,
+      errorMessage: null,
+    );
 
     try {
       final selectedStocks = state.stocks
           .where((stock) => state.selectedStockIds.contains(stock.id))
           .toList();
 
-      await Future.wait(
+      final results = await Future.wait(
         selectedStocks.map(
           (stock) => _stockRepository.updateStock(
-            _stockToStockModel(stock).copyWith(status: status),
+            stock.copyWith(status: status),
           ),
         ),
       );
 
-      await loadStocks();
-      state = state.copyWith(selectedStockIds: {}, isBulkSelectionMode: false);
+      // Check if any operations failed
+      final failures = results.where((result) => result.isLeft()).toList();
+
+      if (failures.isNotEmpty) {
+        state = state.copyWith(
+          status: StockStateStatus.error,
+          errorMessage: 'Some items could not be updated',
+        );
+      } else {
+        await loadStocks();
+        state = state.copyWith(
+          selectedStockIds: {},
+          isBulkSelectionMode: false,
+        );
+      }
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        status: StockStateStatus.error,
+        errorMessage: 'Failed to update stocks: $e',
+      );
     }
   } // Get stock by ID
   Stock? getStockById(String id) {
@@ -380,57 +582,12 @@ class StockViewModel extends StateNotifier<StockState> {
   // Refresh
   Future<void> refresh() async {
     await loadStocks();
-  }
-
-  // Clear errorvoid clearError() {
-  state
-
-  =
-
-  state.copyWith
-
-  (
-
-  errorMessage
-
-      :
-
-  null
-
-  );
-} // Helper method to convert Stock entity to StockModel
-
-StockModel _stockToStockModel(Stock stock) {
-  return StockModel(
-    id: stock.id,
-    name: stock.name,
-    sku: stock.sku,
-    quantity: stock.quantity,
-    status: stock.status,
-    durabilityType: stock.durabilityType,
-    description: stock.description,
-    categoryId: stock.categoryId,
-    supplierId: stock.supplierId,
-    unit: stock.unit,
-    location: stock.location,
-    minimumStock: stock.minimumStock,
-    maximumStock: stock.maximumStock,
-    averageDailyUsage: stock.averageDailyUsage,
-    leadTimeDays: stock.leadTimeDays,
-    safetyStock: stock.safetyStock,
-    reorderPoint: stock.reorderPoint,
-    preferredReorderQuantity: stock.preferredReorderQuantity,
-    price: stock.price,
-    costPrice: stock.costPrice,
-    createdAt: stock.createdAt,
-    updatedAt: stock.updatedAt,
-    expiryDate: stock.expiryDate,
-    lastSoldDate: stock.lastSoldDate,
-    deadstockThreshold: stock.deadstockThreshold,
-    warehouseStock: stock.warehouseStock,
-    movementHistory: stock.movementHistory,
-    tags: stock.tags,
-  );
+  } // Clear error
+  void clearError() {
+    state = state.copyWith(
+      errorMessage: null,
+      status: StockStateStatus.success,
+    );
   }
 
   @override
@@ -439,12 +596,4 @@ StockModel _stockToStockModel(Stock stock) {
   }
 }
 
-final stockViewModelProvider =
-StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
-  final stockRepo = ref.watch(stockRepositoryProvider);
-  final authRepo = ref.watch(authRepositoryProvider);
-  return StockViewModel(
-    stockRepository: stockRepo,
-    authRepository: authRepo,
-  );
-});
+

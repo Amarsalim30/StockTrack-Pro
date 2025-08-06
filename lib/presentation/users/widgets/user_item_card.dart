@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/user.dart';
+import '../../../domain/entities/auth/user.dart';
 import '../user_view_model.dart';
 import 'user_form_dialog.dart';
 
@@ -14,16 +14,15 @@ class UserItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: _getRoleColor(user.role as String),
+      child: ListTile(leading: CircleAvatar(
+        backgroundColor: _getRoleColor(
+            user.roles.isNotEmpty ? user.roles.first.name : 'Viewer'),
           child: Text(
-            user.name.substring(0, 1).toUpperCase(),
+            user.username.substring(0, 1).toUpperCase(),
             style: TextStyle(color: Colors.white),
           ),
-        ),
-        title: Text(
-          user.name,
+      ), title: Text(
+        user.username,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             decoration: user.isActive ? null : TextDecoration.lineThrough,
@@ -35,11 +34,12 @@ class UserItemCard extends StatelessWidget {
             Text(user.email),
             SizedBox(height: 4),
             Row(
-              children: [
-                Chip(
+              children: [Chip(
                   label: Text(
-                      user.role as String, style: TextStyle(fontSize: 12)),
-                  backgroundColor: _getRoleColor(user.role as String)
+                      user.roles.isNotEmpty ? user.roles.first.name : 'No Role',
+                      style: TextStyle(fontSize: 12)),
+                backgroundColor: _getRoleColor(
+                    user.roles.isNotEmpty ? user.roles.first.name : 'Viewer')
                       .withOpacity(0.2),
                 ),
                 SizedBox(width: 8),
@@ -141,7 +141,7 @@ class UserItemCard extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Delete User'),
-        content: Text('Are you sure you want to delete ${user.name}?'),
+        content: Text('Are you sure you want to delete ${user.username}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

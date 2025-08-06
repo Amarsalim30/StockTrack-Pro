@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/stock/stock_take.dart';
-import '../stocktake_view_model.dart';
 
 class SessionProgressCard extends ConsumerWidget {
   final StockTake session;

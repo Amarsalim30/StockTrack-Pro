@@ -10,14 +10,11 @@ class StockTakeItem extends Equatable {
   final String productCode;
   final int systemQuantity;
   final int? countedQuantity;
-  final int? discrepancy;
   final CountMethod? countMethod;
   final String? countedBy;
   final DateTime? countedAt;
   final String? notes;
   final List<String>? photoUrls;
-  final bool isCounted;
-  final bool hasDiscrepancy;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -29,17 +26,23 @@ class StockTakeItem extends Equatable {
     required this.productCode,
     required this.systemQuantity,
     this.countedQuantity,
-    this.discrepancy,
     this.countMethod,
     this.countedBy,
     this.countedAt,
     this.notes,
     this.photoUrls,
-    required this.isCounted,
-    required this.hasDiscrepancy,
     required this.createdAt,
     required this.updatedAt,
   });
+
+  // Computed properties
+  bool get isCounted => countedQuantity != null;
+
+  bool get hasDiscrepancy =>
+      countedQuantity != null && (countedQuantity! - systemQuantity) != 0;
+
+  int get discrepancy =>
+      countedQuantity != null ? (countedQuantity! - systemQuantity) : 0;
 
   StockTakeItem copyWith({
     String? id,
@@ -49,14 +52,11 @@ class StockTakeItem extends Equatable {
     String? productCode,
     int? systemQuantity,
     int? countedQuantity,
-    int? discrepancy,
     CountMethod? countMethod,
     String? countedBy,
     DateTime? countedAt,
     String? notes,
     List<String>? photoUrls,
-    bool? isCounted,
-    bool? hasDiscrepancy,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -68,14 +68,11 @@ class StockTakeItem extends Equatable {
       productCode: productCode ?? this.productCode,
       systemQuantity: systemQuantity ?? this.systemQuantity,
       countedQuantity: countedQuantity ?? this.countedQuantity,
-      discrepancy: discrepancy ?? this.discrepancy,
       countMethod: countMethod ?? this.countMethod,
       countedBy: countedBy ?? this.countedBy,
       countedAt: countedAt ?? this.countedAt,
       notes: notes ?? this.notes,
       photoUrls: photoUrls ?? this.photoUrls,
-      isCounted: isCounted ?? this.isCounted,
-      hasDiscrepancy: hasDiscrepancy ?? this.hasDiscrepancy,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -90,14 +87,11 @@ class StockTakeItem extends Equatable {
     productCode,
     systemQuantity,
     countedQuantity,
-    discrepancy,
     countMethod,
     countedBy,
     countedAt,
     notes,
     photoUrls,
-    isCounted,
-    hasDiscrepancy,
     createdAt,
     updatedAt,
   ];

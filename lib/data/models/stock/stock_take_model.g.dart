@@ -28,8 +28,6 @@ StockTakeModel _$StockTakeModelFromJson(Map<String, dynamic> json) =>
       countedItems: (json['countedItems'] as num).toInt(),
       discrepancies: (json['discrepancies'] as num).toInt(),
       metadata: json['metadata'] as Map<String, dynamic>?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$StockTakeModelToJson(StockTakeModel instance) =>
@@ -48,8 +46,6 @@ Map<String, dynamic> _$StockTakeModelToJson(StockTakeModel instance) =>
       'countedItems': instance.countedItems,
       'discrepancies': instance.discrepancies,
       'metadata': instance.metadata,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$StockTakeStatusEnumMap = {

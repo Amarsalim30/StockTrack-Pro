@@ -35,5 +35,7 @@ class User extends Equatable {
 
   Role get role => roles.first;
 
-  hasPermission(PermissionType permission) {}
+  bool hasPermission(PermissionType permission) {
+    return roles.any((role) => role.permissions.contains(permission));
+  }
 }
