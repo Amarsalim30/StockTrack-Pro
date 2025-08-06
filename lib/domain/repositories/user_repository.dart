@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
-import '../entities/user.dart';
+import '../entities/auth/user.dart';
 
 abstract class UserRepository {
   Future<Either<Failure, List<User>>> getAllUsers();

@@ -17,7 +17,7 @@ class StockBatch extends Equatable {
   });
 
   StockBatch copyWith(
-      {String? batchId, String? stockId, int? quantity, DateTime? manufactureDate, DateTime?? expiryDate}) {
+      {String? batchId, String? stockId, int? quantity, DateTime? manufactureDate, DateTime? expiryDate}) {
     return StockBatch(
       batchId: batchId ?? this.batchId,
       stockId: stockId ?? this.stockId,

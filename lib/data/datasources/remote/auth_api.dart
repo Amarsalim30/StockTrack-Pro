@@ -1,5 +1,6 @@
+import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/api_client.dart';
-import '../../models/user/user_model.dart';
+import '../../models/auth/user_model.dart';
 
 abstract class AuthApi {
   Future<Map<String, dynamic>> login(String email, String password);

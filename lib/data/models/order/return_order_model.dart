@@ -55,7 +55,7 @@ class ReturnOrderModel extends Equatable {
     originalOrderId: ent.originalOrderId,
     requestedByUserId: ent.requestedByUserId,
     requestedAt: ent.requestedAt,
-    type: ReturnTypeModel.fromDomain(ent.type),
+    type: ReturnTypeModelExt.fromDomain(ent.type),
     approvedByUserId: ent.approvedByUserId,
     processedAt: ent.processedAt,
     status: ent.status,

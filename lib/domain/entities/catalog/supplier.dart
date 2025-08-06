@@ -4,13 +4,34 @@ import 'package:equatable/equatable.dart';
 class Supplier extends Equatable {
   final String id;
   final String name;
+  final Map<String, String>? contactInfo;
+  final double? rating;
+  final String? paymentTerms;
 
-  const Supplier({required this.id, required this.name});
+  const Supplier({
+    required this.id,
+    required this.name,
+    this.contactInfo,
+    this.rating,
+    this.paymentTerms,
+  });
 
-  Supplier copyWith({String? id, String? name}) {
-    return Supplier(id: id ?? this.id, name: name ?? this.name);
+  Supplier copyWith({
+    String? id,
+    String? name,
+    Map<String, String>? contactInfo,
+    double? rating,
+    String? paymentTerms,
+  }) {
+    return Supplier(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      contactInfo: contactInfo ?? this.contactInfo,
+      rating: rating ?? this.rating,
+      paymentTerms: paymentTerms ?? this.paymentTerms,
+    );
   }
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [id, name, contactInfo, rating, paymentTerms];
 }

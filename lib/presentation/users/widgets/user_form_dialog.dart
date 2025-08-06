@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/user.dart';
+import '../../../domain/entities/auth/user.dart';
+import '../../../domain/entities/auth/role.dart';
 import '../user_view_model.dart';
 import 'role_selector_dropdown.dart';
 
@@ -13,17 +14,19 @@ class UserFormDialog extends StatefulWidget {
 }
 
 class _UserFormDialogState extends State<UserFormDialog> {
-  late final TextEditingController _nameController;
+  late final TextEditingController _usernameController;
   late final TextEditingController _emailController;
-  UserRole? _selectedRole;
+  Role? _selectedRole;
   bool _isActive = true;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.user?.name ?? '');
+    _usernameController =
+        TextEditingController(text: widget.user?.username ?? '');
     _emailController = TextEditingController(text: widget.user?.email ?? '');
-    _selectedRole = widget.user?.role;
+    _selectedRole =
+    widget.user!.roles.isNotEmpty ? widget.user?.roles.first : null;
     _isActive = widget.user?.isActive ?? true;
   }
 
@@ -34,10 +37,9 @@ class _UserFormDialogState extends State<UserFormDialog> {
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+          children: [TextField(
+            controller: _usernameController,
+            decoration: InputDecoration(labelText: 'Username'),
             ),
             TextField(
               controller: _emailController,
@@ -72,20 +74,17 @@ class _UserFormDialogState extends State<UserFormDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text('Cancel'),
-        ),
-        TextButton(
+        ), TextButton(
           onPressed: () {
-            if (_nameController.text.isNotEmpty &&
+            if (_usernameController.text.isNotEmpty &&
                 _emailController.text.isNotEmpty &&
                 _selectedRole != null) {
               final user = User(
                 id: widget.user?.id ?? UniqueKey().toString(),
-                name: _nameController.text,
+                username: _usernameController.text,
                 email: _emailController.text,
-                role: _selectedRole!,
+                roles: [_selectedRole!],
                 isActive: _isActive,
-                createdAt: widget.user?.createdAt ?? DateTime.now(),
-                updatedAt: DateTime.now(),
               );
               Navigator.pop(context, user);
             }

@@ -4,6 +4,7 @@ import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/stock/stock_take.dart';
+import '../../domain/entities/stock/stock_take_item.dart';
 import '../../domain/repositories/stock_take_repository.dart';
 import '../datasources/remote/stock_take_api.dart';
 
@@ -20,7 +21,10 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   Future<Either<Failure, List<StockTake>>> getAllStockTakes() async {
     if (await networkInfo.isConnected) {
       try {
-        final stockTakes = await stockTakeApi.getAllStockTakes();
+        final stockTakeModels = await stockTakeApi.getAllStockTakes();
+        final stockTakes = stockTakeModels
+            .map((model) => model.toEntity())
+            .toList();
         return Right(stockTakes);
       } on ServerException catch (e) {
         return Left(
@@ -38,8 +42,8 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   Future<Either<Failure, StockTake>> getStockTakeById(String id) async {
     if (await networkInfo.isConnected) {
       try {
-        final stockTake = await stockTakeApi.getStockTakeById(id);
-        return Right(stockTake);
+        final stockTakeModel = await stockTakeApi.getStockTakeById(id);
+        return Right(stockTakeModel.toEntity());
       } on ServerException catch (e) {
         return Left(
           ServerFailure(message: e.message ?? 'Failed to get stock take'),
@@ -71,9 +75,8 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
           'status': 'active',
           'startDate': DateTime.now().toIso8601String(),
         };
-
-        final stockTake = await stockTakeApi.createStockTake(data);
-        return Right(stockTake);
+        final stockTakeModel = await stockTakeApi.createStockTake(data);
+        return Right(stockTakeModel.toEntity());
       } on ServerException catch (e) {
         return Left(
           ServerFailure(message: e.message ?? 'Failed to create stock take'),
@@ -99,9 +102,9 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
               ? DateTime.now().toIso8601String()
               : null,
         };
-
-        final stockTake = await stockTakeApi.updateStockTakeStatus(id, data);
-        return Right(stockTake);
+        final stockTakeModel = await stockTakeApi.updateStockTakeStatus(
+            id, data);
+        return Right(stockTakeModel.toEntity());
       } on ServerException catch (e) {
         return Left(
           ServerFailure(
@@ -140,7 +143,8 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   ) async {
     if (await networkInfo.isConnected) {
       try {
-        final items = await stockTakeApi.getStockTakeItems(stockTakeId);
+        final itemModels = await stockTakeApi.getStockTakeItems(stockTakeId);
+        final items = itemModels.map((model) => model.toEntity()).toList();
         return Right(items);
       } on ServerException catch (e) {
         return Left(
@@ -171,9 +175,8 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
           'notes': notes,
           'photoUrls': photoUrls,
         };
-
-        final item = await stockTakeApi.updateItemCount(itemId, data);
-        return Right(item);
+        final itemModel = await stockTakeApi.updateItemCount(itemId, data);
+        return Right(itemModel.toEntity());
       } on ServerException catch (e) {
         return Left(
           ServerFailure(message: e.message ?? 'Failed to update item count'),
@@ -193,8 +196,9 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   }) async {
     if (await networkInfo.isConnected) {
       try {
-        final item = await stockTakeApi.getItemByBarcode(stockTakeId, barcode);
-        return Right(item);
+        final itemModel = await stockTakeApi.getItemByBarcode(
+            stockTakeId, barcode);
+        return Right(itemModel.toEntity());
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message ?? 'Product not found'));
       } catch (e) {
@@ -231,7 +235,10 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   Future<Either<Failure, List<StockTake>>> getActiveStockTakes() async {
     if (await networkInfo.isConnected) {
       try {
-        final stockTakes = await stockTakeApi.getActiveStockTakes();
+        final stockTakeModels = await stockTakeApi.getActiveStockTakes();
+        final stockTakes = stockTakeModels
+            .map((model) => model.toEntity())
+            .toList();
         return Right(stockTakes);
       } on ServerException catch (e) {
         return Left(
@@ -253,7 +260,10 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   ) async {
     if (await networkInfo.isConnected) {
       try {
-        final stockTakes = await stockTakeApi.getStockTakesByUser(userId);
+        final stockTakeModels = await stockTakeApi.getStockTakesByUser(userId);
+        final stockTakes = stockTakeModels
+            .map((model) => model.toEntity())
+            .toList();
         return Right(stockTakes);
       } on ServerException catch (e) {
         return Left(

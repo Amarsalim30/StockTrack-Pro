@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/models/catalog/supplier_model.dart';
+import '../../domain/entities/catalog/supplier.dart';
 import 'supplier_view_model.dart';
 
 class SupplierPage extends ConsumerWidget {
@@ -36,8 +36,8 @@ class SupplierPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final supplier = suppliers[index];
                 return ListTile(
-            title: Text(supplier.name),
-                  subtitle: Text(supplier.contactPerson ?? '—'),
+                  title: Text(supplier.name),
+                  subtitle: Text(supplier.contactInfo?['contactPerson'] ?? '—'),
                   trailing: _buildActions(context, viewModel, supplier),
                 );
         },
@@ -62,9 +62,11 @@ class SupplierPage extends ConsumerWidget {
     // TODO: Implement sort UI and call viewModel.sortBy()
   }
 
-  Widget _buildActions(BuildContext context,
-      SupplierViewModel viewModel,
-      SupplierModel supplier,) {
+  Widget _buildActions(
+    BuildContext context,
+    SupplierViewModel viewModel,
+    Supplier supplier,
+  ) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -84,15 +86,18 @@ class SupplierPage extends ConsumerWidget {
     // TODO: Implement add form or dialog
   }
 
-  void _editSupplier(BuildContext context,
-      SupplierViewModel viewModel,
-      SupplierModel supplier,) {
+  void _editSupplier(
+    BuildContext context,
+    SupplierViewModel viewModel,
+    Supplier supplier,
+  ) {
     // TODO: Implement edit logic
   }
 
   void _deleteSupplier(BuildContext context,
       SupplierViewModel viewModel,
-      SupplierModel supplier,) {
+    Supplier supplier,
+  ) {
     viewModel.deleteSupplier(supplier.id);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Supplier deleted')),

@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../data/models/catalog/product_model.dart';
-import '../../data/models/catalog/supplier_model.dart';
-import '../../data/models/general/location_model.dart';
+
+import '../../domain/entities/catalog/product.dart';
+import '../../domain/entities/catalog/supplier.dart';
+import '../../domain/entities/general/location.dart';
 
 class AddProductState {
   final String name;
@@ -15,15 +16,16 @@ class AddProductState {
   final String reorderLevel;
   final String reorderQuantity;
   final String category;
-  final SupplierModel? selectedSupplier;
-  final LocationModel? selectedLocation;
+  final Supplier? selectedSupplier;
+  final Location? selectedLocation;
   final List<File> productImages;
   final bool isLoading;
   final bool isSaving;
   final String? error;
   final Map<String, String> fieldErrors;
-  final List<SupplierModel> suppliers;
-  final List<LocationModel> locations;
+
+  final List<Supplier> suppliers;
+  final List<Location> locations;
 
   AddProductState({
     this.name = '',
@@ -54,15 +56,15 @@ class AddProductState {
     String? reorderLevel,
     String? reorderQuantity,
     String? category,
-    SupplierModel? selectedSupplier,
-    LocationModel? selectedLocation,
+    Supplier? selectedSupplier,
+    Location? selectedLocation,
     List<File>? productImages,
     bool? isLoading,
     bool? isSaving,
     String? error,
     Map<String, String>? fieldErrors,
-    List<SupplierModel>? suppliers,
-    List<LocationModel>? locations,
+    List<Supplier>? suppliers,
+    List<Location>? locations,
   }) {
     return AddProductState(
       name: name ?? this.name,
@@ -89,62 +91,59 @@ class AddProductState {
 class AddProductViewModel extends StateNotifier<AddProductState> {
   AddProductViewModel() : super(AddProductState());
 
-  final ImagePicker _imagePicker = ImagePicker();
-
-  // Initialize with mock data
+  final ImagePicker _imagePicker = ImagePicker(); // Initialize with mock data
   Future<void> init() async {
     state = state.copyWith(isLoading: true);
     try {
       // Mock suppliers data
       final mockSuppliers = [
-        const SupplierModel(
+        const Supplier(
           id: '1',
           name: 'Tech Supplies Inc.',
-          contactPerson: 'John Doe',
-          email: 'john@techsupplies.com',
-          phoneNumber: '+1234567890',
+          contactInfo: {
+            'email': 'john@techsupplies.com',
+            'phoneNumber': '+1234567890',
+          },
+          rating: 4.5,
+          paymentTerms: 'Net 30',
         ),
-        const SupplierModel(
+        const Supplier(
           id: '2',
-          name: 'Global Distributors',
-          contactPerson: 'Jane Smith',
-          email: 'jane@globaldist.com',
-          phoneNumber: '+0987654321',
+          name: 'Global Supplies Inc.',
+          contactInfo: {
+            'email': 'john@techsupplies.com',
+            'phoneNumber': '+1234567890',
+          },
+          rating: 4.5,
+          paymentTerms: 'Net 30',
         ),
-        const SupplierModel(
+        const Supplier(
           id: '3',
-          name: 'Premium Wholesale',
-          contactPerson: 'Bob Johnson',
-          email: 'bob@premiumwholesale.com',
-          phoneNumber: '+1122334455',
+          name: 'Tech Retails Inc.',
+          contactInfo: {
+            'email': 'john@techsupplies.com',
+            'phoneNumber': '+1234567890',
+          },
+          rating: 4.5,
+          paymentTerms: 'Net 30',
         ),
       ];
 
       // Mock locations data
       final mockLocations = [
-        const LocationModel(
+        const Location(
           id: '1',
           name: 'Main Warehouse',
-          type: 'Warehouse',
-          address: '123 Storage St',
-          city: 'New York',
-          state: 'NY',
+          description: 'Central storage facility',
+          latitude: 12.3456,
+          longitude: 11.7890,
         ),
-        const LocationModel(
+        const Location(
           id: '2',
           name: 'Store Front',
-          type: 'Retail',
-          address: '456 Main St',
-          city: 'New York',
-          state: 'NY',
-        ),
-        const LocationModel(
-          id: '3',
-          name: 'Distribution Center',
-          type: 'Distribution',
-          address: '789 Logistics Ave',
-          city: 'Los Angeles',
-          state: 'CA',
+          description: 'Central storage facility',
+          latitude: 12.3456,
+          longitude: 11.7890,
         ),
       ];
 
@@ -201,11 +200,11 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
     _clearFieldError('category');
   }
 
-  void setSupplier(SupplierModel? supplier) {
+  void setSupplier(Supplier? supplier) {
     state = state.copyWith(selectedSupplier: supplier);
   }
 
-  void setLocation(LocationModel? location) {
+  void setLocation(Location? location) {
     state = state.copyWith(selectedLocation: location);
   }
 
@@ -329,29 +328,23 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
     if (!_validateForm()) {
       return false;
     }
-
     state = state.copyWith(isSaving: true, error: null);
 
     try {
-      // Create product model
-      final product = ProductModel(
+      // Create product entity
+      final product = Product(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: state.name.trim(),
-        code: state.code.trim(),
+        sku: state.code.trim(),
         description: state.description.trim().isEmpty
             ? null
             : state.description.trim(),
         price: double.parse(state.price),
-        quantity: int.parse(state.quantity),
-        reorderLevel: int.parse(state.reorderLevel),
-        reorderQuantity: int.parse(state.reorderQuantity),
-        category: state.category.trim(),
-        supplierId: state.selectedSupplier?.id,
-        supplierName: state.selectedSupplier?.name,
-        locationId: state.selectedLocation?.id,
-        locationName: state.selectedLocation?.name,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        costPrice: null,
+        // Add cost price if needed
+        categoryId: state.category.trim(),
+        supplierId: state.selectedSupplier?.id ?? '',
+        tags: [],
       );
 
       // TODO: Implement actual API call to save product
@@ -364,7 +357,7 @@ class AddProductViewModel extends StateNotifier<AddProductState> {
         await Future.delayed(const Duration(seconds: 1));
       }
 
-      debugPrint('Product saved: ${product.toJson()}');
+      debugPrint('Product saved: ${product.toString()}');
 
       state = state.copyWith(isSaving: false);
       return true;

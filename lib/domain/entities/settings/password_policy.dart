@@ -17,7 +17,7 @@ class PasswordPolicy extends Equatable {
   });
 
   PasswordPolicy copyWith(
-      {int? minLength, bool? requireUppercase, bool? requireNumbers, bool? requireSpecialChars, Duration?? expiryDuration}) {
+      {int? minLength, bool? requireUppercase, bool? requireNumbers, bool? requireSpecialChars, Duration? expiryDuration}) {
     return PasswordPolicy(
       minLength: minLength ?? this.minLength,
       requireUppercase: requireUppercase ?? this.requireUppercase,

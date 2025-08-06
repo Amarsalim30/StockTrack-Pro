@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import '../../core/error/failures.dart';
 import '../../core/usecases/usecase.dart';
-import '../entities/activity.dart';
+import '../entities/activity/activity.dart';
 import '../repositories/activity_repository.dart';
 
 class GetActivities implements UseCase<List<Activity>, GetActivitiesParams> {

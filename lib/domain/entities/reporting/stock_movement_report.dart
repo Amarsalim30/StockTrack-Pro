@@ -21,7 +21,7 @@ class StockMovementReport extends Equatable {
   });
 
   StockMovementReport copyWith(
-      {String? movementId, String? stockId, String? type, int? quantity, String? performedBy, DateTime? timestamp, String?? reason}) {
+      {String? movementId, String? stockId, String? type, int? quantity, String? performedBy, DateTime? timestamp, String? reason}) {
     return StockMovementReport(
       movementId: movementId ?? this.movementId,
       stockId: stockId ?? this.stockId,

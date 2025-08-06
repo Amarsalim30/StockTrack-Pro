@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../error/exceptions.dart';
 import '../../data/datasources/local/cache_service.dart';
@@ -58,14 +57,12 @@ class ApiClient {
           }
           handler.next(error);
         },
-      ),
-      // Logging interceptor
+      ), // Logging interceptor
       LogInterceptor(
         request: true,
         requestBody: true,
         responseBody: true,
         error: true,
-        logPrint: (log) => print('API: $log'),
       ),
     ]);
   }

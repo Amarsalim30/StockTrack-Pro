@@ -1,12 +1,14 @@
+import 'package:clean_arch_app/di/injection.dart';
+import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/domain/entities/stock/stock_take.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/models/stock/stock_model.dart';
 import '../stock_view_model.dart';
+import '../../../data/models/stock/stock_model.dart';
 
 class StockAdjustmentDialog extends StatefulWidget {
-  final StockModel stock;
+  final Stock stock;
   final bool isEditMode;
 
   const StockAdjustmentDialog({
@@ -55,44 +57,56 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<StockViewModel>(context);
+    return Consumer(
+      builder: (context, WidgetRef ref, child) {
+        final viewModel = ref.watch(stockViewModelProvider.notifier);
 
-    if (!viewModel.canAdjustStock && !widget.isEditMode) {
-      return AlertDialog(
-        title: Text('Permission Denied'),
-        content: Text('You do not have permission to adjust stock quantities.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      );
-    }
+        if (!viewModel.canAdjustStock && !widget.isEditMode) {
+          return AlertDialog(
+            title: Text('Permission Denied'),
+            content: Text(
+                'You do not have permission to adjust stock quantities.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
 
-    if (widget.isEditMode && !viewModel.canEditStock) {
-      return AlertDialog(
-        title: Text('Permission Denied'),
-        content: Text('You do not have permission to edit stock items.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      );
-    }
+        if (widget.isEditMode && !viewModel.canEditStock) {
+          return AlertDialog(
+            title: Text('Permission Denied'),
+            content: Text('You do not have permission to edit stock items.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
 
+        return _buildDialog(context, ref);
+      },
+    );
+  }
+
+  Widget _buildDialog(BuildContext context, WidgetRef ref) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 0.9,
         constraints: BoxConstraints(maxWidth: 500),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [_buildHeader(), _buildContent(), _buildActions()],
+            children: [_buildHeader(), _buildContent(), _buildActions(ref)],
           ),
         ),
       ),
@@ -328,7 +342,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(WidgetRef ref) {
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -344,7 +358,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
           ),
           SizedBox(width: 12),
           ElevatedButton(
-            onPressed: _isLoading ? null : _submit,
+            onPressed: _isLoading ? null : () => _submit(ref),
             child: _isLoading
                 ? SizedBox(
                     width: 20,
@@ -379,14 +393,14 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
     return 'New quantity will be: $newQuantity ${widget.stock.unit}';
   }
 
-  void _submit() async {
+  void _submit(WidgetRef ref) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
     setState(() => _isLoading = true);
 
-    final viewModel = Provider.of<StockViewModel>(context, listen: false);
+    final viewModel = ref.read(stockViewModelProvider.notifier);
 
     try {
       if (widget.isEditMode) {

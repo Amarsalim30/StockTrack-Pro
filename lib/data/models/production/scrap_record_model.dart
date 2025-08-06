@@ -3,7 +3,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/production/scrap_record.dart';
-import '../../../domain/entities/scrap_record.dart';
 
 part 'scrap_record_model.g.dart';
 

@@ -28,8 +28,6 @@ StockTakeModel _$StockTakeModelFromJson(Map<String, dynamic> json) =>
       countedItems: (json['countedItems'] as num).toInt(),
       discrepancies: (json['discrepancies'] as num).toInt(),
       metadata: json['metadata'] as Map<String, dynamic>?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$StockTakeModelToJson(StockTakeModel instance) =>
@@ -48,15 +46,13 @@ Map<String, dynamic> _$StockTakeModelToJson(StockTakeModel instance) =>
       'countedItems': instance.countedItems,
       'discrepancies': instance.discrepancies,
       'metadata': instance.metadata,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$StockTakeStatusEnumMap = {
   StockTakeStatus.active: 'active',
-  StockTakeStatus.paused: 'paused',
   StockTakeStatus.completed: 'completed',
   StockTakeStatus.cancelled: 'cancelled',
+  StockTakeStatus.paused: 'paused',
 };
 
 StockTakeItemModel _$StockTakeItemModelFromJson(Map<String, dynamic> json) =>
@@ -80,7 +76,10 @@ StockTakeItemModel _$StockTakeItemModelFromJson(Map<String, dynamic> json) =>
       photoUrls: (json['photoUrls'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      metadata: json['metadata'] as Map<String, dynamic>?,
+      isCounted: json['isCounted'] as bool,
+      hasDiscrepancy: json['hasDiscrepancy'] as bool,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$StockTakeItemModelToJson(StockTakeItemModel instance) =>
@@ -97,11 +96,15 @@ Map<String, dynamic> _$StockTakeItemModelToJson(StockTakeItemModel instance) =>
       'countedAt': instance.countedAt?.toIso8601String(),
       'notes': instance.notes,
       'photoUrls': instance.photoUrls,
-      'metadata': instance.metadata,
+      'isCounted': instance.isCounted,
+      'hasDiscrepancy': instance.hasDiscrepancy,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$CountMethodEnumMap = {
   CountMethod.manual: 'manual',
   CountMethod.barcode: 'barcode',
   CountMethod.photo: 'photo',
+  CountMethod.rfid: 'rfid',
 };

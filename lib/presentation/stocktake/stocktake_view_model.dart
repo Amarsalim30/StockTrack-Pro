@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../domain/entities/stock/stock_take.dart';
+import '../../domain/entities/stock/stock_take_item.dart';
 import '../../domain/repositories/stock_take_repository.dart';
 
 class StockTakeState {
@@ -228,10 +229,11 @@ class StockTakeViewModel extends StateNotifier<StockTakeState> {
         countedQuantity: count,
         countMethod: CountMethod.manual,
         countedBy: 'current_user',
-        // TODO: Get from auth
         countedAt: DateTime.now(),
         notes: notes,
         photoUrls: state.items[itemIndex].photoUrls,
+        createdAt: state.items[itemIndex].createdAt,
+        updatedAt: state.items[itemIndex].updatedAt,
       );
 
       final updatedItems = [...state.items];
@@ -283,6 +285,8 @@ class StockTakeViewModel extends StateNotifier<StockTakeState> {
         countedAt: DateTime.now(),
         notes: item.notes,
         photoUrls: item.photoUrls,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
       );
 
       final updatedItems = [...state.items];
@@ -330,6 +334,8 @@ class StockTakeViewModel extends StateNotifier<StockTakeState> {
         countedAt: DateTime.now(),
         notes: notes,
         photoUrls: [...(item.photoUrls ?? []), photoUrl],
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
       );
 
       final updatedItems = [...state.items];
@@ -424,8 +430,6 @@ class StockTakeViewModel extends StateNotifier<StockTakeState> {
       totalItems: state.items.length,
       countedItems: countedItems,
       discrepancies: discrepancies,
-      createdAt: state.currentSession!.createdAt,
-      updatedAt: DateTime.now(),
     );
 
     state = state.copyWith(currentSession: updatedSession);

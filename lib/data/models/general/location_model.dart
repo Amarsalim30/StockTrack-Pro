@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/general//location.dart';
 
-part '../settings/location_model.g.dart';
+part 'location_model.g.dart';
 
 @JsonSerializable()
 class LocationModel extends Equatable {

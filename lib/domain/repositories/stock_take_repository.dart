@@ -1,3 +1,4 @@
+import 'package:clean_arch_app/domain/entities/stock/stock_take_item.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
 import '../entities/stock/stock_take.dart';

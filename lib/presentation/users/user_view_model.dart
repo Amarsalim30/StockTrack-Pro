@@ -1,13 +1,12 @@
 import 'package:clean_arch_app/di/injection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/user.dart';
-import '../../data/models/user/user_model.dart';
+import '../../domain/entities/auth/user.dart';
 import '../../domain/repositories/user_repository.dart';
 
 // 📦 State class
 class UserState {
-  final List<UserModel> users;
+  final List<User> users;
   final bool isLoading;
   final String? error;
 
@@ -18,7 +17,7 @@ class UserState {
   });
 
   UserState copyWith({
-    List<UserModel>? users,
+    List<User>? users,
     bool? isLoading,
     String? error,
   }) {
@@ -49,8 +48,7 @@ class UserViewModel extends StateNotifier<UserState> {
           state = state.copyWith(error: failure.toString(), isLoading: false);
         },
             (users) {
-          final mapped = users.map(UserModel.fromEntity).toList();
-          state = state.copyWith(users: mapped, isLoading: false);
+          state = state.copyWith(users: users, isLoading: false);
         },
       );
     } catch (e) {
@@ -61,16 +59,15 @@ class UserViewModel extends StateNotifier<UserState> {
     }
   }
 
-  void addUser(UserModel user) {
+  void addUser(User user) {
     state = state.copyWith(users: [...state.users, user]);
   }
 
   void updateUser(User user) {
-    UserModel updatedUser = UserModel.fromEntity(user);
-    final index = state.users.indexWhere((u) => u.id == updatedUser.id);
+    final index = state.users.indexWhere((u) => u.id == user.id);
     if (index != -1) {
       final updatedUsers = [...state.users];
-      updatedUsers[index] = updatedUser;
+      updatedUsers[index] = user;
       state = state.copyWith(users: updatedUsers);
     }
   }
@@ -86,7 +83,6 @@ class UserViewModel extends StateNotifier<UserState> {
       final user = state.users[index];
       final updatedUser = user.copyWith(
         isActive: !user.isActive,
-        updatedAt: DateTime.now(),
       );
       final updatedUsers = [...state.users];
       updatedUsers[index] = updatedUser;

@@ -15,7 +15,7 @@ class PurchaseOrderItem extends Equatable {
   });
 
   PurchaseOrderItem copyWith(
-      {String? stockId, int? quantityOrdered, int?? quantityReceived, double?? unitCost}) {
+      {String? stockId, int? quantityOrdered, int? quantityReceived, double? unitCost}) {
     return PurchaseOrderItem(
       stockId: stockId ?? this.stockId,
       quantityOrdered: quantityOrdered ?? this.quantityOrdered,

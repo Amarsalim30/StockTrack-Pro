@@ -12,7 +12,7 @@ class ReturnOrderItem extends Equatable {
     this.reason,
   });
 
-  ReturnOrderItem copyWith({String? stockId, int? quantity, String?? reason}) {
+  ReturnOrderItem copyWith({String? stockId, int? quantity, String? reason}) {
     return ReturnOrderItem(
       stockId: stockId ?? this.stockId,
       quantity: quantity ?? this.quantity,

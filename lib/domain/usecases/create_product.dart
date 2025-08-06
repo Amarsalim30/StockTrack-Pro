@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../entities/product.dart';
+import '../entities/catalog/product.dart';
 import '../repositories/product_repository.dart';
 
 class CreateProduct {

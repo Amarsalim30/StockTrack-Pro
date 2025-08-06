@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
-import '../entities/activity.dart';
+import '../entities/activity/activity.dart';
 
 abstract class ActivityRepository {
   Future<Either<Failure, List<Activity>>> getActivities({
@@ -20,6 +20,10 @@ abstract class ActivityRepository {
     required ActivityType type,
     required String action,
     String? description,
+    String? entityType,
+    String? entityId,
+    String? entityName,
+    String? entityLocation,
     Map<String, dynamic>? metadata,
   });
 

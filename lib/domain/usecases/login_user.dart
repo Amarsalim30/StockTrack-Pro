@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../entities/user.dart';
+import '../entities/auth/user.dart';
 import '../repositories/auth_repository.dart';
 
 class LoginUser {

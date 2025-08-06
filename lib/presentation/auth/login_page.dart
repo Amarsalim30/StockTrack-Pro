@@ -4,9 +4,11 @@ import '../../core/constants/strings.dart';
 import '../../core/constants/sizes.dart';
 import '../../core/utils/validators.dart';
 import '../common/widgets/app_button.dart';
+import 'login_view_model.dart';
+import '../../di/injection.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
@@ -28,15 +30,31 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Implement login logic using view model
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login functionality to be implemented')),
+      ref.read(loginViewModelProvider.notifier).login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loginState = ref.watch(loginViewModelProvider);
+
+    // Listen to login state changes
+    ref.listen(loginViewModelProvider, (previous, next) {
+      if (next.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error!)),
+        );
+      }
+      if (next.user != null) {
+        // Navigate to dashboard or home page
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login successful!')),
+        );
+      }
+    });
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -123,10 +141,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSizes.spaceLarge),
-
-                  // Login Button
-                  AppButton(text: AppStrings.login, onPressed: _handleLogin),
+                  const SizedBox(height: AppSizes.spaceLarge), // Login Button
+                  AppButton(
+                    text: AppStrings.login,
+                    onPressed: loginState.isLoading ? null : _handleLogin,
+                    isLoading: loginState.isLoading,
+                  ),
                 ],
               ),
             ),

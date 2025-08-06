@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/order/purchase_order_draft.dart';
 import 'purchase_order_item_model.dart';
 
-part 'purchase_order_draft_model.g.dart';
+part 'purchase_order_draft.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PurchaseOrderDraftModel extends Equatable {

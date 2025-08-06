@@ -18,14 +18,8 @@ class Notification extends Equatable {
     required this.createdAt,
   });
 
-  Notification copyWith({
-    String? id,
-    String? userId,
-    String? title,
-    String? message,
-    bool? read,
-    DateTime? createdAt,
-  }) {
+  Notification copyWith(
+      {String? id, String? userId, String? title, String? message, bool? read, DateTime? createdAt}) {
     return Notification(
       id: id ?? this.id,
       userId: userId ?? this.userId,

@@ -1,8 +1,8 @@
+import 'package:clean_arch_app/domain/entities/catalog/supplier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/utils/validators.dart';
-import '../../domain/entities/supplier.dart';
 
 class SupplierDialog extends ConsumerStatefulWidget {
   final Supplier? supplier;
@@ -36,28 +36,30 @@ class _SupplierDialogState extends ConsumerState<SupplierDialog> {
     super.initState();
     _nameController = TextEditingController(text: widget.supplier?.name ?? '');
     _contactPersonController = TextEditingController(
-      text: widget.supplier?.contactPerson ?? '',
+      text: widget.supplier?.contactInfo?['contactPerson'] ?? '',
     );
     _emailController = TextEditingController(
-      text: widget.supplier?.email ?? '',
+      text: widget.supplier?.contactInfo?['email'] ?? '',
     );
     _phoneController = TextEditingController(
-      text: widget.supplier?.phoneNumber ?? '',
+      text: widget.supplier?.contactInfo?['phone'] ?? '',
     );
     _addressController = TextEditingController(
-      text: widget.supplier?.address ?? '',
+      text: widget.supplier?.contactInfo?['address'] ?? '',
     );
-    _cityController = TextEditingController(text: widget.supplier?.city ?? '');
+    _cityController = TextEditingController(
+        text: widget.supplier?.contactInfo?['city'] ?? '');
     _stateController = TextEditingController(
-      text: widget.supplier?.state ?? '',
+      text: widget.supplier?.contactInfo?['state'] ?? '',
     );
     _countryController = TextEditingController(
-      text: widget.supplier?.country ?? '',
+      text: widget.supplier?.contactInfo?['country'] ?? '',
     );
     _postalCodeController = TextEditingController(
-      text: widget.supplier?.postalCode ?? '',
+      text: widget.supplier?.contactInfo?['postalCode'] ?? '',
     );
-    _isActive = widget.supplier?.isActive ?? true;
+    _isActive =
+    true; // Default to active since Supplier entity doesn't have isActive
   }
 
   @override
@@ -85,38 +87,58 @@ class _SupplierDialogState extends ConsumerState<SupplierDialog> {
     });
 
     try {
+      final contactInfo = <String, String>{};
+      if (_contactPersonController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['contactPerson'] = _contactPersonController.text.trim();
+      }
+      if (_emailController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['email'] = _emailController.text.trim();
+      }
+      if (_phoneController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['phone'] = _phoneController.text.trim();
+      }
+      if (_addressController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['address'] = _addressController.text.trim();
+      }
+      if (_cityController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['city'] = _cityController.text.trim();
+      }
+      if (_stateController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['state'] = _stateController.text.trim();
+      }
+      if (_countryController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['country'] = _countryController.text.trim();
+      }
+      if (_postalCodeController.text
+          .trim()
+          .isNotEmpty) {
+        contactInfo['postalCode'] = _postalCodeController.text.trim();
+      }
+
       final supplier = Supplier(
         id:
             widget.supplier?.id ??
             DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text.trim(),
-        contactPerson: _contactPersonController.text.trim().isEmpty
-            ? null
-            : _contactPersonController.text.trim(),
-        email: _emailController.text.trim().isEmpty
-            ? null
-            : _emailController.text.trim(),
-        phoneNumber: _phoneController.text.trim().isEmpty
-            ? null
-            : _phoneController.text.trim(),
-        address: _addressController.text.trim().isEmpty
-            ? null
-            : _addressController.text.trim(),
-        city: _cityController.text.trim().isEmpty
-            ? null
-            : _cityController.text.trim(),
-        state: _stateController.text.trim().isEmpty
-            ? null
-            : _stateController.text.trim(),
-        country: _countryController.text.trim().isEmpty
-            ? null
-            : _countryController.text.trim(),
-        postalCode: _postalCodeController.text.trim().isEmpty
-            ? null
-            : _postalCodeController.text.trim(),
-        isActive: _isActive,
-        createdAt: widget.supplier?.createdAt ?? DateTime.now(),
-        updatedAt: DateTime.now(),
+        contactInfo: contactInfo.isEmpty ? null : contactInfo,
+        rating: widget.supplier?.rating,
+        // Preserve existing rating
+        paymentTerms: widget.supplier
+            ?.paymentTerms, // Preserve existing payment terms
       );
 
       await widget.onSave(supplier);

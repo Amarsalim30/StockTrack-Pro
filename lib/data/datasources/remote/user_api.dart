@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../models/user/user_model.dart';
+import '../../models/auth/user_model.dart';
 
 class UserApi {
   final Dio _dio;

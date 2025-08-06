@@ -13,7 +13,8 @@ class StockTakeSettings extends Equatable {
   });
 
   StockTakeSettings copyWith(
-      {bool? gpsEnforced, double?? maxDistanceMeters, List<String>?? allowedLocations}) {
+      {bool? gpsEnforced, double? maxDistanceMeters, List<
+          String>? allowedLocations}) {
     return StockTakeSettings(
       gpsEnforced: gpsEnforced ?? this.gpsEnforced,
       maxDistanceMeters: maxDistanceMeters ?? this.maxDistanceMeters,

@@ -25,7 +25,8 @@ class Product extends Equatable {
   });
 
   Product copyWith(
-      {String? id, String? name, String? sku, String?? description, String? categoryId, String? supplierId, double?? price, double?? costPrice, List<String>?? tags}) {
+      {String? id, String? name, String? sku, String? description, String? categoryId, String? supplierId, double? price, double? costPrice, List<
+          String>? tags}) {
     return Product(
       id: id ?? this.id,
       name: name ?? this.name,

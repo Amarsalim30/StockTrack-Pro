@@ -5,7 +5,10 @@ class BomItem extends Equatable {
   final String rawMaterialId;
   final int quantityPerUnit;
 
-  const BomItem({required this.rawMaterialId, required this.quantityPerUnit});
+  const BomItem({
+    required this.rawMaterialId,
+    required this.quantityPerUnit,
+  });
 
   BomItem copyWith({String? rawMaterialId, int? quantityPerUnit}) {
     return BomItem(

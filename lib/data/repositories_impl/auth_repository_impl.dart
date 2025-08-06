@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/user.dart';
+import '../../domain/entities/auth/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/remote/auth_api.dart';
 import '../../core/error/exceptions.dart';
@@ -33,7 +33,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Exception, User>> getCurrentUser() async {
     try {
       final userModel = await _authApi.getCurrentUser();
-      return Right(userModel);
+      return Right(userModel as User);
     } catch (e) {
       return Left(_mapToException(e));
     }

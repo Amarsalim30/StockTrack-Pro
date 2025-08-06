@@ -4,19 +4,26 @@ import 'package:equatable/equatable.dart';
 class ExportImportSettings extends Equatable {
   final bool exportEnabled;
   final bool importEnabled;
+  final Map<String, dynamic>? importValidationRules;
 
   const ExportImportSettings({
     required this.exportEnabled,
     required this.importEnabled,
+    this.importValidationRules,
   });
 
-  ExportImportSettings copyWith({bool? exportEnabled, bool? importEnabled}) {
+  ExportImportSettings copyWith({bool? exportEnabled, bool? importEnabled, Map<
+      String,
+      dynamic>? importValidationRules}) {
     return ExportImportSettings(
       exportEnabled: exportEnabled ?? this.exportEnabled,
       importEnabled: importEnabled ?? this.importEnabled,
+      importValidationRules: importValidationRules ??
+          this.importValidationRules,
     );
   }
 
   @override
-  List<Object?> get props => [exportEnabled, importEnabled];
+  List<Object?> get props =>
+      [exportEnabled, importEnabled, importValidationRules];
 }

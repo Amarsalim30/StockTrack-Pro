@@ -21,7 +21,7 @@ class ProductionOrder extends Equatable {
   });
 
   ProductionOrder copyWith(
-      {String? id, String? productId, int? quantityToProduce, String? status, DateTime? createdAt, DateTime?? startedAt, DateTime?? completedAt}) {
+      {String? id, String? productId, int? quantityToProduce, String? status, DateTime? createdAt, DateTime? startedAt, DateTime? completedAt}) {
     return ProductionOrder(
       id: id ?? this.id,
       productId: productId ?? this.productId,

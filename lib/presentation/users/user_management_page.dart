@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/user.dart';
+import '../../domain/entities/auth/user.dart';
 import 'user_view_model.dart';
 import 'widgets/user_item_card.dart';
 import 'widgets/user_form_dialog.dart';

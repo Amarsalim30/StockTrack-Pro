@@ -17,6 +17,12 @@ enum PermissionTypeModel {
   viewReports,
   @JsonValue('processReturns')
   processReturns,
+  @JsonValue('createProduct')
+  createProduct,
+  @JsonValue('editProduct')
+  editProduct,
+  @JsonValue('deleteProduct')
+  deleteProduct,
   // Add additional permissions here...
 }
 
@@ -24,6 +30,6 @@ extension PermissionTypeModelExtension on PermissionTypeModel {
   /// Convert to domain enum
   PermissionType toDomain() => PermissionType.values.byName(name);
 
-  static PermissionTypeModel fromDomain(PermissionType p) =>
-      PermissionTypeModel.values.byName(p.name);
+  static PermissionTypeModel fromDomain(PermissionType permission) =>
+      PermissionTypeModel.values.byName(permission.name);
 }

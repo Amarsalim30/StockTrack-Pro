@@ -1,20 +1,25 @@
+import 'package:dartz/dartz.dart';
+
 import '../../core/enums/stock_status.dart';
-import '../../data/models/stock/stock_model.dart';
+import '../../core/error/failures.dart';
+import '../entities/stock/stock.dart';
 
 abstract class StockRepository {
-  Future<List<StockModel>> getStocks();
+  Future<Either<Failure, List<Stock>>> getStocks();
 
-  Future<StockModel> getStockById(String id);
+  Future<Either<Failure, Stock>> getStockById(String id);
 
-  Future<void> createStock(StockModel stock);
+  Future<Either<Failure, Stock>> createStock(Stock stock);
 
-  Future<void> updateStock(StockModel stock);
+  Future<Either<Failure, Stock>> updateStock(Stock stock);
 
-  Future<void> deleteStock(String id);
+  Future<Either<Failure, void>> deleteStock(String id);
 
-  Future<void> deleteStocks(List<String> ids);
+  Future<Either<Failure, void>> deleteStocks(List<String> ids);
 
-  Future<void> updateStockStatus(List<String> ids, StockStatus status);
+  Future<Either<Failure, void>> updateStockStatus(List<String> ids,
+      StockStatus status);
 
-  Future<void> adjustStock(String stockId, int adjustment, String reason);
+  Future<Either<Failure, void>> adjustStock(String stockId, int adjustment,
+      String reason);
 }

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../entities/product.dart';
+import '../entities/catalog/product.dart';
 
 abstract class ProductRepository {
   Future<Either<Exception, List<Product>>> getAllProducts();

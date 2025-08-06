@@ -14,12 +14,8 @@ class ScrapRecord extends Equatable {
     required this.reason,
   });
 
-  ScrapRecord copyWith({
-    String? productionOrderId,
-    String? rawMaterialId,
-    int? wastedQuantity,
-    String? reason,
-  }) {
+  ScrapRecord copyWith(
+      {String? productionOrderId, String? rawMaterialId, int? wastedQuantity, String? reason}) {
     return ScrapRecord(
       productionOrderId: productionOrderId ?? this.productionOrderId,
       rawMaterialId: rawMaterialId ?? this.rawMaterialId,
@@ -29,10 +25,6 @@ class ScrapRecord extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    productionOrderId,
-    rawMaterialId,
-    wastedQuantity,
-    reason,
-  ];
+  List<Object?> get props =>
+      [productionOrderId, rawMaterialId, wastedQuantity, reason];
 }

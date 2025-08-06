@@ -47,9 +47,12 @@ class ActivityApiImpl implements ActivityApi {
     if (limit != null) queryParams['limit'] = limit;
     if (userId != null && userId.isNotEmpty) queryParams['userId'] = userId;
     if (type != null && type.isNotEmpty) queryParams['type'] = type;
-    if (startDate != null)
+    if (startDate != null) {
       queryParams['startDate'] = startDate.toIso8601String();
-    if (endDate != null) queryParams['endDate'] = endDate.toIso8601String();
+    }
+    if (endDate != null) {
+      queryParams['endDate'] = endDate.toIso8601String();
+    }
 
     final response = await _apiClient.get<Map<String, dynamic>>(
       '/activities',
@@ -85,9 +88,12 @@ class ActivityApiImpl implements ActivityApi {
   }) async {
     final queryParams = <String, dynamic>{};
     if (userId != null && userId.isNotEmpty) queryParams['userId'] = userId;
-    if (startDate != null)
+    if (startDate != null) {
       queryParams['startDate'] = startDate.toIso8601String();
-    if (endDate != null) queryParams['endDate'] = endDate.toIso8601String();
+    }
+    if (endDate != null) {
+      queryParams['endDate'] = endDate.toIso8601String();
+    }
 
     final response = await _apiClient.get<Map<String, dynamic>>(
       '/activities/stats',
@@ -111,8 +117,9 @@ class ActivityApiImpl implements ActivityApi {
   Future<void> deleteActivities({String? userId, DateTime? beforeDate}) async {
     final queryParams = <String, dynamic>{};
     if (userId != null && userId.isNotEmpty) queryParams['userId'] = userId;
-    if (beforeDate != null)
+    if (beforeDate != null) {
       queryParams['beforeDate'] = beforeDate.toIso8601String();
+    }
 
     await _apiClient.delete('/activities', queryParameters: queryParams);
   }

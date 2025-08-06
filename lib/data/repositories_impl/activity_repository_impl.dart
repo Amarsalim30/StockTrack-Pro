@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
-import '../../domain/entities/activity.dart';
+import '../../domain/entities/activity/activity.dart';
 import '../../domain/repositories/activity_repository.dart';
 import '../datasources/remote/activity_source.dart';
 import '../models/activity/activity_model.dart';
@@ -35,7 +35,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           limit: limit,
           offset: offset,
         );
-        return Right(activities);
+        return Right(activities.cast<Activity>());
       } on ServerException {
         return const Left(ServerFailure(message: 'Server error occurred'));
       }
@@ -49,7 +49,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
     if (await networkInfo.isConnected) {
       try {
         final activity = await remoteDataSource.getActivityById(id);
-        return Right(activity);
+        return Right(activity as Activity);
       } on ServerException {
         return const Left(ServerFailure(message: 'Server error occurred'));
       }
@@ -65,6 +65,10 @@ class ActivityRepositoryImpl implements ActivityRepository {
     required ActivityType type,
     required String action,
     String? description,
+    String? entityType,
+    String? entityId,
+    String? entityName,
+    String? entityLocation,
     Map<String, dynamic>? metadata,
   }) async {
     if (await networkInfo.isConnected) {
@@ -76,8 +80,10 @@ class ActivityRepositoryImpl implements ActivityRepository {
           type: type,
           action: action,
           description: description,
-          metadata: metadata,
+          metadata: metadata ?? {},
           timestamp: DateTime.now(),
+          entityType: entityType ?? '',
+          entityId: entityId ?? '',
         );
         await remoteDataSource.logActivity(activity);
         return const Right(null);
@@ -124,7 +130,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           endDate: endDate,
           limit: limit,
         );
-        return Right(activities);
+        return Right(activities.cast<Activity>());
       } on ServerException {
         return const Left(
           ServerFailure(message: 'Failed to get user activities'),

@@ -4,16 +4,23 @@ import 'package:equatable/equatable.dart';
 class FeatureToggle extends Equatable {
   final String featureKey;
   final bool enabled;
+  final Map<String, dynamic>? config;
 
-  const FeatureToggle({required this.featureKey, required this.enabled});
+  const FeatureToggle({
+    required this.featureKey,
+    required this.enabled,
+    this.config,
+  });
 
-  FeatureToggle copyWith({String? featureKey, bool? enabled}) {
+  FeatureToggle copyWith(
+      {String? featureKey, bool? enabled, Map<String, dynamic>? config}) {
     return FeatureToggle(
       featureKey: featureKey ?? this.featureKey,
       enabled: enabled ?? this.enabled,
+      config: config ?? this.config,
     );
   }
 
   @override
-  List<Object?> get props => [featureKey, enabled];
+  List<Object?> get props => [featureKey, enabled, config];
 }

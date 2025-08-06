@@ -17,7 +17,7 @@ class Customer extends Equatable {
   });
 
   Customer copyWith(
-      {String? id, String? name, String?? email, String?? phone, String?? loyaltyId}) {
+      {String? id, String? name, String? email, String? phone, String? loyaltyId}) {
     return Customer(
       id: id ?? this.id,
       name: name ?? this.name,

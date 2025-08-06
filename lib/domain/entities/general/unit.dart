@@ -15,7 +15,7 @@ class Unit extends Equatable {
   });
 
   Unit copyWith(
-      {String? id, String? name, String?? description, double?? conversionRate}) {
+      {String? id, String? name, String? description, double? conversionRate}) {
     return Unit(
       id: id ?? this.id,
       name: name ?? this.name,
