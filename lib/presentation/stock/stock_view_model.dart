@@ -516,7 +516,8 @@ class StockViewModel extends StateNotifier<StockState> {
           errorMessage: failure.message,
         ),
         (_) => loadStocks(),
-      )} catch (e) {
+      );
+    } catch (e) {
       state = state.copyWith(
         status: StockStateStatus.error,
         errorMessage: 'Failed to adjust stock: $e',
