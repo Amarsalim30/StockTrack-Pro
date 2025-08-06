@@ -22,12 +22,12 @@ gantt
     title StockTrackPro – Phase 1 Roadmap
     dateFormat  YYYY-MM-DD
     section 📑 Documentation
-    Charter & Stakeholders       :done,    charter,    2025-07-20, 3d
-    SRS, BRD & RTM               :done,    docs,       2025-07-23, 5d
+    Charter & Stakeholders       :done,    charter,    2025-07-29, 3d
+    SRS, BRD & RTM               :done,    docs,       2025-08-1, 4d
     section 🛠️ Development
-    Sprint 1 – Frontend MVP      :active,  s1,         2025-07-29, 7d
-    Sprint 2 – Backend + Firebase:         s2,         2025-08-05, 14d
-    Sprint 3 – Reporting + QA    :         s3,         2025-08-19, 7d
+    Sprint 1 – Frontend MVP      :active,  s1,         2025-08-4, 7d
+    Sprint 2 – Backend + Firebase:         s2,         2025-08-11, 14d
+    Sprint 3 – Reporting + QA    :         s3,         2025-08-24, 7d
     section 🚀 Release
     Release v1.0                 :         release,    2025-08-26, 1d
 ```
