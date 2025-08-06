@@ -219,6 +219,9 @@ class StockViewModel extends StateNotifier<StockState> {
     }
     _applyFiltersAndSort();
   }
+  void edit(Stock filteredStock){
+    
+  }
 
   // Apply filters and sort
   void _applyFiltersAndSort() {
@@ -594,6 +597,12 @@ class StockViewModel extends StateNotifier<StockState> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void setStatusFilter(String value) {
+  }
+
+  void addNewStock() {
   }
 }
 

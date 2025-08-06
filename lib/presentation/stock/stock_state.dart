@@ -4,7 +4,20 @@ import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 
 import '../../core/enums/stock_status.dart';
 
-enum SortBy { name, sku, quantity, lastUpdated }
+enum SortBy { name, sku, quantity, lastUpdated;
+  String get label {
+    switch (this) {
+      case SortBy.name:
+        return 'Name';
+      case SortBy.quantity:
+        return 'Quantity';
+      case SortBy.lastUpdated:
+        return 'Last Updated';
+      case SortBy.sku:
+        return 'SKU';
+    }
+  }
+}
 
 enum SortOrder { ascending, descending }
 

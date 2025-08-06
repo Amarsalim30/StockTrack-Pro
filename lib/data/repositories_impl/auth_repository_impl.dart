@@ -96,4 +96,15 @@ class AuthRepositoryImpl implements AuthRepository {
     // You can expand this later with proper error mapping
     return e is Exception ? e : ServerException(e.toString());
   }
+
+  @override
+  Future<Either<Exception, void>> loadToken() {
+    // TODO: implement loadToken
+    throw UnimplementedError();
+  }
+
+  @override
+  void clearToken() {
+    // TODO: implement clearToken
+  }
 }

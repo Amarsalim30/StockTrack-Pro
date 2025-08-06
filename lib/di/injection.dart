@@ -1,3 +1,5 @@
+import 'package:clean_arch_app/presentation/auth/auth_state.dart';
+import 'package:clean_arch_app/presentation/auth/auth_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 
@@ -106,6 +108,12 @@ final loginViewModelProvider =
       final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
       return LoginViewModel(loginUseCase);
     });
+
+final authViewModelProvider =
+StateNotifierProvider<AuthViewModel, AuthState>((ref) {
+  return AuthViewModel(ref.read(authRepositoryProvider));
+});
+
 
 // Mock stock take repository for now
 final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {

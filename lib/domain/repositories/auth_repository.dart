@@ -20,4 +20,8 @@ abstract class AuthRepository {
   Future<Either<Exception, String>> getAuthToken();
 
   Future<Either<Exception, void>> refreshToken();
+  Future<Either<Exception, void>> loadToken();
+
+  void clearToken() {}
+
 }
