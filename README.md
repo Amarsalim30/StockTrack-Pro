@@ -1,17 +1,1 @@
-# clean_arch_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# StockTrack-Pro" 
+<pre><code>```mermaid --- config: layout: dagre --- flowchart TD %% Start & Auth A[App Start] --> B{Check Auth Token} B -- Token Exists --> C[Load Current User] B -- No Token --> F[Redirect to Login] C -- Valid --> D[Authenticated Home Flow] C -- Invalid --> F C -- Token Expired --> T1[Attempt Token Refresh] T1 -- Success --> C T1 -- Failure --> F %% Login flow F --> L1[LoginViewModel] L1 -- Success --> C L1 -- Failure --> FE[Show Error / Stay on Login] %% Dashboard Modules D --> DA[Show Dashboard] subgraph Modules [Dashboard Modules] DA --> E1[Inventory Module] DA --> E2[Sales Module] DA --> E3[Settings Module] DA --> E4[Reports Module] end %% Inventory E1 --> I1[Load Stocks] I1 --> I2{Can Edit/Create/Delete?} I2 -- Yes --> I3[Show Stock UI with Actions] I2 -- No --> I4[Show Stock UI Read-Only] %% Sales E2 --> S1[SalesViewModel] S1 --> S2[Customer Orders, Returns] %% Settings E3 --> ST1[SettingsViewModel] ST1 --> ST2[Change Password, Units, Permissions] %% Session Watcher DA --> SE{Session Active?} SE -- No --> F %% Styles (GitHub ignores, used in mermaid.live only) click A "https://docs.flutter.dev/development/ui/overview" "Flutter UI Overview" click L1 "https://riverpod.dev/docs/essentials/providers/" "Riverpod Provider Usage" ``` </code></pre>
