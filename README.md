@@ -8,8 +8,8 @@
 
 | 📄 Document                                   | Description                                                              | Download                                                                                                                                                                                                   |
 | --------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Software Requirements Specification (SRS)** | Captures all functional and non-functional system requirements           | [📥 Download](https://github.com/Amarsalim30/StockTrack-Pro/blob/dev/docs/2.Software%20Requirements%20Specification.docx)      |
-| **Requirements Traceability Matrix (RTM)**    | Maps requirements to design, test coverage, and current status           | [📥 Download](https://github.com/Amarsalim30/StockTrack-Pro/blob/dev/docs/rtm_stocktrackpro.docx)                                                                   |
+| **Software Requirements Specification (SRS)** | Captures all functional and non-functional system requirements           | [📥 Download](https://github.com/Amarsalim30/StockTrack-Pro/raw/refs/heads/dev/docs/2.Software%20Requirements%20Specification.docx)      |
+| **Requirements Traceability Matrix (RTM)**    | Maps requirements to design, test coverage, and current status           | [📥 Download](https://github.com/Amarsalim30/StockTrack-Pro/raw/refs/heads/dev/docs/rtm_stocktrackpro.docx)                                                                   |
 
 ---
 
