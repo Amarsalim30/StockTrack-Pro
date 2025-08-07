@@ -1,0 +1,36 @@
+Model/Enum,Field/Value Name,Type
+ActivityType,stockIn,enum value
+ActivityType,stockOut,enum value
+ActivityType,adjustment,enum value
+ActivityType,transfer,enum value
+ActivityType,return_,enum value
+ActivityType,created,enum value
+ActivityType,updated,enum value
+ActivityType,deleted,enum value
+ActivityType,approved,enum value
+ActivityType,rejected,enum value
+PermissionType,createOrder,enum value
+PermissionType,approveOrder,enum value
+PermissionType,receiveStock,enum value
+PermissionType,adjustStock,enum value
+PermissionType,viewReports,enum value
+PermissionType,processReturns,enum value
+PermissionType,createProduct,enum value
+PermissionType,editProduct,enum value
+PermissionType,deleteProduct,enum value
+PermissionType,// Add additional permissions here...,enum value
+ReturnType,"supplier, customer, warranty",enum value
+ProductionOrderStatus,name,String
+StockDurabilityType,"perishable, // e.g. food, medicine",enum value
+StockDurabilityType,"nonPerishable, // e.g. electronics, furniture",enum value
+StockDurabilityType,"durable, // e.g. machinery, vehicles",enum value
+StockDurabilityType,"consumable, // e.g. office supplies, cleaning products",enum value
+MovementType,inbound,enum value
+MovementType,outbound,enum value
+MovementType,adjustment,enum value
+MovementType,// Add more types as needed,enum value
+StockTakeStatus,active,enum value
+StockTakeStatus,completed,enum value
+StockTakeStatus,cancelled,enum value
+StockTakeStatus,paused,enum value
+CountMethod,"manual, barcode, photo, rfid",enum value

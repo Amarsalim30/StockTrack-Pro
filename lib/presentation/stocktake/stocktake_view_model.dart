@@ -478,15 +478,3 @@ class StockTakeViewModel extends StateNotifier<StockTakeState> {
     };
   }
 }
-
-// Provider for repository
-final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
-  throw UnimplementedError('Stock take repository provider must be overridden');
-});
-
-// Provider definition
-final stockTakeViewModelProvider =
-    StateNotifierProvider<StockTakeViewModel, StockTakeState>((ref) {
-      final repository = ref.watch(stockTakeRepositoryProvider);
-      return StockTakeViewModel(repository);
-    });

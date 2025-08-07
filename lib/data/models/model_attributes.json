@@ -1,0 +1,1540 @@
+[
+  {
+    "type": "class",
+    "name": "ActivityModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "action",
+        "type": "String"
+      },
+      {
+        "name": "entityType",
+        "type": "String"
+      },
+      {
+        "name": "entityId",
+        "type": "String"
+      },
+      {
+        "name": "userId",
+        "type": "String"
+      },
+      {
+        "name": "userName",
+        "type": "String?"
+      },
+      {
+        "name": "type",
+        "type": "ActivityType?"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "timestamp",
+        "type": "DateTime"
+      },
+      {
+        "name": "metadata",
+        "type": "dynamic>"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ApprovalRequestModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "entityType",
+        "type": "String"
+      },
+      {
+        "name": "entityId",
+        "type": "String"
+      },
+      {
+        "name": "requestedBy",
+        "type": "String"
+      },
+      {
+        "name": "approvedBy",
+        "type": "String?"
+      },
+      {
+        "name": "requestedAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "approvedAt",
+        "type": "DateTime?"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "reason",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "AuditLogModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "action",
+        "type": "String"
+      },
+      {
+        "name": "performedBy",
+        "type": "String"
+      },
+      {
+        "name": "performedAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "details",
+        "type": "dynamic>"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "PermissionTypeModel",
+    "values": [
+      "@JsonValue('createOrder')",
+      "createOrder",
+      "@JsonValue('approveOrder')",
+      "approveOrder",
+      "@JsonValue('receiveStock')",
+      "receiveStock",
+      "@JsonValue('adjustStock')",
+      "adjustStock",
+      "@JsonValue('viewReports')",
+      "viewReports",
+      "@JsonValue('processReturns')",
+      "processReturns",
+      "@JsonValue('createProduct')",
+      "createProduct",
+      "@JsonValue('editProduct')",
+      "editProduct",
+      "@JsonValue('deleteProduct')",
+      "deleteProduct",
+      "// Add additional permissions here..."
+    ]
+  },
+  {
+    "type": "class",
+    "name": "RoleModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "permissions",
+        "type": "List<PermissionTypeModel>"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "UserModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "username",
+        "type": "String"
+      },
+      {
+        "name": "email",
+        "type": "String"
+      },
+      {
+        "name": "roles",
+        "type": "List<RoleModel>"
+      },
+      {
+        "name": "isActive",
+        "type": "bool"
+      },
+      {
+        "name": "permissionModel",
+        "type": "final"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "BillOfMaterialsModel",
+    "fields": [
+      {
+        "name": "productId",
+        "type": "String"
+      },
+      {
+        "name": "components",
+        "type": "List<BomItemModel>"
+      },
+      {
+        "name": "yieldPerRun",
+        "type": "int"
+      },
+      {
+        "name": "scrapPercent",
+        "type": "double"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "BomItemModel",
+    "fields": [
+      {
+        "name": "rawMaterialId",
+        "type": "String"
+      },
+      {
+        "name": "quantityPerUnit",
+        "type": "int"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "CategoryModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "parentCategoryId",
+        "type": "String?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ProductModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "sku",
+        "type": "String"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "categoryId",
+        "type": "String"
+      },
+      {
+        "name": "supplierId",
+        "type": "String"
+      },
+      {
+        "name": "price",
+        "type": "double?"
+      },
+      {
+        "name": "costPrice",
+        "type": "double?"
+      },
+      {
+        "name": "tags",
+        "type": "List<String>?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "SupplierModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "contactInfo",
+        "type": "String>?"
+      },
+      {
+        "name": "rating",
+        "type": "double?"
+      },
+      {
+        "name": "paymentTerms",
+        "type": "String?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ProductionOrderStatusModelConverter",
+    "fields": []
+  },
+  {
+    "type": "class",
+    "name": "LocationModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "latitude",
+        "type": "double?"
+      },
+      {
+        "name": "longitude",
+        "type": "double?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "NotificationModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "userId",
+        "type": "String"
+      },
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "message",
+        "type": "String"
+      },
+      {
+        "name": "read",
+        "type": "bool"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "UnitModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "conversionRate",
+        "type": "double?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "PurchaseOrderDraftModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "supplierId",
+        "type": "String"
+      },
+      {
+        "name": "createdByUserId",
+        "type": "String"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "items",
+        "type": "List<PurchaseOrderItemModel>"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      },
+      {
+        "name": "autoGenerated",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "PurchaseOrderItemModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "quantityOrdered",
+        "type": "int"
+      },
+      {
+        "name": "quantityReceived",
+        "type": "int?"
+      },
+      {
+        "name": "unitCost",
+        "type": "double?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "PurchaseOrderModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "supplierId",
+        "type": "String"
+      },
+      {
+        "name": "createdByUserId",
+        "type": "String"
+      },
+      {
+        "name": "approvedByUserId",
+        "type": "String?"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "expectedDeliveryDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "receivedDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "items",
+        "type": "List<PurchaseOrderItemModel>"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ReturnOrderItemModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "reason",
+        "type": "String?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ReturnOrderModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "originalOrderId",
+        "type": "String"
+      },
+      {
+        "name": "requestedByUserId",
+        "type": "String"
+      },
+      {
+        "name": "requestedAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "type",
+        "type": "ReturnTypeModel"
+      },
+      {
+        "name": "approvedByUserId",
+        "type": "String?"
+      },
+      {
+        "name": "processedAt",
+        "type": "DateTime?"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "items",
+        "type": "List<ReturnOrderItemModel>"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "ReturnTypeModel",
+    "values": [
+      "@JsonValue('supplier')",
+      "supplier",
+      "@JsonValue('customer')",
+      "customer",
+      "@JsonValue('warranty')",
+      "warranty"
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ProductionOrderModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "productId",
+        "type": "String"
+      },
+      {
+        "name": "quantityToProduce",
+        "type": "int"
+      },
+      {
+        "name": "status",
+        "type": "ProductionOrderStatusModel"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "startedAt",
+        "type": "DateTime?"
+      },
+      {
+        "name": "completedAt",
+        "type": "DateTime?"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "ProductionOrderStatusModel",
+    "values": [
+      "pending('pending')",
+      "inProgress('inProgress')",
+      "completed('completed')",
+      "cancelled('cancelled')",
+      "paused('paused');",
+      "final String name;",
+      "const ProductionOrderStatusModel(this.name);",
+      "@override",
+      "String toString() => name;",
+      "static ProductionOrderStatusModel fromString(String value) {",
+      "return ProductionOrderStatusModel.values.firstWhere(",
+      "(e) => e.name == value",
+      "orElse: () => ProductionOrderStatusModel.pending",
+      ");"
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ScrapRecordModel",
+    "fields": [
+      {
+        "name": "productionOrderId",
+        "type": "String"
+      },
+      {
+        "name": "rawMaterialId",
+        "type": "String"
+      },
+      {
+        "name": "wastedQuantity",
+        "type": "int"
+      },
+      {
+        "name": "reason",
+        "type": "String"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ExpiryReportModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "expiryDate",
+        "type": "DateTime"
+      },
+      {
+        "name": "daysToExpiry",
+        "type": "int"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ReorderReportModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "minimumStock",
+        "type": "int"
+      },
+      {
+        "name": "needsReorder",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ReportModel",
+    "fields": [
+      {
+        "name": "reportId",
+        "type": "String"
+      },
+      {
+        "name": "type",
+        "type": "String"
+      },
+      {
+        "name": "generatedAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "items",
+        "type": "List<T>"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockMovementReportModel",
+    "fields": [
+      {
+        "name": "movementId",
+        "type": "String"
+      },
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "type",
+        "type": "String"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "performedBy",
+        "type": "String"
+      },
+      {
+        "name": "timestamp",
+        "type": "DateTime"
+      },
+      {
+        "name": "reason",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockOutReportModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "quantityOut",
+        "type": "int"
+      },
+      {
+        "name": "dateOut",
+        "type": "DateTime"
+      },
+      {
+        "name": "performedBy",
+        "type": "String"
+      },
+      {
+        "name": "reason",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "CustomerModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "email",
+        "type": "String?"
+      },
+      {
+        "name": "phone",
+        "type": "String?"
+      },
+      {
+        "name": "loyaltyId",
+        "type": "String?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "SalesOrderItemModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "unitPrice",
+        "type": "double"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "SalesOrderModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "customerId",
+        "type": "String"
+      },
+      {
+        "name": "createdByUserId",
+        "type": "String"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "items",
+        "type": "List<SalesOrderItemModel>"
+      },
+      {
+        "name": "totalAmount",
+        "type": "double"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "SalesReturnModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "salesOrderId",
+        "type": "String"
+      },
+      {
+        "name": "returnedByUserId",
+        "type": "String"
+      },
+      {
+        "name": "returnedAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "items",
+        "type": "List<SalesOrderItemModel>"
+      },
+      {
+        "name": "refundAmount",
+        "type": "double"
+      },
+      {
+        "name": "reason",
+        "type": "String?"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "AppSettingsModel",
+    "fields": [
+      {
+        "name": "featureToggles",
+        "type": "List<FeatureToggleModel>"
+      },
+      {
+        "name": "productionSettings",
+        "type": "ProductionSettingsModel"
+      },
+      {
+        "name": "reorderSettings",
+        "type": "ReorderWorkflowSettingsModel"
+      },
+      {
+        "name": "stockTakeSettings",
+        "type": "StockTakeSettingsModel"
+      },
+      {
+        "name": "exportImportSettings",
+        "type": "ExportImportSettingsModel"
+      },
+      {
+        "name": "passwordPolicy",
+        "type": "PasswordPolicyModel"
+      },
+      {
+        "name": "supplierSupport",
+        "type": "SupplierSupportSettingsModel"
+      },
+      {
+        "name": "expiryDuration",
+        "type": "Duration?"
+      },
+      {
+        "name": "days",
+        "type": ">"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ExportImportSettingsModel",
+    "fields": [
+      {
+        "name": "exportEnabled",
+        "type": "bool"
+      },
+      {
+        "name": "importEnabled",
+        "type": "bool"
+      },
+      {
+        "name": "importValidationRules",
+        "type": "dynamic>?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "FeatureToggleModel",
+    "fields": [
+      {
+        "name": "featureKey",
+        "type": "String"
+      },
+      {
+        "name": "enabled",
+        "type": "bool"
+      },
+      {
+        "name": "config",
+        "type": "dynamic>?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "PasswordPolicyModel",
+    "fields": [
+      {
+        "name": "minLength",
+        "type": "int"
+      },
+      {
+        "name": "requireUppercase",
+        "type": "bool"
+      },
+      {
+        "name": "requireNumbers",
+        "type": "bool"
+      },
+      {
+        "name": "requireSpecialChars",
+        "type": "bool"
+      },
+      {
+        "name": "expiryDuration",
+        "type": "Duration?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ProductionSettingsModel",
+    "fields": [
+      {
+        "name": "allowReservation",
+        "type": "bool"
+      },
+      {
+        "name": "autoConsumeOnComplete",
+        "type": "bool"
+      },
+      {
+        "name": "defaultYieldPerRun",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ReorderWorkflowSettingsModel",
+    "fields": [
+      {
+        "name": "autoReorderEnabled",
+        "type": "bool"
+      },
+      {
+        "name": "reorderPointMultiplier",
+        "type": "int"
+      },
+      {
+        "name": "maxPendingOrders",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockTakeSettingsModel",
+    "fields": [
+      {
+        "name": "gpsEnforced",
+        "type": "bool"
+      },
+      {
+        "name": "maxDistanceMeters",
+        "type": "double?"
+      },
+      {
+        "name": "allowedLocations",
+        "type": "List<String>?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "SupplierSupportSettingsModel",
+    "fields": [
+      {
+        "name": "enabled",
+        "type": "bool"
+      },
+      {
+        "name": "supplierRoles",
+        "type": "List<String>?"
+      },
+      {
+        "name": "config",
+        "type": "dynamic>?"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "AdjustmentModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "quantityChange",
+        "type": "int"
+      },
+      {
+        "name": "reason",
+        "type": "String"
+      },
+      {
+        "name": "performedByUserId",
+        "type": "String"
+      },
+      {
+        "name": "timestamp",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockBatchModel",
+    "fields": [
+      {
+        "name": "batchId",
+        "type": "String"
+      },
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "manufactureDate",
+        "type": "DateTime"
+      },
+      {
+        "name": "expiryDate",
+        "type": "DateTime?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "sku",
+        "type": "String"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "status",
+        "type": "StockStatus"
+      },
+      {
+        "name": "durabilityType",
+        "type": "StockDurabilityType"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "categoryId",
+        "type": "String?"
+      },
+      {
+        "name": "supplierId",
+        "type": "String?"
+      },
+      {
+        "name": "unit",
+        "type": "String?"
+      },
+      {
+        "name": "location",
+        "type": "String?"
+      },
+      {
+        "name": "minimumStock",
+        "type": "int?"
+      },
+      {
+        "name": "maximumStock",
+        "type": "int?"
+      },
+      {
+        "name": "averageDailyUsage",
+        "type": "int?"
+      },
+      {
+        "name": "leadTimeDays",
+        "type": "int?"
+      },
+      {
+        "name": "safetyStock",
+        "type": "int?"
+      },
+      {
+        "name": "reorderPoint",
+        "type": "int?"
+      },
+      {
+        "name": "preferredReorderQuantity",
+        "type": "int?"
+      },
+      {
+        "name": "price",
+        "type": "double?"
+      },
+      {
+        "name": "costPrice",
+        "type": "double?"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "updatedAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "expiryDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "lastSoldDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "deadstockThreshold",
+        "type": "Duration?"
+      },
+      {
+        "name": "warehouseStock",
+        "type": "int>?"
+      },
+      {
+        "name": "movementHistory",
+        "type": "List<StockMovement>?"
+      },
+      {
+        "name": "tags",
+        "type": "List<String>?"
+      },
+      {
+        "name": "false",
+        "type": "return"
+      },
+      {
+        "name": "false",
+        "type": "return"
+      },
+      {
+        "name": "days",
+        "type": ">"
+      },
+      {
+        "name": "null",
+        "type": "return"
+      },
+      {
+        "name": "null",
+        "type": "return"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockMovementModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "type",
+        "type": "MovementTypeModel"
+      },
+      {
+        "name": "quantity",
+        "type": "int"
+      },
+      {
+        "name": "reason",
+        "type": "String?"
+      },
+      {
+        "name": "referenceId",
+        "type": "String?"
+      },
+      {
+        "name": "performedByUserId",
+        "type": "String?"
+      },
+      {
+        "name": "fromLocation",
+        "type": "String?"
+      },
+      {
+        "name": "toLocation",
+        "type": "String?"
+      },
+      {
+        "name": "timestamp",
+        "type": "DateTime"
+      },
+      {
+        "name": "props",
+        "type": "get"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "MovementTypeModel",
+    "values": [
+      "inbound",
+      "outbound",
+      "adjustment",
+      "// Add more types as needed"
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockTakeModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "description",
+        "type": "String?"
+      },
+      {
+        "name": "startDate",
+        "type": "DateTime"
+      },
+      {
+        "name": "endDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "status",
+        "type": "StockTakeStatus"
+      },
+      {
+        "name": "createdBy",
+        "type": "String"
+      },
+      {
+        "name": "assignedTo",
+        "type": "List<String>"
+      },
+      {
+        "name": "locationId",
+        "type": "String?"
+      },
+      {
+        "name": "categoryFilters",
+        "type": "List<String>?"
+      },
+      {
+        "name": "totalItems",
+        "type": "int"
+      },
+      {
+        "name": "countedItems",
+        "type": "int"
+      },
+      {
+        "name": "discrepancies",
+        "type": "int"
+      },
+      {
+        "name": "metadata",
+        "type": "dynamic>?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "StockTakeItemModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "stockTakeId",
+        "type": "String"
+      },
+      {
+        "name": "productId",
+        "type": "String"
+      },
+      {
+        "name": "productName",
+        "type": "String"
+      },
+      {
+        "name": "productCode",
+        "type": "String"
+      },
+      {
+        "name": "systemQuantity",
+        "type": "int"
+      },
+      {
+        "name": "countedQuantity",
+        "type": "int?"
+      },
+      {
+        "name": "countMethod",
+        "type": "CountMethod?"
+      },
+      {
+        "name": "countedBy",
+        "type": "String?"
+      },
+      {
+        "name": "countedAt",
+        "type": "DateTime?"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      },
+      {
+        "name": "photoUrls",
+        "type": "List<String>?"
+      },
+      {
+        "name": "isCounted",
+        "type": "bool"
+      },
+      {
+        "name": "hasDiscrepancy",
+        "type": "bool"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "updatedAt",
+        "type": "DateTime"
+      }
+    ]
+  }
+]

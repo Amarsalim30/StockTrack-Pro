@@ -1,0 +1,51 @@
+Enum: ActivityType
+- stockIn
+- stockOut
+- adjustment
+- transfer
+- return_
+- created
+- updated
+- deleted
+- approved
+- rejected
+
+Enum: PermissionType
+- createOrder
+- approveOrder
+- receiveStock
+- adjustStock
+- viewReports
+- processReturns
+- createProduct
+- editProduct
+- deleteProduct
+- // Add additional permissions here...
+
+Enum: ReturnType
+- supplier, customer, warranty
+
+Model: ProductionOrderStatus
+- name: String
+
+Enum: StockDurabilityType
+- perishable, // e.g. food, medicine
+- nonPerishable, // e.g. electronics, furniture
+- durable, // e.g. machinery, vehicles
+- consumable, // e.g. office supplies, cleaning products
+
+Enum: MovementType
+- inbound
+- outbound
+- adjustment
+- // Add more types as needed
+
+Enum: StockTakeStatus
+- active
+- completed
+- cancelled
+- paused
+
+Enum: CountMethod
+- manual, barcode, photo, rfid
+

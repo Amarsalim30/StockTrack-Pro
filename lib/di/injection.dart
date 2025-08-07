@@ -119,3 +119,12 @@ StateNotifierProvider<AuthViewModel, AuthState>((ref) {
 final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
   throw UnimplementedError('StockTakeRepository implementation needed');
 });
+
+
+// Provider definition
+final stockTakeViewModelProvider =
+StateNotifierProvider<StockTakeViewModel, StockTakeState>((ref) {
+  final repository = ref.watch(stockTakeRepositoryProvider);
+  return StockTakeViewModel(repository);
+});
+

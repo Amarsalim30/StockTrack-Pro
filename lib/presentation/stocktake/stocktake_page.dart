@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../di/injection.dart';
 import '../../domain/entities/stock/stock_take.dart';
 import 'stocktake_view_model.dart';
 

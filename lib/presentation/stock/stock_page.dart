@@ -1,64 +1,93 @@
-// lib/presentation/stock/stock_page.dart
+// // lib/presentation/stock/stock_page.dart
 
 import 'package:clean_arch_app/presentation/stock/stock_state.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
-import 'package:clean_arch_app/presentation/stocktake/stocktake_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../core/constants/colors.dart';
-import '../../core/enums/stock_status.dart';
 import '../../di/injection.dart' as di;
 import '../dashboard/dashboard_view_model.dart';
-import 'widgets/advanced_stock_list.dart';
+import '../dashboard/widgets/stock_list.dart';
 
-class StockPage extends ConsumerStatefulWidget {
+class StockPage extends ConsumerWidget {
   const StockPage({super.key});
 
   @override
-  ConsumerState<StockPage> createState() => _StockPageState();
-}
-
-class _StockPageState extends ConsumerState<StockPage>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
-  
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _searchController.addListener(_onSearchChanged);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  void _onSearchChanged() {
-    final stockViewModel = ref.read(di.stockViewModelProvider.notifier);
-    stockViewModel.setSearchQuery(_searchController.text);
-  }
-
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(di.dashboardViewModelProvider.notifier);
     final stockState = ref.watch(di.stockViewModelProvider);
     final stockViewModel = ref.watch(di.stockViewModelProvider.notifier);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      body: CustomScrollView(
-        slivers: [
-          _buildSliverAppBar(context, ref, stockState),
-          _buildSliverBody(context, ref, stockState, stockViewModel),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.slate[900],
+        elevation: 0,
+        titleSpacing: 16.0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'StockTrackPro',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 2),
+            Text(
+              'Professional Inventory Management',
+              style: TextStyle(fontSize: 12, color: Colors.white70),
+            ),
+          ],
+        ),
+        centerTitle: false,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: Icon(Icons.notifications_none, color: Colors.white),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Icon(Icons.account_circle_rounded, color: Colors.white),
+          ),
         ],
       ),
-      floatingActionButton: _buildFloatingActionButtons(context, ref),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Stock Inventory',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  '${stockState.stocks.length} items',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildInventoryHeader(viewModel, stockViewModel ,stockState),
+            const SizedBox(height: 12),
+            Expanded(child: StockList(stocks: stockState.stocks)),
+          ],
+        ),
+      ),
+
     );
   }
 

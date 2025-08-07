@@ -1,0 +1,88 @@
+[
+  {
+    "type": "enum",
+    "name": "ActivityType",
+    "values": [
+      "stockIn",
+      "stockOut",
+      "adjustment",
+      "transfer",
+      "return_",
+      "created",
+      "updated",
+      "deleted",
+      "approved",
+      "rejected"
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "PermissionType",
+    "values": [
+      "createOrder",
+      "approveOrder",
+      "receiveStock",
+      "adjustStock",
+      "viewReports",
+      "processReturns",
+      "createProduct",
+      "editProduct",
+      "deleteProduct",
+      "// Add additional permissions here..."
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "ReturnType",
+    "values": [
+      "supplier, customer, warranty"
+    ]
+  },
+  {
+    "type": "class",
+    "name": "ProductionOrderStatus",
+    "fields": [
+      {
+        "name": "name",
+        "type": "String"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "StockDurabilityType",
+    "values": [
+      "perishable, // e.g. food, medicine",
+      "nonPerishable, // e.g. electronics, furniture",
+      "durable, // e.g. machinery, vehicles",
+      "consumable, // e.g. office supplies, cleaning products"
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "MovementType",
+    "values": [
+      "inbound",
+      "outbound",
+      "adjustment",
+      "// Add more types as needed"
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "StockTakeStatus",
+    "values": [
+      "active",
+      "completed",
+      "cancelled",
+      "paused"
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "CountMethod",
+    "values": [
+      "manual, barcode, photo, rfid"
+    ]
+  }
+]
