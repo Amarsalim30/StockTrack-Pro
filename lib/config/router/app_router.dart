@@ -1,9 +1,11 @@
+import 'package:clean_arch_app/presentation/stocktake/stocktake_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../di/injection.dart';
 import '../../presentation/auth/login_page.dart';
+import '../../presentation/common/widgets/main_scaffold.dart';
 import '../../presentation/dashboard/dashboard_page.dart';
-import '../../presentation/dashboard/dashboard_view_model.dart';
 import '../../presentation/stock/stock_page.dart';
 import '../../presentation/product_form/add_product_page.dart';
 import '../../presentation/suppliers/supplier_page.dart';
@@ -12,9 +14,16 @@ import '../../presentation/settings/settings_page.dart';
 import 'route_names.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authViewModelProvider);
+
   return GoRouter(
-    initialLocation: RouteNames.stock,
+    initialLocation: RouteNames.login,
     routes: [
+      ShellRoute(
+      builder: (context, state, child) => MainScaffold(child: child),
+
+      routes: [
+
       GoRoute(
         path: RouteNames.login,
         name: RouteNames.login,
@@ -31,6 +40,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: RouteNames.stock,
         builder: (context, state) => StockPage(),
       ),
+        GoRoute(
+          path: RouteNames.stocktake,
+          name: RouteNames.stocktake,
+          builder: (context, state) => StockTakePage(),
+        ),
       GoRoute(
         path: RouteNames.addProduct,
         name: RouteNames.addProduct,
@@ -50,6 +64,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: RouteNames.settings,
         name: RouteNames.settings,
         builder: (context, state) => const SettingsPage(),
+      ),
+      ],
       ),
     ],
     errorBuilder: (context, state) =>

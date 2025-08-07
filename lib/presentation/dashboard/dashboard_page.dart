@@ -225,7 +225,7 @@ class DashboardPage extends ConsumerWidget {
                   size: 18,
                   color: Colors.black87,
                 ), const SizedBox(width: 6),
-                Text(stockState.sortBy.name.toUpperCase()),
+                Text(stockState.sortBy.toString()),
                 const SizedBox(width: 6),
                 const Icon(
                   LucideIcons.chevron_down,
@@ -236,7 +236,6 @@ class DashboardPage extends ConsumerWidget {
             ),
           ),
         ),
-
       ],
     );
   }

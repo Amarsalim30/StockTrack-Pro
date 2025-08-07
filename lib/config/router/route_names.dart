@@ -11,4 +11,6 @@ class RouteNames {
   static const String addUser = '/add-user';
   static const String editUser = '/edit-user';
   static const String settings = '/settings';
+
+  static const String stocktake = '/stocktake';
 }
