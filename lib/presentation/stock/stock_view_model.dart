@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import '../../core/enums/stock_status.dart';
@@ -604,6 +605,12 @@ class StockViewModel extends StateNotifier<StockState> {
 
   void addNewStock() {
   }
+
+  void showAddStock(BuildContext context) {}
+
+  void refreshItem(String id) {}
+
+  void handleItemAction(BuildContext context, Stock item, String action) {}
 }
 
 
