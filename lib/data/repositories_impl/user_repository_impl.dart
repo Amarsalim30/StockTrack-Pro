@@ -100,5 +100,11 @@ class UserRepositoryImpl implements UserRepository {
     throw UnimplementedError();
   }
 
+  @override
+  Future<Either<Exception, User>> getCurrentUser() {
+    // TODO: implement getCurrentUser
+    throw UnimplementedError();
+  }
+
   // Add more methods as needed like toggleUserStatus, getStats, etc.
 }

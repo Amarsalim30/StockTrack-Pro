@@ -415,7 +415,3 @@ class _StockTakeApi implements StockTakeApi {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
-
-extension on Type {
-  fromJson(Map<String, dynamic> v) {}
-}

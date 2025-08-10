@@ -24,8 +24,8 @@ import '../data/repositories_impl/stock_repository_impl.dart';
 // ViewModels
 import '../presentation/dashboard/dashboard_state.dart';
 import '../presentation/dashboard/dashboard_view_model.dart';
-import '../presentation/stock/stock_state.dart';
-import '../presentation/stock/stock_view_model.dart';
+import '../presentation/stock/viewModels/stock_state.dart';
+import '../presentation/stock/viewModels/stock_view_model.dart';
 import '../presentation/suppliers/supplier_view_model.dart';
 import '../presentation/auth/login_view_model.dart';
 import '../presentation/stocktake/stocktake_view_model.dart';
@@ -85,29 +85,29 @@ final stockRepositoryProvider = Provider<StockRepository>((ref) {
 // ─────────────────────────────────────────────
 
 final dashboardViewModelProvider =
-    StateNotifierProvider<DashboardViewModel, DashboardState>(
+StateNotifierProvider<DashboardViewModel, DashboardState>(
       (ref) => DashboardViewModel(),
-    );
+);
 
 final stockViewModelProvider =
-    StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
-      final stockRepo = ref.watch(stockRepositoryProvider);
-      final authRepo = ref.watch(authRepositoryProvider);
-      return StockViewModel(
-        stockRepository: stockRepo,
-        authRepository: authRepo,
-      );
-    });
+StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
+  final stockRepo = ref.watch(stockRepositoryProvider);
+  final authRepo = ref.watch(authRepositoryProvider);
+  return StockViewModel(
+
+  );
+
+});
 
 final supplierViewModelProvider = Provider<SupplierViewModel>((ref) {
   return SupplierViewModel();
 });
 
 final loginViewModelProvider =
-    StateNotifierProvider<LoginViewModel, LoginState>((ref) {
-      final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
-      return LoginViewModel(loginUseCase);
-    });
+StateNotifierProvider<LoginViewModel, LoginState>((ref) {
+  final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
+  return LoginViewModel(loginUseCase);
+});
 
 final authViewModelProvider =
 StateNotifierProvider<AuthViewModel, AuthState>((ref) {

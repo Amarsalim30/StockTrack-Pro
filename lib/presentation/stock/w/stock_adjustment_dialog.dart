@@ -1,21 +1,17 @@
 import 'package:clean_arch_app/di/injection.dart';
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock_take.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../stock_view_model.dart';
-import '../../../data/models/stock/stock_model.dart';
-
-class StockAdjustmentDialog extends StatefulWidget {
+import '../stock_view_model.dart';class StockAdjustmentDialog extends StatefulWidget {
   final Stock stock;
   final bool isEditMode;
 
   const StockAdjustmentDialog({
-    Key? key,
+    super.key,
     required this.stock,
     this.isEditMode = false,
-  }) : super(key: key);
+  });
 
   @override
   State<StockAdjustmentDialog> createState() => _StockAdjustmentDialogState();
@@ -36,11 +32,10 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   @override
   void initState() {
     super.initState();
-    if (widget.isEditMode) {
-      _nameController.text = widget.stock.name;
+    if (widget.isEditMode) {_nameController.text = widget.stock.name;
       _descriptionController.text = widget.stock.description ?? '';
-      _priceController.text = widget.stock.price.toString();
-      _reorderPointController.text = widget.stock.reorderPoint.toString();
+      _priceController.text = (widget.stock.price ?? 0.0).toString();
+      _reorderPointController.text = (widget.stock.minimumStock ?? 0).toString();
     }
   }
 
@@ -61,15 +56,14 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
       builder: (context, WidgetRef ref, child) {
         final viewModel = ref.watch(stockViewModelProvider.notifier);
 
-        if (!viewModel.canAdjustStock && !widget.isEditMode) {
-          return AlertDialog(
-            title: Text('Permission Denied'),
-            content: Text(
+        if (!viewModel.canAdjustStock && !widget.isEditMode) {return AlertDialog(
+            title: const Text('Permission Denied'),
+            content: const Text(
                 'You do not have permission to adjust stock quantities.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -77,12 +71,12 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
 
         if (widget.isEditMode && !viewModel.canEditStock) {
           return AlertDialog(
-            title: Text('Permission Denied'),
-            content: Text('You do not have permission to edit stock items.'),
+            title: const Text('Permission Denied'),
+            content: const Text('You do not have permission to edit stock items.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -95,13 +89,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
 
   Widget _buildDialog(BuildContext context, WidgetRef ref) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.9,
-        constraints: BoxConstraints(maxWidth: 500),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        constraints: const BoxConstraints(maxWidth: 500),
         child: Form(
           key: _formKey,
           child: Column(
@@ -111,32 +101,28 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
         ),
       ),
     );
-  }
-
-  Widget _buildHeader() {
+  }Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Row(
-        children: [
-          Icon(
+        children: [Icon(
             widget.isEditMode ? Icons.edit : Icons.inventory_2,
             color: Colors.white,
             size: 28,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+              children: [Text(
                   widget.isEditMode
                       ? 'Edit Stock Item'
                       : 'Adjust Stock: ${widget.stock.name}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -144,8 +130,8 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                 ),
                 if (!widget.isEditMode)
                   Text(
-                    'Current Quantity: ${widget.stock.quantity} ${widget.stock.unit}',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    'Current Quantity: ${widget.stock.quantity} ${widget.stock.unit ?? "pcs"}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
                   ),
               ],
             ),
@@ -153,11 +139,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
         ],
       ),
     );
-  }
-
-  Widget _buildContent() {
+  }Widget _buildContent() {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: widget.isEditMode ? _buildEditForm() : _buildAdjustmentForm(),
     );
   }
@@ -165,10 +149,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   Widget _buildEditForm() {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        TextFormField(
+      children: [TextFormField(
           controller: _nameController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Product Name',
             prefixIcon: Icon(Icons.label),
             border: OutlineInputBorder(),
@@ -180,24 +163,23 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             return null;
           },
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         TextFormField(
           controller: _descriptionController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Description (Optional)',
             prefixIcon: Icon(Icons.description),
             border: OutlineInputBorder(),
           ),
           maxLines: 3,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(
-              child: TextFormField(
+            Expanded(child: TextFormField(
                 controller: _priceController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
                   labelText: 'Price',
                   prefixIcon: Icon(Icons.attach_money),
                   border: OutlineInputBorder(),
@@ -213,12 +195,12 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                 },
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: TextFormField(
                 controller: _reorderPointController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Reorder Point',
                   prefixIcon: Icon(Icons.low_priority),
                   border: OutlineInputBorder(),
@@ -245,10 +227,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Row(
-          children: [
-            Expanded(
+          children: [Expanded(
               child: RadioListTile<AdjustmentType>(
-                title: Text('Add'),
+                title: const Text('Add'),
                 value: AdjustmentType.add,
                 groupValue: _adjustmentType,
                 onChanged: (value) {
@@ -260,7 +241,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             ),
             Expanded(
               child: RadioListTile<AdjustmentType>(
-                title: Text('Remove'),
+                title: const Text('Remove'),
                 value: AdjustmentType.remove,
                 groupValue: _adjustmentType,
                 onChanged: (value) {
@@ -271,8 +252,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
               ),
             ),
           ],
-        ),
-        SizedBox(height: 16),
+        ),const SizedBox(height: 16),
         TextFormField(
           controller: _adjustmentController,
           keyboardType: TextInputType.number,
@@ -283,8 +263,8 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   ? Icons.add_circle
                   : Icons.remove_circle,
             ),
-            suffixText: widget.stock.unit,
-            border: OutlineInputBorder(),
+            suffixText: widget.stock.unit ?? "pcs",
+            border: const OutlineInputBorder(),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -300,11 +280,10 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             }
             return null;
           },
-        ),
-        SizedBox(height: 16),
+        ),const SizedBox(height: 16),
         TextFormField(
           controller: _reasonController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Reason for Adjustment',
             prefixIcon: Icon(Icons.comment),
             border: OutlineInputBorder(),
@@ -317,18 +296,17 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             return null;
           },
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.blue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.blue.withOpacity(0.3)),
-          ),
-          child: Row(
+          ),child: Row(
             children: [
-              Icon(Icons.info_outline, color: Colors.blue),
-              SizedBox(width: 8),
+              const Icon(Icons.info_outline, color: Colors.blue),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   _getNewQuantityText(),
@@ -340,27 +318,23 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
         ),
       ],
     );
-  }
-
-  Widget _buildActions(WidgetRef ref) {
+  }Widget _buildActions(WidgetRef ref) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          TextButton(
+        children: [TextButton(
             onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           ElevatedButton(
-            onPressed: _isLoading ? null : () => _submit(ref),
-            child: _isLoading
-                ? SizedBox(
+            onPressed: _isLoading ? null : () => _submit(ref),child: _isLoading
+                ? const SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -390,7 +364,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
         ? widget.stock.quantity + adjustment
         : widget.stock.quantity - adjustment;
 
-    return 'New quantity will be: $newQuantity ${widget.stock.unit}';
+    return 'New quantity will be: $newQuantity ${widget.stock.unit ?? "pcs"}';
   }
 
   void _submit(WidgetRef ref) async {

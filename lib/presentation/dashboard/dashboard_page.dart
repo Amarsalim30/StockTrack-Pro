@@ -5,8 +5,8 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../../di/injection.dart' as di;
 import '../../di/injection.dart';
-import '../stock/stock_state.dart';
-import '../stock/stock_view_model.dart';
+import '../stock/viewModels/stock_state.dart';
+import '../stock/viewModels/stock_view_model.dart';
 import 'dashboard_view_model.dart';
 import 'widgets/stock_list.dart';
 

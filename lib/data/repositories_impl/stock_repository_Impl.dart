@@ -1,3 +1,4 @@
+import 'package:clean_arch_app/core/error/unexpected_failure.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/enums/stock_status.dart';
 import '../../core/error/failures.dart';
@@ -7,6 +8,8 @@ import '../../domain/repositories/stock_repository.dart';
 import '../datasources/remote/stock_api.dart';
 import '../models/stock/stock_model.dart';
 
+/// Concrete data-layer implementation of [StockRepository].
+/// Converts between API models and domain entities, and maps exceptions to [Failure]s.
 class StockRepositoryImpl implements StockRepository {
   final StockApi api;
 
@@ -14,103 +17,104 @@ class StockRepositoryImpl implements StockRepository {
 
   @override
   Future<Either<Failure, List<Stock>>> getStocks() async {
-    try {
+    return _execute<List<Stock>>(() async {
       final stockModels = await api.getStocks();
-      final stocks = stockModels.map((model) => model.toEntity()).toList();
-      return Right(stocks);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch stocks: $e'));
-    }
+      return stockModels.map((model) => model.toEntity()).toList();
+    }, 'fetch stocks');
   }
 
   @override
   Future<Either<Failure, Stock>> getStockById(String id) async {
-    try {
+    return _execute<Stock>(() async {
       final stockModel = await api.getStockById(id);
-      return Right(stockModel.toEntity());
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch stock: $e'));
-    }
+      return stockModel.toEntity();
+    }, 'fetch stock by ID');
   }
 
   @override
   Future<Either<Failure, Stock>> createStock(Stock stock) async {
-    try {
+    return _execute<Stock>(() async {
       final stockModel = StockModel.fromDomain(stock);
       await api.createStock(stockModel);
-      return Right(stock);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to create stock: $e'));
-    }
+      return stock;
+    }, 'create stock');
   }
 
   @override
   Future<Either<Failure, Stock>> updateStock(Stock stock) async {
-    try {
+    return _execute<Stock>(() async {
       final stockModel = StockModel.fromDomain(stock);
       await api.updateStock(stock.id, stockModel);
-      return Right(stock);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update stock: $e'));
-    }
+      return stock;
+    }, 'update stock');
   }
 
   @override
   Future<Either<Failure, void>> deleteStock(String id) async {
-    try {
+    return _execute<void>(() async {
       await api.deleteStock(id);
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to delete stock: $e'));
-    }
+    }, 'delete stock');
   }
 
   @override
   Future<Either<Failure, void>> deleteStocks(List<String> ids) async {
-    try {
+    return _execute<void>(() async {
       await api.deleteStocks({'ids': ids});
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to delete stocks: $e'));
-    }
+    }, 'delete multiple stocks');
   }
 
   @override
-  Future<Either<Failure, void>> updateStockStatus(List<String> ids,
-      StockStatus status) async {
-    try {
-      await api.updateStockStatus({'ids': ids, 'status': status.code});
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update stock status: $e'));
-    }
+  Future<Either<Failure, void>> updateStockStatus(
+      String id, StockStatus status) async {
+    return _execute<void>(() async {
+      await api.updateStockStatus({'ids': id, 'status': status.code});
+    }, 'update stock status');
   }
 
   @override
-  Future<Either<Failure, void>> adjustStock(String stockId, int adjustment,
-      String reason) async {
-    try {
+  Future<Either<Failure, void>> adjustStock(
+      String stockId, int adjustment, String reason) async {
+    return _execute<void>(() async {
       await api.adjustStock(
-          stockId, {'adjustment': adjustment, 'reason': reason});
-      return const Right(null);
+        stockId,
+        {'adjustment': adjustment, 'reason': reason},
+      );
+    }, 'adjust stock');
+  }
+
+  /// Utility method to wrap API calls, handle exceptions, and map to [Failure].
+  Future<Either<Failure, T>> _execute<T>(
+      Future<T> Function() body,
+      String actionDescription,
+      ) async {
+    try {
+      final result = await body();
+      return Right(result);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to adjust stock: $e'));
+      return Left(ServerFailure(message: e.message ?? 'Server error during $actionDescription'));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message ?? 'Cache error during $actionDescription'));
+    } catch (e, stack) {
+      // Optional: Log stack trace to Crashlytics/Sentry here
+      return Left(UnexpectedFailure() as Failure);
     }
+  }
+
+  @override
+  Future<Either<Failure, Stock>> addStock(Stock stock) {
+    // TODO: implement addStock
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, List<Stock>>> getAllStocks() {
+    // TODO: implement getAllStocks
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, void>> updateMultipleStockStatus(List<String> ids, StockStatus status) {
+    // TODO: implement updateMultipleStockStatus
+    throw UnimplementedError();
   }
 }

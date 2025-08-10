@@ -2,7 +2,6 @@ import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:flutter/material.dart';
 import '../../../core/enums/stock_status.dart';
 
-
 class StockItemCard extends StatelessWidget {
   final Stock stock;
   final bool isSelected;
@@ -13,7 +12,7 @@ class StockItemCard extends StatelessWidget {
   final bool showSelectionCheckbox;
 
   const StockItemCard({
-    Key? key,
+    super.key,
     required this.stock,
     this.isSelected = false,
     this.onTap,
@@ -21,12 +20,11 @@ class StockItemCard extends StatelessWidget {
     this.onEdit,
     this.onDelete,
     this.showSelectionCheckbox = false,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  Widget build(BuildContext context) {return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: isSelected ? 4 : 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -37,7 +35,7 @@ class StockItemCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-        child: Padding(
+        child: const Padding(
           padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,16 +49,15 @@ class StockItemCard extends StatelessWidget {
                     ),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      crossAxisAlignment: CrossAxisAlignment.start,children: [
                         Text(
                           stock.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'SKU: ${stock.sku}',
                           style: TextStyle(
@@ -73,8 +70,7 @@ class StockItemCard extends StatelessWidget {
                   ),
                   _buildStatusChip(context),
                 ],
-              ),
-              SizedBox(height: 12),
+              ),const const SizedBox(height: 12),
               if (stock.description != null) ...[
                 Text(
                   stock.description!,
@@ -82,7 +78,7 @@ class StockItemCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
               ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,10 +134,8 @@ class StockItemCard extends StatelessWidget {
         statusColor = Colors.orange;
         statusIcon = Icons.local_shipping;
         break;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    }return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: statusColor.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
@@ -150,7 +144,7 @@ class StockItemCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(statusIcon, size: 16, color: statusColor),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             _getStatusText(stock.status),
             style: TextStyle(
@@ -162,10 +156,8 @@ class StockItemCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildQuantityInfo() {
-    final isLowStock = stock.isLowStock;
+  }Widget _buildQuantityInfo() {
+    final isLowStock = stock.quantity <= (stock.minimumStock ?? 0) && stock.quantity > 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +169,7 @@ class StockItemCard extends StatelessWidget {
         Row(
           children: [
             Text(
-              '${stock.quantity} ${stock.unit}',
+              '${stock.quantity} ${stock.unit ?? "pcs"}',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -185,27 +177,27 @@ class StockItemCard extends StatelessWidget {
               ),
             ),
             if (isLowStock) ...[
-              SizedBox(width: 4),
-              Icon(Icons.warning, size: 16, color: Colors.orange),
+              const SizedBox(width: 4),
+              const Icon(Icons.warning, size: 16, color: Colors.orange),
             ],
           ],
         ),
-        if (stock.needsReorder)
+        if (stock.minimumStock != null)
           Text(
-            'Reorder at: ${stock.reorderPoint}',
+            'Min: ${stock.minimumStock}',
             style: TextStyle(fontSize: 11, color: Colors.grey[500]),
           ),
       ],
     );
-  }
-
-  Widget _buildPriceInfo() {
+  }Widget _buildPriceInfo() {
+    final price = stock.price ?? 0.0;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text('Price', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         Text(
-          '\$${stock.price!.toStringAsFixed(2)}',
+          '\$${price.toStringAsFixed(2)}',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -213,7 +205,7 @@ class StockItemCard extends StatelessWidget {
           ),
         ),
         Text(
-          'Total: \$${(stock.price! * stock.quantity).toStringAsFixed(2)}',
+          'Total: \$${(price * stock.quantity).toStringAsFixed(2)}',
           style: TextStyle(fontSize: 11, color: Colors.grey[500]),
         ),
       ],
@@ -223,33 +215,32 @@ class StockItemCard extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (onViewDetails != null)
+      children: [if (onViewDetails != null)
           TextButton.icon(
             onPressed: onViewDetails,
-            icon: Icon(Icons.visibility, size: 18),
-            label: Text('View'),
+            icon: const Icon(Icons.visibility, size: 18),
+            label: const Text('View'),
             style: TextButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
           ),
         if (onEdit != null)
           TextButton.icon(
             onPressed: onEdit,
-            icon: Icon(Icons.edit, size: 18),
-            label: Text('Edit'),
+            icon: const Icon(Icons.edit, size: 18),
+            label: const Text('Edit'),
             style: TextButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
           ),
         if (onDelete != null)
           TextButton.icon(
             onPressed: onDelete,
-            icon: Icon(Icons.delete, size: 18),
-            label: Text('Delete'),
+            icon: const Icon(Icons.delete, size: 18),
+            label: const Text('Delete'),
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
           ),
       ],

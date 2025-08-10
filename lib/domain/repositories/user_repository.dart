@@ -25,4 +25,6 @@ abstract class UserRepository {
   Future<Either<Failure, void>> deleteUser(String id);
 
   Future<Either<Exception, List<User>>> searchUsers(String query);
+
+  Future<Either<Exception ,User>> getCurrentUser() ;
 }
