@@ -1,6 +1,7 @@
 // Stock State
 import 'package:clean_arch_app/domain/entities/auth/user.dart';
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
+import 'package:clean_arch_app/presentation/suppliers/supplier_view_model.dart';
 
 import '../../core/enums/stock_status.dart';
 
@@ -36,6 +37,8 @@ class StockState {
   final StockStatus? filterStatus;
   final SortBy sortBy;
   final SortOrder sortOrder;
+
+  final List<SortBy> sortOptions;   // Available fields to sort by
   final String? errorMessage;
 
   const StockState({
@@ -46,6 +49,7 @@ class StockState {
     this.searchQuery = '',
     this.filterStatus,
     this.sortBy = SortBy.name,
+    this.sortOptions = const [SortBy.name, SortBy.sku, SortBy.quantity, SortBy.lastUpdated],
     this.sortOrder = SortOrder.ascending,
     this.errorMessage,
     this.isLoading = false,

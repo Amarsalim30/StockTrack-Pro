@@ -24,4 +24,6 @@ abstract class AuthRepository {
 
   void clearToken() {}
 
+  Future<Either<Exception, User>> register(String username, String email, String password) ;
+
 }

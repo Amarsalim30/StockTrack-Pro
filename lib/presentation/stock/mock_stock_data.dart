@@ -253,3 +253,6 @@ final List<Stock> mockStocks = [
     durabilityType: StockDurabilityType.durable,
   ),
 ];
+
+
+List<Stock> getMockStocks() => mockStocks;

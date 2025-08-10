@@ -74,7 +74,7 @@ class _StockApi implements StockApi {
   }
 
   @override
-  Future<void> createStock(StockModel stock) async {
+  Future<void> addStock(StockModel stock) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

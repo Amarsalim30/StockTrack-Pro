@@ -22,6 +22,20 @@ import '../data/repositories_impl/user_repository_impl.dart';
 import '../data/repositories_impl/stock_repository_impl.dart';
 
 // ViewModels
+import '../domain/usecases/stock/add_stock_usecase.dart';
+import '../domain/usecases/stock/adjust_stock_usecase.dart';
+import '../domain/usecases/stock/delete_multiple_stocks_usecase.dart';
+import '../domain/usecases/stock/delete_stock_usecase.dart';
+import '../domain/usecases/stock/filter_stocks_usecase.dart';
+import '../domain/usecases/stock/get_all_stocks_usecase.dart';
+import '../domain/usecases/stock/get_stock_by_id_usecase.dart';
+import '../domain/usecases/stock/search_stocks_usecase.dart';
+import '../domain/usecases/stock/sort_stocks_usecase.dart';
+import '../domain/usecases/stock/toggle_stock_selection_usecase.dart';
+import '../domain/usecases/stock/update_multiple_stock_status.dart';
+import '../domain/usecases/stock/update_stock_status_usecase.dart';
+import '../domain/usecases/stock/update_stock_usecase.dart';
+import '../domain/usecases/stock_usecases.dart';
 import '../presentation/dashboard/dashboard_state.dart';
 import '../presentation/dashboard/dashboard_view_model.dart';
 import '../presentation/stock/stock_state.dart';
@@ -88,16 +102,45 @@ final dashboardViewModelProvider =
     StateNotifierProvider<DashboardViewModel, DashboardState>(
       (ref) => DashboardViewModel(),
     );
+//
+// final stockViewModelProvider =
+//     StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
+//       final stockRepo = ref.watch(stockRepositoryProvider);
+//       final authRepo = ref.watch(authRepositoryProvider);
+//       return StockViewModel(
+//         stockRepository: stockRepo,
+//         authRepository: authRepo,
+//       );
+//     });
 
+final stockUsecasesProvider = Provider((ref) {
+  final stockRepo = ref.watch(stockRepositoryProvider);
+  return StockUseCases(
+    addStockUseCase: AddStockUseCase(stockRepo),
+    adjustStockUseCase: AdjustStockUseCase(stockRepo),
+    deleteMultipleStocksUseCase: DeleteMultipleStocksUseCase(stockRepo),
+    deleteStockUseCase: DeleteStockUseCase(stockRepo),
+    filterStocksUseCase: FilterStocksUseCase(),
+    getAllStocksUseCase: GetAllStocksUseCase(stockRepo),
+    getStockByIdUseCase: GetStockByIdUseCase(stockRepo),
+    searchStocksUseCase: SearchStocksUseCase(),
+    sortStocksUseCase: SortStocksUseCase(),
+    toggleStockSelectionUseCase: ToggleStockSelectionUseCase(),
+    updateMultipleStockStatusUseCase:
+        UpdateMultipleStockStatusUseCase(stockRepo),
+    updateStockStatusUseCase: UpdateStockStatusUseCase(stockRepo),
+    updateStockUseCase: UpdateStockUseCase(stockRepo),
+  );
+});
 final stockViewModelProvider =
-    StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
-      final stockRepo = ref.watch(stockRepositoryProvider);
-      final authRepo = ref.watch(authRepositoryProvider);
-      return StockViewModel(
-        stockRepository: stockRepo,
-        authRepository: authRepo,
-      );
-    });
+StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
+  final stockUseCases =ref.watch(stockUsecasesProvider);
+  final authRepo = ref.watch(authRepositoryProvider);
+  return StockViewModel(
+    stockUseCases: stockUseCases,
+    authRepository: authRepo,
+  );
+});
 
 final supplierViewModelProvider = Provider<SupplierViewModel>((ref) {
   return SupplierViewModel();

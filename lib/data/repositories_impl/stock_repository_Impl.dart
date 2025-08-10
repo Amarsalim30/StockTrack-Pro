@@ -13,7 +13,7 @@ class StockRepositoryImpl implements StockRepository {
   StockRepositoryImpl(this.api);
 
   @override
-  Future<Either<Failure, List<Stock>>> getStocks() async {
+  Future<Either<Failure, List<Stock>>> getAllStocks() async {
     try {
       final stockModels = await api.getStocks();
       final stocks = stockModels.map((model) => model.toEntity()).toList();
@@ -22,6 +22,19 @@ class StockRepositoryImpl implements StockRepository {
       return Left(ServerFailure(message: e.message ?? 'Server error'));
     } catch (e) {
       return Left(ServerFailure(message: 'Failed to fetch stocks: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addStock(Stock stock) async {
+    try {
+      final stockModel = StockModel.fromDomain(stock);
+      await api.addStock(stockModel);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message ?? 'Server error'));
+    } catch (e) {
+      return Left(ServerFailure(message: 'Failed to add stock: $e'));
     }
   }
 
@@ -37,18 +50,6 @@ class StockRepositoryImpl implements StockRepository {
     }
   }
 
-  @override
-  Future<Either<Failure, Stock>> createStock(Stock stock) async {
-    try {
-      final stockModel = StockModel.fromDomain(stock);
-      await api.createStock(stockModel);
-      return Right(stock);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to create stock: $e'));
-    }
-  }
 
   @override
   Future<Either<Failure, Stock>> updateStock(Stock stock) async {
@@ -88,15 +89,26 @@ class StockRepositoryImpl implements StockRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateStockStatus(List<String> ids,
+  Future<Either<Failure, void>> updateStockStatus(String id,
       StockStatus status) async {
+    try {
+      await api.updateStockStatus({'ids': id, 'status': status.code});
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'Failed to update stock status: $e'));
+    }
+  }
+  Future<Either<Failure ,void>> updateMultipleStockStatus(
+      List<String> ids, StockStatus status) async {
     try {
       await api.updateStockStatus({'ids': ids, 'status': status.code});
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update stock status: $e'));
+      return Left(ServerFailure(message: 'Failed to update stock statuses: $e'));
     }
   }
 

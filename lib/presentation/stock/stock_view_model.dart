@@ -1,3 +1,5 @@
+import 'package:clean_arch_app/domain/usecases/stock_usecases.dart';
+import 'package:clean_arch_app/presentation/stock/mock_stock_data.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
@@ -9,15 +11,13 @@ import '../../domain/repositories/auth_repository.dart';
 import 'stock_state.dart';
 
 class StockViewModel extends StateNotifier<StockState> {
-  final StockRepository _stockRepository;
-  final AuthRepository _authRepository;
+  final StockUseCases stockUseCases;
+  final AuthRepository authRepository;
 
   StockViewModel({
-    required StockRepository stockRepository,
-    required AuthRepository authRepository,
-  }) : _stockRepository = stockRepository,
-       _authRepository = authRepository,
-       super(const StockState()) {
+    required  this.stockUseCases,
+    required this.authRepository,
+  }) :super(const StockState()) {
     _loadCurrentUser();
     loadStocks();
   }
@@ -39,7 +39,7 @@ class StockViewModel extends StateNotifier<StockState> {
       hasPermission(PermissionType.viewReports); // Load current user
   Future<void> _loadCurrentUser() async {
     try {
-      final result = await _authRepository.getCurrentUser();
+      final result = await authRepository.getCurrentUser();
       result.fold(
         (failure) => state = state.copyWith(
           status: StockStateStatus.error,
@@ -62,11 +62,11 @@ class StockViewModel extends StateNotifier<StockState> {
     );
 
     try {
-      final result = await _stockRepository.getStocks();
+      final result = await stockUseCases.getAllStocksUseCase();
       result.fold(
         (failure) {
           // Use mock data as fallback for development
-          final mockData = _getMockStocks();
+          final mockData = getMockStocks();
           state = state.copyWith(
             stocks: mockData,
             status: StockStateStatus.success,
@@ -75,7 +75,7 @@ class StockViewModel extends StateNotifier<StockState> {
           _applyFiltersAndSort();
         },
         (stocks) {
-          final stocksToUse = stocks.isEmpty ? _getMockStocks() : stocks;
+          final stocksToUse = stocks.isEmpty ? getMockStocks() : stocks;
           state = state.copyWith(
             stocks: stocksToUse,
             status: StockStateStatus.success,
@@ -85,7 +85,7 @@ class StockViewModel extends StateNotifier<StockState> {
       );
     } catch (e) {
       // Use mock data as fallback for development
-      final mockData = _getMockStocks();
+      final mockData = getMockStocks();
       state = state.copyWith(
         stocks: mockData,
         status: StockStateStatus.success,
@@ -93,106 +93,6 @@ class StockViewModel extends StateNotifier<StockState> {
       );
       _applyFiltersAndSort();
     }
-  }
-
-  List<Stock> _getMockStocks() {
-    return [
-      Stock(
-        id: 'stk-001',
-        name: 'Surgical Gloves - Medium',
-        sku: 'GLV-MD-001',
-        quantity: 120,
-        description: 'Powder-free latex surgical gloves (Medium)',
-        status: StockStatus.available,
-        price: 5.00,
-        costPrice: 3.00,
-        categoryId: 'cat-medical',
-        supplierId: 'sup-001',
-        minimumStock: 50,
-        maximumStock: 200,
-        unit: 'Box',
-        location: 'Aisle 1 - Shelf 3',
-        createdAt: DateTime.now().subtract(const Duration(days: 20)),
-        updatedAt: DateTime.now(),
-        durabilityType: StockDurabilityType.durable,
-      ),
-      Stock(
-        id: 'stk-002',
-        name: 'Vitamin C Tablets 1000mg',
-        sku: 'VITC-1000',
-        quantity: 30,
-        description: '1000mg Vitamin C, 60 tablets per bottle',
-        status: StockStatus.available,
-        price: 12.00,
-        costPrice: 7.50,
-        categoryId: 'cat-supplements',
-        supplierId: 'sup-002',
-        minimumStock: 40,
-        maximumStock: 100,
-        unit: 'Bottle',
-        location: 'Aisle 3 - Shelf 1',
-        createdAt: DateTime.now().subtract(const Duration(days: 12)),
-        updatedAt: DateTime.now(),
-        durabilityType: StockDurabilityType.nonPerishable,
-      ),
-      Stock(
-        id: 'stk-003',
-        name: 'Infrared Thermometer',
-        sku: 'THRM-INFRA-01',
-        quantity: 0,
-        description: 'Non-contact infrared thermometer for clinical use',
-        status: StockStatus.outOfStock,
-        price: 45.00,
-        costPrice: 30.00,
-        categoryId: 'cat-devices',
-        supplierId: 'sup-003',
-        minimumStock: 10,
-        maximumStock: 50,
-        unit: 'Piece',
-        location: 'Aisle 2 - Shelf 2',
-        createdAt: DateTime.now().subtract(const Duration(days: 45)),
-        updatedAt: DateTime.now().subtract(const Duration(days: 1)),
-        durabilityType: StockDurabilityType.nonPerishable,
-      ),
-      Stock(
-        id: 'stk-004',
-        name: 'Disposable Syringes 5ml',
-        sku: 'SYR-5ML',
-        quantity: 200,
-        description: 'Sterile single-use syringes 5ml with needle',
-        status: StockStatus.available,
-        price: 0.50,
-        costPrice: 0.20,
-        categoryId: 'cat-medical',
-        supplierId: 'sup-004',
-        minimumStock: 100,
-        maximumStock: 500,
-        unit: 'Piece',
-        location: 'Aisle 4 - Shelf 5',
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        updatedAt: DateTime.now(),
-        durabilityType: StockDurabilityType.nonPerishable,
-      ),
-      Stock(
-        id: 'stk-005',
-        name: 'N95 Face Masks',
-        sku: 'N95-MASK-001',
-        quantity: 15,
-        description: 'N95 respiratory face masks, pack of 20',
-        status: StockStatus.lowStock,
-        price: 25.00,
-        costPrice: 18.00,
-        categoryId: 'cat-ppe',
-        supplierId: 'sup-005',
-        minimumStock: 20,
-        maximumStock: 100,
-        unit: 'Pack',
-        location: 'Aisle 1 - Shelf 1',
-        createdAt: DateTime.now().subtract(const Duration(days: 15)),
-        updatedAt: DateTime.now().subtract(const Duration(hours: 6)),
-        durabilityType: StockDurabilityType.consumable,
-      ),
-    ];
   }
 
   // Search functionality
@@ -336,7 +236,7 @@ class StockViewModel extends StateNotifier<StockState> {
     state = state.copyWith(selectedStockIds: {});
   } // CRUD Operations
 
-  Future<void> createStock(Stock stock) async {
+  Future<void> addStock(Stock stock) async {
     if (!canCreateStock) {
       state = state.copyWith(
         status: StockStateStatus.error,
@@ -351,7 +251,7 @@ class StockViewModel extends StateNotifier<StockState> {
     );
 
     try {
-      final result = await _stockRepository.createStock(stock);
+      final result = await stockUseCases.addStockUseCase(stock);
       result.fold(
         (failure) => state = state.copyWith(
           status: StockStateStatus.error,
@@ -382,7 +282,7 @@ class StockViewModel extends StateNotifier<StockState> {
     );
 
     try {
-      final result = await _stockRepository.updateStock(stock);
+      final result = await stockUseCases.updateStockUseCase(stock);
       result.fold(
         (failure) => state = state.copyWith(
           status: StockStateStatus.error,
@@ -413,7 +313,7 @@ class StockViewModel extends StateNotifier<StockState> {
     );
 
     try {
-      final result = await _stockRepository.deleteStock(stockId);
+      final result = await stockUseCases.deleteStockUseCase(stockId);
       result.fold(
         (failure) => state = state.copyWith(
           status: StockStateStatus.error,
@@ -459,7 +359,7 @@ class StockViewModel extends StateNotifier<StockState> {
 
     try {
       final results = await Future.wait(
-        state.selectedStockIds.map((id) => _stockRepository.deleteStock(id)),
+        state.selectedStockIds.map((id) => stockUseCases.deleteStockUseCase(id)),
       );
 
       // Check if any operations failed
@@ -509,7 +409,7 @@ class StockViewModel extends StateNotifier<StockState> {
     );
 
     try {
-      final result = await _stockRepository.adjustStock(
+      final result = await stockUseCases.adjustStockUseCase(
         stockId,
         adjustment,
         reason,
@@ -552,8 +452,8 @@ class StockViewModel extends StateNotifier<StockState> {
 
       final results = await Future.wait(
         selectedStocks.map(
-          (stock) => _stockRepository.updateStock(
-            stock.copyWith(status: status),
+          (stock) => stockUseCases.updateMultipleStockStatusUseCase(state.selectedStockIds.toList(),
+            stock.copyWith(status: status) as StockStatus,
           ),
         ),
       );
@@ -611,6 +511,9 @@ class StockViewModel extends StateNotifier<StockState> {
   void refreshItem(String id) {}
 
   void handleItemAction(BuildContext context, Stock item, String action) {}
+
+  void openAdvancedFilters() {
+  }
 }
 
 
