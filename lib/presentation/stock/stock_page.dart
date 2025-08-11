@@ -1,4 +1,5 @@
 import 'package:clean_arch_app/core/constants/breakpoints.dart';
+import 'package:clean_arch_app/core/enums/stock_status.dart';
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/presentation/stock/stock_state.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
@@ -12,43 +13,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/colors.dart';
 import '../../di/injection.dart' as di;
-import '../dashboard/widgets/stock_list.dart';
+import 'widgets/stock_list.dart';
 import 'widgets/spread_sheet_table.dart';
 
-/// Production-ready responsive StockPage:
-/// - Uses spreadsheet table on wide widths (pixel-aligned headers)
-/// - Mobile fallback uses existing StockList
-/// - Controls wrap gracefully; no RenderFlex overflow
 class StockPage extends ConsumerWidget {
   const StockPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // NOTE: Use `read` for the notifier (to call methods) and `watch/select` for state slices
-    final stockVM = ref.read(di.stockViewModelProvider.notifier);
-
-    // Select only what we need to avoid unnecessary rebuilds
-    final stocks = ref.watch(di.stockViewModelProvider.select((s) => s.stocks));
-    final isLoading = ref.watch(
-      di.stockViewModelProvider.select((s) => s.isLoading),
-    );
-    final sortBy = ref.watch(di.stockViewModelProvider.select((s) => s.sortBy));
-    final searchQuery = ref.watch(
-      di.stockViewModelProvider.select((s) => s.searchQuery),
-    );
-    final filterStatus = ref.watch(
-      di.stockViewModelProvider.select((s) => s.filterStatus),
-    );
-    final isBulkMode = ref.watch(
-      di.stockViewModelProvider.select((s) => s.isBulkSelectionMode),
-    );
-    final total = stocks.length;
-    final sortOrder = ref.watch(
-      di.stockViewModelProvider.select((s) => s.sortOrder),
-    );
-    final sortOptions = ref.watch(
-      di.stockViewModelProvider.select((s) => s.sortOptions),
-    );
+    // notifier for calling methods
+    final StockViewModel stockVM = ref.read(di.stockViewModelProvider.notifier);
+    final StockState stockState = ref.watch(di.stockViewModelProvider);
+    // reactive state slices (select only what's needed)
+    final List<Stock> stocks =
+    ref.watch(di.stockViewModelProvider.select((s) => s.filteredStocks));
+    final bool isLoading =
+    ref.watch(di.stockViewModelProvider.select((s) => s.status == StockStateStatus.loading));
+    final SortBy? sortBy =
+    ref.watch(di.stockViewModelProvider.select((s) => s.sortBy));
+  final String searchQuery =
+    ref.watch(di.stockViewModelProvider.select((s) => s.searchQuery ?? ''));
+  final StockStatus? filterStatus =
+    ref.watch(di.stockViewModelProvider.select((s) => s.filterStatus));
+    final bool isBulkMode =
+    ref.watch(di.stockViewModelProvider.select((s) => s.isBulkSelectionMode));
+    final SortOrder sortOrder =
+    ref.watch(di.stockViewModelProvider.select((s) => s.sortOrder));
+    final List<SortBy> sortOptions =
+    ref.watch(di.stockViewModelProvider.select((s) => s.sortOptions));
+    final int total = stocks.length;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -63,19 +56,17 @@ class StockPage extends ConsumerWidget {
               const SizedBox(height: 12),
               _buildControls(
                 context,
+                stockVM: stockVM,
                 narrowBreakpoint: Breakpoints.controlWrapBreakpoint,
                 sortOptions: sortOptions,
                 sortOrder: sortOrder,
                 searchQuery: searchQuery,
-                filterStatus: filterStatus.toString(),
+                filterStatus: filterStatus,
                 sortBy: sortBy,
                 isBulkMode: isBulkMode,
-                stockVM: stockVM,
               ),
               const SizedBox(height: 12),
-              Expanded(
-                child: _buildContent(context, isLoading, stocks, stockVM),
-              ),
+              Expanded(child: _buildContent(context, isLoading, stockState.stocks, stockVM)),
             ],
           ),
         ),
@@ -110,16 +101,16 @@ class StockPage extends ConsumerWidget {
   }
 
   Widget _buildControls(
-    BuildContext context, {
-    required StockViewModel stockVM,
-    required double narrowBreakpoint,
-    required String searchQuery,
-    required String? filterStatus,
-    required dynamic sortBy,
-    required bool isBulkMode,
-    required List<SortBy> sortOptions,
-    required SortOrder sortOrder,
-  }) {
+      BuildContext context, {
+        required StockViewModel stockVM,
+        required double narrowBreakpoint,
+        required String searchQuery,
+        required StockStatus? filterStatus,
+        required SortBy? sortBy,
+        required bool isBulkMode,
+        required List<SortBy> sortOptions,
+        required SortOrder sortOrder,
+      }) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final narrow = constraints.maxWidth < narrowBreakpoint;
@@ -128,19 +119,35 @@ class StockPage extends ConsumerWidget {
           narrow: narrow,
           searchQuery: searchQuery,
           isBulkMode: isBulkMode,
-          currentFilter: filterStatus,
+          currentFilter: filterStatus.toString(),
           currentSortBy: sortBy,
           currentSortOrder: sortOrder,
           sortOptions: sortOptions,
           onSearch: stockVM.setSearchQuery,
           onClearSearch: () => stockVM.setSearchQuery(''),
-          onFilterSelected: stockVM.setStatusFilter,
-
-          onSortSelected: (selectedSortBy) {
-            if (sortBy == selectedSortBy) {
-              stockVM.toggleSortOrder(selectedSortBy);
+          // PASS the function (don't call it here)
+          onFilterSelected: (status) {
+            StockStatus? stockStatus;
+            if (status == null || status.isEmpty || status == 'All') {
+              stockStatus = null;
             } else {
-              stockVM.setSortBy(selectedSortBy);
+              // Map string to enum
+              try {
+                stockStatus = StockStatus.values.firstWhere(
+                  (e) => e.toString().split('.').last.toLowerCase() == status.toLowerCase(),
+                );
+              } catch (_) {
+                stockStatus = null;
+              }
+            }
+            stockVM.setFilterStatus(stockStatus);
+          },
+          onSortSelected: (selectedSortBy) {
+            // selectedSortBy is expected to be SortBy
+            if (sortBy == selectedSortBy) {
+              stockVM.toggleSortOrder(selectedSortBy as SortBy);
+            } else {
+              stockVM.setSortBy(selectedSortBy as SortBy);
             }
           },
           onOpenAdvancedFilter: stockVM.openAdvancedFilters,
@@ -150,11 +157,11 @@ class StockPage extends ConsumerWidget {
   }
 
   Widget _buildContent(
-    BuildContext context,
-    bool isLoading,
-    List<Stock> stocks,
-    dynamic stockVM,
-  ) {
+      BuildContext context,
+      bool isLoading,
+      List<Stock> stocks,
+      StockViewModel stockVM,
+      ) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 220),
       switchInCurve: Curves.easeOut,
@@ -164,25 +171,29 @@ class StockPage extends ConsumerWidget {
           : stocks.isEmpty
           ? emptyState(context)
           : LayoutBuilder(
-              builder: (context, c) {
-                final wide = c.maxWidth >= Breakpoints.desktopTableBreakpoint;
-                return wide
-                    ? SpreadsheetTable(
-                        key: const ValueKey('spreadsheet_table'),
-                        stocks: stocks,
-                        onAction: (id, action) =>
-                            stockVM.handleItemAction(context, id, action),
-                        onRefreshItem: (id) => stockVM.refreshItem(id),
-                      )
-                    : RefreshIndicator.adaptive(
-                        onRefresh: () async => stockVM.refresh(),
-                        child: StockList(
-                          key: const ValueKey('stock_list'),
-                          stocks: stocks,
-                        ),
-                      );
+        builder: (context, c) {
+          final wide =
+              c.maxWidth >= Breakpoints.desktopTableBreakpoint;return wide? SpreadsheetTable(
+            key: const ValueKey('spreadsheet_table'),
+            stocks: stocks,
+            onAction: (id, action) =>
+                stockVM.handleItemAction(id, action),
+            onRefreshItem: (id) => stockVM.refreshItem(id),
+          ) : RefreshIndicator.adaptive(
+            onRefresh: () async => stockVM.refresh(),
+            child: StockList(
+              key: const ValueKey('stock_list'),
+              stocks: stocks,
+              isLoading: isLoading,
+              onTap: (stock) {
+                // Handle stock item tap - navigate to details or edit
               },
+              onEdit: (stock) => stockVM.handleItemAction(stock.id, 'edit'),
+              onDelete: (stock) => stockVM.handleItemAction(stock.id, 'delete'),
             ),
+          );
+        },
+      ),
     );
   }
 }

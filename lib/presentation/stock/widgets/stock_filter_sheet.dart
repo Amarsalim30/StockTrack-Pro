@@ -47,8 +47,7 @@ class StockFilterSheet extends ConsumerWidget {
           SizedBox(height: 12),
           Wrap(
             spacing: 8,
-            children: [
-              FilterChip(
+            children: [FilterChip(
                 label: Text('All'),
                 selected: stockState.filterStatus == null,
                 onSelected: (_) {
@@ -59,8 +58,7 @@ class StockFilterSheet extends ConsumerWidget {
               ...StockStatus.values.map(
                 (status) => FilterChip(
                   label: Text(_getStatusDisplayText(status)),
-                  selected: stockState.filterStatus == status,
-                  onSelected: (_) {
+                  selected: stockState.filterStatus == status,onSelected: (_) {
                     viewModel.setFilterStatus(status);
                     Navigator.pop(context);
                   },
@@ -132,8 +130,7 @@ class StockFilterSheet extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
+                child: OutlinedButton(onPressed: () {
                     viewModel.setFilterStatus(null);
                     viewModel.setSortBy(SortBy.name);
                     Navigator.pop(context);

@@ -52,22 +52,21 @@ class StockItemCard extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          stock.name,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'SKU: ${stock.sku}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
+                      children: [Text(
+            stock.name ?? '-',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'SKU: ${stock.sku ?? '-'}',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
                       ],
                     ),
                   ),
@@ -175,22 +174,20 @@ class StockItemCard extends StatelessWidget {
           style: TextStyle(fontSize: 12, color: Colors.grey[600]),
         ),
         Row(
-          children: [
-            Text(
-              '${stock.quantity} ${stock.unit}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isLowStock ? Colors.orange : null,
-              ),
+          children: [Text(
+            '${stock.quantity} ${stock.unit ?? ''}',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isLowStock ? Colors.orange : null,
             ),
+          ),
             if (isLowStock) ...[
               SizedBox(width: 4),
               Icon(Icons.warning, size: 16, color: Colors.orange),
             ],
           ],
-        ),
-        if (stock.needsReorder)
+        ),if (stock.reorderPoint != null && stock.quantity <= stock.reorderPoint!)
           Text(
             'Reorder at: ${stock.reorderPoint}',
             style: TextStyle(fontSize: 11, color: Colors.grey[500]),
@@ -203,19 +200,19 @@ class StockItemCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text('Price', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-        Text(
-          '\$${stock.price!.toStringAsFixed(2)}',
+        Text('Price', style: TextStyle(fontSize: 12, color: Colors.grey[600])),Text(
+          stock.price != null ? '\$${stock.price!.toStringAsFixed(2)}' : '-',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.green[700],
           ),
         ),
-        Text(
-          'Total: \$${(stock.price! * stock.quantity).toStringAsFixed(2)}',
-          style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-        ),
+        if (stock.price != null)
+          Text(
+            'Total: \$${(stock.price! * stock.quantity).toStringAsFixed(2)}',
+            style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+          ),
       ],
     );
   }

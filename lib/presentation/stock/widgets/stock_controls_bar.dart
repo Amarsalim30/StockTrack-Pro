@@ -131,10 +131,9 @@ class ControlsBar extends StatelessWidget {
         itemBuilder: (_) {
           return sortOptions.map((s) {
             return PopupMenuItem(
-              value: s,
-              child: Row(
+              value: s,child: Row(
                 children: [
-                  Text(s.name ?? s.toString()),
+                  Text(s.label),
                   const Spacer(),
                   if (currentSortBy == s)
                     Icon(
@@ -152,12 +151,11 @@ class ControlsBar extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: Colors.grey.shade300),
-        ),
-        child: _buildButtonContainer(
+        ),child: _buildButtonContainer(
           icon: currentSortOrder == SortOrder.ascending
               ? LucideIcons.arrow_up
               : LucideIcons.arrow_down,
-          label: currentSortBy?.name ?? 'Sort',
+          label: (currentSortBy as SortBy?)?.label ?? 'Sort',
         ),
       ),
     );

@@ -31,16 +31,14 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   final TextEditingController _reorderPointController = TextEditingController();
 
   bool _isLoading = false;
-  AdjustmentType _adjustmentType = AdjustmentType.add;
-
-  @override
+  AdjustmentType _adjustmentType = AdjustmentType.add;@override
   void initState() {
     super.initState();
     if (widget.isEditMode) {
-      _nameController.text = widget.stock.name;
+      _nameController.text = widget.stock.name ?? '';
       _descriptionController.text = widget.stock.description ?? '';
-      _priceController.text = widget.stock.price.toString();
-      _reorderPointController.text = widget.stock.reorderPoint.toString();
+      _priceController.text = widget.stock.price?.toString() ?? '0.00';
+      _reorderPointController.text = widget.stock.reorderPoint?.toString() ?? '0';
     }
   }
 
@@ -134,17 +132,16 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
               children: [
                 Text(
                   widget.isEditMode
-                      ? 'Edit Stock Item'
-                      : 'Adjust Stock: ${widget.stock.name}',
+                      ?'Edit Stock Item'
+                      : 'Adjust Stock: ${widget.stock.name ?? 'Unknown'}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (!widget.isEditMode)
-                  Text(
-                    'Current Quantity: ${widget.stock.quantity} ${widget.stock.unit}',
+                if (!widget.isEditMode)Text(
+                    'Current Quantity: ${widget.stock.quantity} ${widget.stock.unit ?? ''}',
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
               ],
@@ -283,7 +280,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   ? Icons.add_circle
                   : Icons.remove_circle,
             ),
-            suffixText: widget.stock.unit,
+            suffixText: widget.stock.unit ?? '',
             border: OutlineInputBorder(),
           ),
           validator: (value) {
@@ -390,7 +387,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
         ? widget.stock.quantity + adjustment
         : widget.stock.quantity - adjustment;
 
-    return 'New quantity will be: $newQuantity ${widget.stock.unit}';
+    return 'New quantity will be: $newQuantity ${widget.stock.unit ?? ''}';
   }
 
   void _submit(WidgetRef ref) async {
@@ -409,7 +406,8 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
           description: _descriptionController.text.isEmpty
               ? null
               : _descriptionController.text,
-          price: double.parse(_priceController.text),
+          price: double.tryParse(_priceController.text),
+          reorderPoint: int.tryParse(_reorderPointController.text),
         );
         await viewModel.updateStock(updatedStock);
       } else {

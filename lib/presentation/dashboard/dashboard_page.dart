@@ -1,14 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'package:clean_arch_app/presentation/stock/stock_state.dart';
+import 'package:clean_arch_app/presentation/stock/widgets/stock_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../../di/injection.dart' as di;
-import '../../di/injection.dart';
-import '../stock/stock_state.dart';
 import '../stock/stock_view_model.dart';
 import 'dashboard_view_model.dart';
-import 'widgets/stock_list.dart';
 
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
@@ -16,8 +14,8 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(di.dashboardViewModelProvider.notifier);
-    final stockState = ref.watch(stockViewModelProvider);
-    final stockViewModel = ref.read(stockViewModelProvider.notifier);
+    final stockState = ref.watch(di.stockViewModelProvider);
+    final stockViewModel = ref.read(di.stockViewModelProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -83,7 +81,7 @@ class DashboardPage extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildInventoryHeader(viewModel, stockViewModel, stockState),
             const SizedBox(height: 12),
-            Expanded(child: StockList(stocks: stockState.stocks)),
+            Expanded(child: StockList(stocks: stockState.stocks, isLoading: false,)),
           ],
         ),
       ),

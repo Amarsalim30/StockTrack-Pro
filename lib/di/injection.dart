@@ -35,7 +35,7 @@ import '../domain/usecases/stock/toggle_stock_selection_usecase.dart';
 import '../domain/usecases/stock/update_multiple_stock_status.dart';
 import '../domain/usecases/stock/update_stock_status_usecase.dart';
 import '../domain/usecases/stock/update_stock_usecase.dart';
-import '../domain/usecases/stock_usecases.dart';
+import '../domain/usecases/stock/stock_usecases.dart';
 import '../presentation/dashboard/dashboard_state.dart';
 import '../presentation/dashboard/dashboard_view_model.dart';
 import '../presentation/stock/stock_state.dart';
@@ -116,20 +116,20 @@ final dashboardViewModelProvider =
 final stockUsecasesProvider = Provider((ref) {
   final stockRepo = ref.watch(stockRepositoryProvider);
   return StockUseCases(
-    addStockUseCase: AddStockUseCase(stockRepo),
-    adjustStockUseCase: AdjustStockUseCase(stockRepo),
-    deleteMultipleStocksUseCase: DeleteMultipleStocksUseCase(stockRepo),
-    deleteStockUseCase: DeleteStockUseCase(stockRepo),
-    filterStocksUseCase: FilterStocksUseCase(),
-    getAllStocksUseCase: GetAllStocksUseCase(stockRepo),
-    getStockByIdUseCase: GetStockByIdUseCase(stockRepo),
-    searchStocksUseCase: SearchStocksUseCase(),
-    sortStocksUseCase: SortStocksUseCase(),
-    toggleStockSelectionUseCase: ToggleStockSelectionUseCase(),
-    updateMultipleStockStatusUseCase:
+    addStock: AddStockUseCase(stockRepo),
+    adjustStock: AdjustStockUseCase(stockRepo),
+    deleteMultipleStocks: DeleteMultipleStocksUseCase(stockRepo),
+    deleteStock: DeleteStockUseCase(stockRepo),
+    filterStocks: FilterStocksUseCase(),
+    getAllStocks: GetAllStocksUseCase(stockRepo),
+    getStockById: GetStockByIdUseCase(stockRepo),
+    searchStocks: SearchStocksUseCase(),
+    sortStocks: SortStocksUseCase(),
+    toggleStockSelection: ToggleStockSelectionUseCase(),
+    updateMultipleStockStatus:
         UpdateMultipleStockStatusUseCase(stockRepo),
-    updateStockStatusUseCase: UpdateStockStatusUseCase(stockRepo),
-    updateStockUseCase: UpdateStockUseCase(stockRepo),
+    updateStockStatus: UpdateStockStatusUseCase(stockRepo),
+    updateStock: UpdateStockUseCase(stockRepo),
   );
 });
 final stockViewModelProvider =

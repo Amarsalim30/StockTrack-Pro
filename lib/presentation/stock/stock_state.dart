@@ -1,7 +1,6 @@
 // Stock State
 import 'package:clean_arch_app/domain/entities/auth/user.dart';
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/presentation/suppliers/supplier_view_model.dart';
 
 import '../../core/enums/stock_status.dart';
 
@@ -33,7 +32,7 @@ class StockState {
   final bool isBulkSelectionMode;
   final StockStateStatus status;
   final Set<String> selectedStockIds;
-  final String searchQuery;
+  final String? searchQuery;
   final StockStatus? filterStatus;
   final SortBy sortBy;
   final SortOrder sortOrder;
@@ -46,7 +45,7 @@ class StockState {
     this.filteredStocks = const [],
     this.status = StockStateStatus.initial,
     this.selectedStockIds = const {},
-    this.searchQuery = '',
+    this.searchQuery,
     this.filterStatus,
     this.sortBy = SortBy.name,
     this.sortOptions = const [SortBy.name, SortBy.sku, SortBy.quantity, SortBy.lastUpdated],
@@ -56,6 +55,12 @@ class StockState {
     this.isBulkSelectionMode = false,
     this.currentUser,
   });
+  /// Default initial state
+  factory StockState.initial() => const StockState(
+    stocks: [],
+    filteredStocks: [],
+    selectedStockIds: {},
+  );
 
   StockState copyWith({
     List<Stock>? stocks,
