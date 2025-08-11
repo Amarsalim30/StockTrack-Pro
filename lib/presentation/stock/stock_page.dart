@@ -54,7 +54,7 @@ class StockPage extends ConsumerWidget {
             children: [
               _buildTitle(total),
               const SizedBox(height: 12),
-              const SearchControlBar(),
+               const SearchControlBar(),
               const SizedBox(height: 12),
               Expanded(child: _buildContent(context, isLoading, stockState.stocks, stockVM)),
             ],

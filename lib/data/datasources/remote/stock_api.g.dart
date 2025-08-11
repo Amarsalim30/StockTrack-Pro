@@ -84,7 +84,7 @@ class _StockApi implements StockApi {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/stocks',
+            '/stocks/add',
             queryParameters: queryParameters,
             data: _data,
           )

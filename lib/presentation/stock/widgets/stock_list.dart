@@ -29,46 +29,50 @@ class _StockListState extends State<StockList> {
   final ScrollController _horizontalController = ScrollController();
   final Set<Stock> _selected = {};
 
-  // Fixed column widths for spreadsheet layout
+  // Column widths
   final double _checkboxWidth = 50;
-  final double _nameWidth = 180;
+  final double _nameWidth = 200;
   final double _skuWidth = 120;
   final double _categoryWidth = 140;
   final double _locationWidth = 140;
-  final double _stockWidth = 110;
+  final double _stockWidth = 120;
   final double _minStockWidth = 110;
   final double _statusWidth = 110;
-  final double _actionsWidth = 80;
+  final double _actionsWidth = 90;
 
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) return _buildLoadingSkeleton();
     if (widget.stocks.isEmpty) return _buildEmptyState();
 
-    return _buildSpreadsheetTable();
-  }
-
-  Widget _buildSpreadsheetTable() {
-    return Column(
-      children: [
-        _buildHeaderRow(),
-        Expanded(
-          child: ListView.builder(
-            itemCount: widget.stocks.length,
-            itemBuilder: (context, index) {
-              final stock = widget.stocks[index];
-              return _buildTableRow(stock, index);
-            },
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.all(12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        children: [
+          _buildHeaderRow(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: widget.stocks.length,
+              itemBuilder: (context, index) {
+                final stock = widget.stocks[index];
+                return _buildTableRow(stock, index);
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildHeaderRow() {
     return Container(
-      height: 48,
-      color: Colors.grey.shade50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+      ),
       child: SingleChildScrollView(
         controller: _horizontalController,
         scrollDirection: Axis.horizontal,
@@ -76,15 +80,15 @@ class _StockListState extends State<StockList> {
           width: _getTotalTableWidth(),
           child: Row(
             children: [
-              _buildHeaderCell('', _checkboxWidth, FontWeight.bold),
-              _buildHeaderCell('NAME', _nameWidth, FontWeight.bold),
-              _buildHeaderCell('SKU', _skuWidth, FontWeight.bold),
-              _buildHeaderCell('CATEGORY', _categoryWidth, FontWeight.bold),
-              _buildHeaderCell('LOCATION', _locationWidth, FontWeight.bold),
-              _buildHeaderCell('STOCK', _stockWidth, FontWeight.bold),
-              _buildHeaderCell('MIN STOCK', _minStockWidth, FontWeight.bold),
-              _buildHeaderCell('STATUS', _statusWidth, FontWeight.bold),
-              _buildHeaderCell('ACTIONS', _actionsWidth, FontWeight.bold),
+              _buildHeaderCell('', _checkboxWidth),
+              _buildHeaderCell('NAME', _nameWidth),
+              _buildHeaderCell('SKU', _skuWidth),
+              _buildHeaderCell('CATEGORY', _categoryWidth),
+              _buildHeaderCell('LOCATION', _locationWidth),
+              _buildHeaderCell('STOCK', _stockWidth),
+              _buildHeaderCell('MIN STOCK', _minStockWidth),
+              _buildHeaderCell('STATUS', _statusWidth),
+              _buildHeaderCell('ACTIONS', _actionsWidth),
             ],
           ),
         ),
@@ -92,23 +96,18 @@ class _StockListState extends State<StockList> {
     );
   }
 
-  Widget _buildHeaderCell(String text, double width, [FontWeight? weight]) {
+  Widget _buildHeaderCell(String text, double width) {
     return Container(
       width: width,
-      alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 0.5),
-        ),
-      ),
+      alignment: Alignment.centerLeft,
       child: Text(
         text,
         style: TextStyle(
-          fontWeight: weight ?? FontWeight.normal,
-          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
           color: Colors.grey.shade700,
-          letterSpacing: 0.8,
+          letterSpacing: 0.6,
         ),
       ),
     );
@@ -119,9 +118,10 @@ class _StockListState extends State<StockList> {
 
     return InkWell(
       onTap: () => widget.onTap?.call(stock),
+      hoverColor: Colors.blue.withOpacity(0.05),
       child: Container(
         height: 64,
-        color: isSelected ? Colors.blue.shade50 : Colors.white,
+        color: index.isEven ? Colors.grey.shade50 : Colors.white,
         child: SingleChildScrollView(
           controller: _horizontalController,
           scrollDirection: Axis.horizontal,
@@ -129,11 +129,13 @@ class _StockListState extends State<StockList> {
             width: _getTotalTableWidth(),
             child: Row(
               children: [
-                _buildRowCheckbox(stock),_buildCell(stock.name ?? 'Unnamed', _nameWidth, FontWeight.w600),
+                _buildRowCheckbox(stock),
+                _buildCell(stock.name ?? 'Unnamed', _nameWidth, FontWeight.w600),
                 _buildCell(stock.sku ?? '-', _skuWidth, null, 'monospace'),
                 _buildCell(stock.categoryId ?? 'N/A', _categoryWidth),
                 _buildCell(stock.location ?? 'N/A', _locationWidth),
-                _buildStockCell(stock),_buildCell('${stock.minimumStock ?? 0}', _minStockWidth,
+                _buildStockCell(stock),
+                _buildCell('${stock.minimumStock ?? 0}', _minStockWidth,
                     FontWeight.w500, 'monospace'),
                 _buildStatusCell(stock),
                 _buildActionsCell(stock),
@@ -149,19 +151,15 @@ class _StockListState extends State<StockList> {
       [FontWeight? weight, String? fontFamily]) {
     return Container(
       width: width,
-      alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 0.5),
-        ),
-      ),
+      alignment: Alignment.centerLeft,
       child: Text(
         text,
         style: TextStyle(
           fontWeight: weight ?? FontWeight.normal,
           fontSize: 14,
           fontFamily: fontFamily,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
@@ -174,11 +172,6 @@ class _StockListState extends State<StockList> {
     return Container(
       width: _stockWidth,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 0.5),
-        ),
-      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -191,31 +184,26 @@ class _StockListState extends State<StockList> {
             ),
           ),
           const SizedBox(height: 4),
-          SizedBox(
-            height: 6,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(3),
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.grey.shade200,
-                valueColor: AlwaysStoppedAnimation<Color>(color),
-              ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.grey.shade200,
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+              minHeight: 6,
             ),
           ),
         ],
       ),
     );
-  }Widget _buildStatusCell(Stock stock) {
+  }
+
+  Widget _buildStatusCell(Stock stock) {
     final statusName = stock.status.toString().split('.').last;
     final statusColor = _getStatusColor(statusName);
     return Container(
       width: _statusWidth,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 0.5),
-        ),
-      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
@@ -234,43 +222,21 @@ class _StockListState extends State<StockList> {
     );
   }
 
-  String _formatStatusName(String status) {
-    switch (status.toLowerCase()) {
-      case 'instock':
-        return 'In Stock';
-      case 'outofstock':
-        return 'Out of Stock';
-      case 'lowstock':
-        return 'Low Stock';
-      case 'reserved':
-        return 'Reserved';
-      default:
-        return status.replaceAllMapped(
-          RegExp(r'([A-Z])'),
-          (match) => ' ${match.group(1)}',
-        ).trim();
-    }
-  }
-
   Widget _buildActionsCell(Stock stock) {
-    return Container(
+    return SizedBox(
       width: _actionsWidth,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 0.5),
-        ),
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: const Icon(Icons.edit, size: 18),
+            icon: const Icon(Icons.edit, size: 18, color: Colors.blue),
             onPressed: () => widget.onEdit?.call(stock),
+            splashRadius: 20,
           ),
           IconButton(
-            icon: const Icon(Icons.delete, size: 18),
+            icon: const Icon(Icons.delete, size: 18, color: Colors.red),
             onPressed: () => widget.onDelete?.call(stock),
+            splashRadius: 20,
           ),
         ],
       ),
@@ -278,14 +244,8 @@ class _StockListState extends State<StockList> {
   }
 
   Widget _buildRowCheckbox(Stock stock) {
-    return Container(
+    return SizedBox(
       width: _checkboxWidth,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 0.5),
-        ),
-      ),
       child: widget.selectable
           ? Checkbox(
         value: _selected.contains(stock),
@@ -314,7 +274,9 @@ class _StockListState extends State<StockList> {
         _minStockWidth +
         _statusWidth +
         _actionsWidth;
-  }double _getProgressValue(Stock stock) {
+  }
+
+  double _getProgressValue(Stock stock) {
     final minStock = stock.minimumStock ?? 0;
     if (minStock == 0) return 1.0;
     return (stock.quantity / minStock).clamp(0.0, 1.0);
@@ -326,7 +288,9 @@ class _StockListState extends State<StockList> {
     if (ratio < 0.5) return Colors.red;
     if (ratio < 1) return Colors.orange;
     return Colors.green;
-  }Color _getStatusColor(String status) {
+  }
+
+  Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'instock':
         return Colors.green;
@@ -338,6 +302,21 @@ class _StockListState extends State<StockList> {
         return Colors.blue;
       default:
         return Colors.grey;
+    }
+  }
+
+  String _formatStatusName(String status) {
+    switch (status.toLowerCase()) {
+      case 'instock':
+        return 'In Stock';
+      case 'outofstock':
+        return 'Out of Stock';
+      case 'lowstock':
+        return 'Low Stock';
+      case 'reserved':
+        return 'Reserved';
+      default:
+        return status;
     }
   }
 
