@@ -17,6 +17,7 @@ class App extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
     );
   }
 }

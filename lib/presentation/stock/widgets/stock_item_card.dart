@@ -137,6 +137,15 @@ class StockItemCard extends StatelessWidget {
         statusColor = Colors.orange;
         statusIcon = Icons.local_shipping;
         break;
+      case StockStatus.good:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.critical:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.low:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
 
     return Container(
@@ -273,6 +282,15 @@ class StockItemCard extends StatelessWidget {
         return 'Expired';
       case StockStatus.inTransit:
         return 'In Transit';
+      case StockStatus.good:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.critical:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.low:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 }

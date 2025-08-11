@@ -203,6 +203,15 @@ class StockFilterSheet extends ConsumerWidget {
         return 'Expired';
       case StockStatus.inTransit:
         return 'In Transit';
+      case StockStatus.good:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.critical:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.low:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -226,6 +235,15 @@ class StockFilterSheet extends ConsumerWidget {
         return Colors.purple;
       case StockStatus.inTransit:
         return Colors.orange;
+      case StockStatus.good:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.critical:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case StockStatus.low:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 }

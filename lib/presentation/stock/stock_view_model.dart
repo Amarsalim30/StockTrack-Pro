@@ -1,5 +1,9 @@
+// stock_view_model.dart
 import 'dart:async';
 
+import 'package:clean_arch_app/data/mappers/auth/user_mapper.dart';
+import 'package:clean_arch_app/data/models/auth/user_model.dart';
+import 'package:clean_arch_app/domain/entities/auth/user.dart';
 import 'package:clean_arch_app/presentation/stock/mock_stock_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,9 +15,9 @@ import '../../domain/usecases/stock/stock_usecases.dart';
 import 'stock_state.dart';
 
 /// Production-grade StockViewModel which uses grouped usecases.
-/// - All domain/data access goes through `stockUseCases` (one injected object).
-/// - ViewModel only updates immutable StockState.
-/// - Filtering + sorting are applied in one place `_applyFiltersAndSort`.
+/// All domain/data access goes through `stockUseCases` (one injected object).
+/// ViewModel only updates immutable StockState. Filtering + sorting are computed
+/// by StockState.filteredStocks (no duplicated storage).
 class StockViewModel extends StateNotifier<StockState> {
   final StockUseCases stockUseCases;
   final AuthRepository authRepository;
@@ -44,8 +48,8 @@ class StockViewModel extends StateNotifier<StockState> {
           status: StockStateStatus.error,
           errorMessage: _failureMessage(failure, fallback: 'Failed to load user'),
         ),
-            (user) => state = state.copyWith(currentUser: user),
-      );
+            (user) => state = state.copyWith(currentUser: user)
+    );
     } catch (e) {
       state = state.copyWith(
         status: StockStateStatus.error,
@@ -95,12 +99,11 @@ class StockViewModel extends StateNotifier<StockState> {
             status: StockStateStatus.success,
             errorMessage: _failureMessage(failure, fallback: 'Using mock data'),
           );
-          _applyFiltersAndSort();
+          // no _applyFiltersAndSort: filteredStocks is computed by state
         },
             (stocks) {
           final used = stocks.isEmpty ? getMockStocks() : stocks;
           state = state.copyWith(stocks: used, status: StockStateStatus.success);
-          _applyFiltersAndSort();
         },
       );
     } catch (e) {
@@ -110,7 +113,6 @@ class StockViewModel extends StateNotifier<StockState> {
         status: StockStateStatus.success,
         errorMessage: 'Using mock data due to error: $e',
       );
-      _applyFiltersAndSort();
     }
   }
 
@@ -124,16 +126,25 @@ class StockViewModel extends StateNotifier<StockState> {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 300), () {
       state = state.copyWith(searchQuery: q);
-      _applyFiltersAndSort();
+      // no explicit apply; UI should read state.filteredStocks
     });
-  }void setFilterStatus(StockStatus? status) {
-    state = state.copyWith(filterStatus: status);
-    _applyFiltersAndSort();
   }
+
+  /// Convenience alias (UI may call updateSearch)
+  void updateSearch(String q) => setSearchQuery(q);
+
+  /// Set filter status
+  void setFilterStatus(StockStatus? status) {
+    state = state.copyWith(filterStatus: status);
+  }
+
+  /// Alias to match UI naming
+  void setStatusFilter(StockStatus? status) => setFilterStatus(status);
 
   // -----------------------
   // Sorting
   // -----------------------
+  /// Toggle / set sort by
   void setSortBy(SortBy sortBy) {
     // if same field, flip order; if different, set ascending
     if (state.sortBy == sortBy) {
@@ -144,58 +155,13 @@ class StockViewModel extends StateNotifier<StockState> {
     } else {
       state = state.copyWith(sortBy: sortBy, sortOrder: SortOrder.ascending);
     }
-    _applyFiltersAndSort();
   }
+
+  /// Toggle the sort order for the current sort field (useful for UI toggle)
+  void toggleSort() => setSortBy(state.sortBy);
 
   void toggleSortOrder(SortBy sortBy) {
     setSortBy(sortBy); // setSortBy already toggles
-  }
-
-  // -----------------------
-  // Core: apply filters & sort in one place
-  // -----------------------
-  void _applyFiltersAndSort() {
-    final base = List<Stock>.from(state.stocks);
-
-    var filtered = base;
-
-    final query = (state.searchQuery ?? '').trim();
-    if (query.isNotEmpty) {
-      final q = query.toLowerCase();
-      filtered = filtered.where((s) {
-        return (s.name ?? '').toLowerCase().contains(q) ||
-            (s.sku ?? '').toLowerCase().contains(q) ||
-            ((s.description ?? '').toLowerCase().contains(q));
-      }).toList();
-    }
-
-    if (state.filterStatus != null) {
-      filtered = filtered.where((s) => s.status == state.filterStatus).toList();
-    }
-
-    // Sort: use state.sortBy & state.sortOrder
-    filtered.sort((a, b) {
-      int cmp = 0;
-      switch (state.sortBy) {
-        case SortBy.name:
-          cmp = (a.name ?? '').compareTo(b.name ?? '');
-          break;
-        case SortBy.sku:
-          cmp = (a.sku ?? '').compareTo(b.sku ?? '');
-          break;
-        case SortBy.quantity:
-          cmp = a.quantity.compareTo(b.quantity);
-          break;
-        case SortBy.lastUpdated:
-          cmp = (a.updatedAt ?? DateTime(0)).compareTo(b.updatedAt ?? DateTime(0));
-          break;
-        default:
-          cmp = (a.name ?? '').compareTo(b.name ?? '');
-      }
-      return state.sortOrder == SortOrder.ascending ? cmp : -cmp;
-    });
-
-    state = state.copyWith(filteredStocks: filtered);
   }
 
   // -----------------------
@@ -215,8 +181,15 @@ class StockViewModel extends StateNotifier<StockState> {
     state = state.copyWith(selectedStockIds: set);
   }
 
+  /// Select all visible (filtered) items
   void selectAll() {
     final all = state.filteredStocks.map((s) => s.id).toSet();
+    state = state.copyWith(selectedStockIds: all);
+  }
+
+  /// Select all items (regardless of filter)
+  void selectAllAll() {
+    final all = state.stocks.map((s) => s.id).toSet();
     state = state.copyWith(selectedStockIds: all);
   }
 
@@ -286,9 +259,11 @@ class StockViewModel extends StateNotifier<StockState> {
     try {
       final res = await stockUseCases.deleteStock(id);
       res.fold(
-            (failure) => state.copyWith(
-            status: StockStateStatus.error,
-            errorMessage: _failureMessage(failure, fallback: 'Failed to delete')),
+            (failure) {
+          state = state.copyWith(
+              status: StockStateStatus.error,
+              errorMessage: _failureMessage(failure, fallback: 'Failed to delete'));
+        },
             (_) {
           final remaining = state.stocks.where((s) => s.id != id).toList();
           state = state.copyWith(
@@ -296,7 +271,6 @@ class StockViewModel extends StateNotifier<StockState> {
             selectedStockIds: Set<String>.from(state.selectedStockIds)..remove(id),
             status: StockStateStatus.success,
           );
-          _applyFiltersAndSort();
         },
       );
     } catch (e) {
@@ -323,7 +297,7 @@ class StockViewModel extends StateNotifier<StockState> {
       if (stockUseCases.deleteMultipleStocks != null) {
         final res = await stockUseCases.deleteMultipleStocks!(ids);
         res.fold(
-              (failure) => state.copyWith(
+              (failure) => state = state.copyWith(
               status: StockStateStatus.error,
               errorMessage: _failureMessage(failure, fallback: 'Failed batch delete')),
               (_) {
@@ -333,12 +307,12 @@ class StockViewModel extends StateNotifier<StockState> {
               isBulkSelectionMode: false,
               status: StockStateStatus.success,
             );
-            _applyFiltersAndSort();
           },
         );
       } else {
         // fallback to parallel deletes and collect failures
         final results = await Future.wait(ids.map((id) => stockUseCases.deleteStock(id)));
+        // assume results are Either; adapt to your type if different
         final failures = results.where((r) => r.isLeft()).toList();
         if (failures.isNotEmpty) {
           state = state.copyWith(
@@ -351,7 +325,6 @@ class StockViewModel extends StateNotifier<StockState> {
             isBulkSelectionMode: false,
             status: StockStateStatus.success,
           );
-          _applyFiltersAndSort();
         }
       }
     } catch (e) {
@@ -374,7 +347,7 @@ class StockViewModel extends StateNotifier<StockState> {
     try {
       final res = await stockUseCases.adjustStock(stockId, delta, reason);
       res.fold(
-            (failure) => state.copyWith(
+            (failure) => state = state.copyWith(
             status: StockStateStatus.error,
             errorMessage: _failureMessage(failure, fallback: 'Failed to adjust')),
             (_) => loadStocks(),
@@ -402,7 +375,7 @@ class StockViewModel extends StateNotifier<StockState> {
       if (stockUseCases.updateMultipleStockStatus != null) {
         final res = await stockUseCases.updateMultipleStockStatus!(ids, status);
         res.fold(
-              (failure) => state.copyWith(
+              (failure) => state = state.copyWith(
               status: StockStateStatus.error,
               errorMessage: _failureMessage(failure, fallback: 'Failed batch update')),
               (_) async {
@@ -433,27 +406,44 @@ class StockViewModel extends StateNotifier<StockState> {
   // -----------------------
   // Helpers / UI actions (placeholders)
   // -----------------------
-  Stock? getStockById(String id) => state.stocks.firstWhere((s) => s.id == id);
+  Stock? getStockById(String id) {
+    try {
+      return state.stocks.firstWhere((s) => s.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 
   // Placeholder – wire these to real UI navigations / dialogs
-  void showAddStock(/* BuildContext ctx */) {
+  void showViewStock(String id) {
+    try{
+
+    }
+    catch (_){
+
+    }
+  }
+  void showAddStock() {
     // TODO: open create modal / route
   }
 
   void refreshItem(String id) {
-  }void handleItemAction(String stockId, String action) {
+    // TODO: refresh single item if needed
+  }
+
+  void handleItemAction(String stockId, String action) {
     switch (action.toLowerCase()) {
       case 'delete':
         deleteStock(stockId);
         break;
       case 'edit':
-        // TODO: Navigate to edit screen
+      // TODO: Navigate to edit screen
         break;
       case 'adjust':
-        // TODO: Show adjustment dialog
+      // TODO: Show adjustment dialog
         break;
       default:
-        // Unknown action
+      // Unknown action
         break;
     }
   }
