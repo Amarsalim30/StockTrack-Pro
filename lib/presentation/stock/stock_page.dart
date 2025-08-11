@@ -5,7 +5,7 @@ import 'package:clean_arch_app/presentation/stock/stock_state.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/empty_state.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/stock_controls_bar.dart';
+import 'package:clean_arch_app/presentation/stock/widgets/search_controls_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -54,17 +54,7 @@ class StockPage extends ConsumerWidget {
             children: [
               _buildTitle(total),
               const SizedBox(height: 12),
-              _buildControls(
-                context,
-                stockVM: stockVM,
-                narrowBreakpoint: Breakpoints.controlWrapBreakpoint,
-                sortOptions: sortOptions,
-                sortOrder: sortOrder,
-                searchQuery: searchQuery,
-                filterStatus: filterStatus,
-                sortBy: sortBy,
-                isBulkMode: isBulkMode,
-              ),
+              const SearchControlBar(),
               const SizedBox(height: 12),
               Expanded(child: _buildContent(context, isLoading, stockState.stocks, stockVM)),
             ],
@@ -97,62 +87,6 @@ class StockPage extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildControls(
-      BuildContext context, {
-        required StockViewModel stockVM,
-        required double narrowBreakpoint,
-        required String searchQuery,
-        required StockStatus? filterStatus,
-        required SortBy? sortBy,
-        required bool isBulkMode,
-        required List<SortBy> sortOptions,
-        required SortOrder sortOrder,
-      }) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final narrow = constraints.maxWidth < narrowBreakpoint;
-
-        return ControlsBar(
-          narrow: narrow,
-          searchQuery: searchQuery,
-          isBulkMode: isBulkMode,
-          currentFilter: filterStatus.toString(),
-          currentSortBy: sortBy,
-          currentSortOrder: sortOrder,
-          sortOptions: sortOptions,
-          onSearch: stockVM.setSearchQuery,
-          onClearSearch: () => stockVM.setSearchQuery(''),
-          // PASS the function (don't call it here)
-          onFilterSelected: (status) {
-            StockStatus? stockStatus;
-            if (status == null || status.isEmpty || status == 'All') {
-              stockStatus = null;
-            } else {
-              // Map string to enum
-              try {
-                stockStatus = StockStatus.values.firstWhere(
-                  (e) => e.toString().split('.').last.toLowerCase() == status.toLowerCase(),
-                );
-              } catch (_) {
-                stockStatus = null;
-              }
-            }
-            stockVM.setFilterStatus(stockStatus);
-          },
-          onSortSelected: (selectedSortBy) {
-            // selectedSortBy is expected to be SortBy
-            if (sortBy == selectedSortBy) {
-              stockVM.toggleSortOrder(selectedSortBy as SortBy);
-            } else {
-              stockVM.setSortBy(selectedSortBy as SortBy);
-            }
-          },
-          onOpenAdvancedFilter: stockVM.openAdvancedFilters,
-        );
-      },
     );
   }
 

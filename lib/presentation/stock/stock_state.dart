@@ -17,6 +17,20 @@ enum SortBy { name, sku, quantity, lastUpdated;
         return 'SKU';
     }
   }
+  static SortBy fromString(String value) {
+    switch (value.toLowerCase()) {
+      case 'name':
+        return SortBy.name;
+      case 'sku':
+        return SortBy.sku;
+      case 'quantity':
+        return SortBy.quantity;
+      case 'last updated':
+        return SortBy.lastUpdated;
+      default:
+        throw ArgumentError('Invalid sort field: $value');
+    }
+  }
 }
 
 enum SortOrder { ascending, descending }
