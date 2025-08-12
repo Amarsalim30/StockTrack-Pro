@@ -1,4 +1,5 @@
 enum StockStatus {
+
   lowStock,
   outOfStock,
   reserved,
