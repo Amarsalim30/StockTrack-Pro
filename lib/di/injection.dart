@@ -1,5 +1,11 @@
+import 'package:clean_arch_app/data/datasources/remote/notification_api.dart';
+import 'package:clean_arch_app/data/repositories_impl/notification_repository_impl.dart';
+import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
+import 'package:clean_arch_app/domain/usecases/general/notification/notification_usecases.dart';
 import 'package:clean_arch_app/presentation/auth/auth_state.dart';
 import 'package:clean_arch_app/presentation/auth/auth_view_model.dart';
+import 'package:clean_arch_app/presentation/notification/notification_state.dart';
+import 'package:clean_arch_app/presentation/notification/notification_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 
@@ -74,6 +80,24 @@ final stockRemoteDataSourceProvider = Provider<StockApi>((ref) {
   final dio = ref.watch(dioProvider);
   return StockApi(dio);
 });
+// Provide the generated Retrofit API
+final notificationApiProvider = Provider<NotificationApi>((ref) {
+  final dio = ref.read(dioProvider);
+  return NotificationApi(dio, baseUrl: dio.options.baseUrl);
+});
+
+// Provide the concrete repository implementation
+final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
+  final api = ref.read(notificationApiProvider);
+  return NotificationRepositoryImpl(api);
+});
+
+// ---------- usecases provider ----------
+final notificationUseCasesProvider = Provider<NotificationUseCases>((ref) {
+  final repo = ref.read(notificationRepositoryProvider);
+  return NotificationUseCases.fromRepository(repo);
+});
+
 
 // ─────────────────────────────────────────────
 // REPOSITORY PROVIDERS
@@ -112,6 +136,12 @@ final dashboardViewModelProvider =
 //         authRepository: authRepo,
 //       );
 //     });
+
+final notificationViewModelProvider =
+StateNotifierProvider<NotificationViewModel, NotificationState>((ref) {
+  final usecases = ref.read(notificationUseCasesProvider);
+  return NotificationViewModel(notificationUseCases: usecases);
+});
 
 final stockUsecasesProvider = Provider((ref) {
   final stockRepo = ref.watch(stockRepositoryProvider);

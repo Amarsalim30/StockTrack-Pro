@@ -2,6 +2,7 @@ import 'package:clean_arch_app/core/enums/stock_status.dart';
 import 'package:clean_arch_app/di/injection.dart'; // should export stockViewModelProvider
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
+import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/search_control_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,10 +23,12 @@ class StockPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
+  appBar: ProductionTopAppBar(),
       body: SafeArea(
         child: Column(
           children: [
-            _buildTopBar(context, vm),
+            // buildTopAppBar(context, vm),
+            // _buildTopBar(context, vm),
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 12, 18, 6), // tightened
               child: _buildTitleAndCount(stocks.length),
@@ -51,57 +54,63 @@ class StockPage extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _buildTopBar(BuildContext context, StockViewModel stockVm) {
-    return Container(
-      color: const Color(0xFF0E2330),
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12), // tightened
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('StockTrack-Pro',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.1,
-                  )),
-              SizedBox(height: 2),
-              Text('Professional Inventory Management',
-                  style: TextStyle(color: Colors.white70, fontSize: 12)),
-            ],
+  Widget buildTopAppBar(BuildContext context, StockViewModel stockVm) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(72.0),
+      child: AppBar(
+        backgroundColor: const Color(0xFF0E2330),
+        elevation: 0,
+        toolbarHeight: 72,
+        titleSpacing: 18,
+        automaticallyImplyLeading: false, // keep no back button if not needed
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'StockTrack-Pro',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.1,
+              ),
+            ),
+            SizedBox(height: 2),
+            Text(
+              'Professional Inventory Management',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => stockVm.refresh(),
+            icon: const Icon(Icons.refresh),
+            color: Colors.white70,
+            tooltip: 'Refresh',
+            visualDensity: VisualDensity.compact,
           ),
-          const Spacer(),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => stockVm.refresh(),
-                icon: const Icon(Icons.refresh, color: Colors.white70),
-                tooltip: 'Refresh',
-                visualDensity: VisualDensity.compact,
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_none, color: Colors.white70),
-                tooltip: 'Notifications',
-                visualDensity: VisualDensity.compact,
-              ),
-              const SizedBox(width: 6),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                child: const Center(child: Icon(Icons.person, color: Color(0xFF0E2330))),
-              )
-            ],
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_none),
+            color: Colors.white70,
+            tooltip: 'Notifications',
+            visualDensity: VisualDensity.compact,
+          ),
+          const SizedBox(width: 6),
+          Padding(
+            padding: const EdgeInsets.only(right: 14.0),
+            child: CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.white,
+              child: const Icon(Icons.person, color: Color(0xFF0E2330)),
+            ),
           ),
         ],
       ),
     );
   }
-
   Widget _buildTitleAndCount(int total) {
     return Row(
       children: [

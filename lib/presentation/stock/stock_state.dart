@@ -26,24 +26,19 @@ extension SortByLabel on SortBy {
     final v = value.trim().toLowerCase();
     switch (v) {
       case 'name':
-      case 'nameasc':
       case 'name_asc':
       case 'name (a–z)':
       case 'name (a-z)':
         return SortBy.nameAsc;
-      case 'namedesc':
       case 'name_desc':
       case 'name (z–a)':
       case 'name (z-a)':
         return SortBy.nameDesc;
       case 'quantity':
-      case 'quantityasc':
       case 'quantity_asc':
         return SortBy.quantityAsc;
-      case 'quantitydesc':
       case 'quantity_desc':
         return SortBy.quantityDesc;
-      case 'lastupdated':
       case 'last_updated':
       case 'last updated':
         return SortBy.lastUpdated;
@@ -96,6 +91,7 @@ class StockState {
 
   /// Default initial state
   factory StockState.initial() => const StockState();
+  static const _noChange = Object();
 
   StockState copyWith({
     List<Stock>? stocks,
@@ -103,7 +99,7 @@ class StockState {
     StockStateStatus? status,
     Set<String>? selectedStockIds,
     String? searchQuery,
-    StockStatus? filterStatus,
+    Object? filterStatus = _noChange,
     SortBy? sortBy,
     SortOrder? sortOrder,
     List<SortBy>? sortOptions,
@@ -118,7 +114,9 @@ class StockState {
       status: status ?? this.status,
       selectedStockIds: selectedStockIds ?? this.selectedStockIds,
       searchQuery: searchQuery ?? this.searchQuery,
-      filterStatus: filterStatus ?? this.filterStatus,
+      filterStatus: filterStatus == _noChange
+          ? this.filterStatus
+          : filterStatus as StockStatus?,
       sortBy: sortBy ?? this.sortBy,
       sortOrder: sortOrder ?? this.sortOrder,
       sortOptions: sortOptions ?? this.sortOptions,
