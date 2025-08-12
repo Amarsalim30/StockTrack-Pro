@@ -3,36 +3,53 @@ import 'package:clean_arch_app/domain/entities/auth/user.dart';
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/core/enums/stock_status.dart';
 
-enum SortBy { name, sku, quantity, lastUpdated }
+enum SortBy { nameAsc, nameDesc, quantityAsc, quantityDesc, lastUpdated }
 
 extension SortByLabel on SortBy {
   String get label {
     switch (this) {
-      case SortBy.name:
-        return 'Name';
-      case SortBy.sku:
-        return 'SKU';
-      case SortBy.quantity:
-        return 'Quantity';
+      case SortBy.nameAsc:
+        return 'Name (A–Z)';
+      case SortBy.nameDesc:
+        return 'Name (Z–A)';
+      case SortBy.quantityAsc:
+        return 'Quantity (Low → High)';
+      case SortBy.quantityDesc:
+        return 'Quantity (High → Low)';
       case SortBy.lastUpdated:
-        return 'Last Updated';
+        return 'Last updated';
     }
   }
 
+  /// Flexible parser: accepts "name", "quantity", "lastUpdated" or explicit enum strings.
   static SortBy fromString(String value) {
-    final v = value.toLowerCase();
+    final v = value.trim().toLowerCase();
     switch (v) {
       case 'name':
-        return SortBy.name;
-      case 'sku':
-        return SortBy.sku;
+      case 'nameasc':
+      case 'name_asc':
+      case 'name (a–z)':
+      case 'name (a-z)':
+        return SortBy.nameAsc;
+      case 'namedesc':
+      case 'name_desc':
+      case 'name (z–a)':
+      case 'name (z-a)':
+        return SortBy.nameDesc;
       case 'quantity':
-        return SortBy.quantity;
-      case 'last updated':
+      case 'quantityasc':
+      case 'quantity_asc':
+        return SortBy.quantityAsc;
+      case 'quantitydesc':
+      case 'quantity_desc':
+        return SortBy.quantityDesc;
       case 'lastupdated':
+      case 'last_updated':
+      case 'last updated':
         return SortBy.lastUpdated;
       default:
-        throw ArgumentError('Invalid sort field: $value');
+      // default fallback
+        return SortBy.nameAsc;
     }
   }
 }
@@ -64,9 +81,14 @@ class StockState {
     this.selectedStockIds = const {},
     this.searchQuery = '',
     this.filterStatus,
-    this.sortBy = SortBy.name,
+    this.sortBy = SortBy.nameAsc,
     this.sortOrder = SortOrder.ascending,
-    this.sortOptions = const [SortBy.name, SortBy.sku, SortBy.quantity, SortBy.lastUpdated],
+    this.sortOptions = const [
+      SortBy.nameAsc,
+      SortBy.nameDesc,
+      SortBy.quantityAsc,
+      SortBy.quantityDesc
+    ],
     this.errorMessage,
     this.isLoading = false,
     this.isBulkSelectionMode = false,
@@ -77,7 +99,7 @@ class StockState {
 
   StockState copyWith({
     List<Stock>? stocks,
-    User?  currentUser,
+    User? currentUser,
     StockStateStatus? status,
     Set<String>? selectedStockIds,
     String? searchQuery,
@@ -91,7 +113,8 @@ class StockState {
   }) {
     return StockState(
       stocks: stocks ?? this.stocks,
-      currentUser: currentUser == null ? this.currentUser : currentUser,
+      // allow setting currentUser to null by explicitly passing non-null ? (keeps existing if parameter omitted)
+      currentUser: currentUser ?? this.currentUser,
       status: status ?? this.status,
       selectedStockIds: selectedStockIds ?? this.selectedStockIds,
       searchQuery: searchQuery ?? this.searchQuery,
@@ -115,7 +138,7 @@ class StockState {
   List<Stock> get filteredStocks {
     var list = List<Stock>.from(stocks);
 
-    final q = searchQuery.trim().toLowerCase();
+    final q = (searchQuery).trim().toLowerCase();
     if (q.isNotEmpty) {
       list = list.where((s) {
         final name = (s.name ?? '').toLowerCase();
@@ -133,17 +156,23 @@ class StockState {
     list.sort((a, b) {
       int cmp = 0;
       switch (sortBy) {
-        case SortBy.name:
+        case SortBy.nameAsc:
+        case SortBy.nameDesc:
           cmp = (a.name ?? '').toLowerCase().compareTo((b.name ?? '').toLowerCase());
+          if (sortBy == SortBy.nameDesc) cmp = -cmp;
           break;
-        case SortBy.sku:
-          cmp = (a.sku ?? '').toLowerCase().compareTo((b.sku ?? '').toLowerCase());
+
+        case SortBy.quantityAsc:
+        case SortBy.quantityDesc:
+        // Stock.quantity in your domain model is non-nullable int; but guard anyway
+          final aq = a.quantity;
+          final bq = b.quantity;
+          cmp = aq.compareTo(bq);
+          if (sortBy == SortBy.quantityDesc) cmp = -cmp;
           break;
-        case SortBy.quantity:
-          cmp = (a.quantity ?? 0).compareTo(b.quantity ?? 0);
-          break;
+
         case SortBy.lastUpdated:
-        // assumes Stock has a DateTime? lastUpdated field; fallback to 0
+        // sort by updatedAt (newest first); respect sortOrder for direction
           final ad = a.updatedAt?.millisecondsSinceEpoch ?? 0;
           final bd = b.updatedAt?.millisecondsSinceEpoch ?? 0;
           cmp = ad.compareTo(bd);

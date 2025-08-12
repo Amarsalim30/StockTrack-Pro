@@ -2,6 +2,7 @@ import 'package:clean_arch_app/core/enums/stock_status.dart';
 import 'package:clean_arch_app/di/injection.dart'; // should export stockViewModelProvider
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
+import 'package:clean_arch_app/presentation/stock/widgets/search_control_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,7 +32,8 @@ class StockPage extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: _buildSearchFilterRow(vm, state),
+              child: SearchControlBar(),
+              // _buildSearchFilterRow(vm, state),
             ),
             const SizedBox(height: 10),
             Expanded(
