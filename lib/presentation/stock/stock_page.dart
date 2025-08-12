@@ -15,7 +15,7 @@ class StockPage extends ConsumerWidget {
 
     final List<Stock> stocks = state.filteredStocks;
     final isLoading = state.isLoading;
-    final selectable = true; // show checkboxes by default (change to state flag if you add one)
+    final selectable = false; // show checkboxes by default (change to state flag if you add one)
     final selectedIds = state.selectedStockIds;
     final allSelected = state.allSelected;
 
@@ -204,7 +204,7 @@ class StockPage extends ConsumerWidget {
                 )),
                 Expanded(flex: 2, child: Text('STOCK', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.w700))),
                 Expanded(flex: 2, child: Text('STATUS', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.w700))),
-                SizedBox(width: 96, child: Center(child: Text('ACTIONS', style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.w700)))),
+                Expanded(flex:2,child: SizedBox(width: 96, child: Center(child: Text('ACTIONS', style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.w700))))),
               ],
             ),
           ),
@@ -249,35 +249,38 @@ class StockPage extends ConsumerWidget {
           Expanded(flex: 4, child: _itemDetailsCol(stock)),
           Expanded(flex: 2, child: _stockCol(stock)),
           Expanded(flex: 2, child: Center(child: _statusPill(stock.status))),
-          SizedBox(
-            width: 96, // narrower
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Single overflow dropdown with View & Delete
-                PopupMenuButton<_Action>(
-                  tooltip: 'Actions',
-                  onSelected: (action) async {
-                    switch (action) {
-                      case _Action.view:
-                      // adapt to your VM API
-                          showViewStock(ref.context, stock);
-                        break;
-                      case _Action.delete:
-                        final confirmed = await _confirmDelete(ref.context, stock);
-                        if (confirmed) vm.deleteStock(stock.id);
-                        break;
-                    }
-                  },
-                  itemBuilder: (_) => [
-                    const PopupMenuItem(value: _Action.view, child: ListTile(leading: Icon(Icons.remove_red_eye_outlined), title: Text('View'))),
-                    const PopupMenuItem(value: _Action.delete, child: ListTile(leading: Icon(Icons.delete_outline), title: Text('Delete'))),
-                  ],
-                  icon: const Icon(Icons.more_vert, size: 20, color: Color(0xFF374151)),
-                  padding: EdgeInsets.zero,
-                  offset: const Offset(0, 36),
-                ),
-              ],
+          Expanded(
+            flex: 2,
+            child: SizedBox(
+              width: 96, // narrower
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Single overflow dropdown with View & Delete
+                  PopupMenuButton<_Action>(
+                    tooltip: 'Actions',
+                    onSelected: (action) async {
+                      switch (action) {
+                        case _Action.view:
+                        // adapt to your VM API
+                            showViewStock(ref.context, stock);
+                          break;
+                        case _Action.delete:
+                          final confirmed = await _confirmDelete(ref.context, stock);
+                          if (confirmed) vm.deleteStock(stock.id);
+                          break;
+                      }
+                    },
+                    itemBuilder: (_) => [
+                      const PopupMenuItem(value: _Action.view, child: ListTile(leading: Icon(Icons.remove_red_eye_outlined), title: Text('View'))),
+                      const PopupMenuItem(value: _Action.delete, child: ListTile(leading: Icon(Icons.delete_outline), title: Text('Delete'))),
+                    ],
+                    icon: const Icon(Icons.more_vert, size: 20, color: Color(0xFF374151)),
+                    padding: EdgeInsets.zero,
+                    offset: const Offset(0, 36),
+                  ),
+                ],
+              ),
             ),
           )
         ],
@@ -358,7 +361,7 @@ class StockPage extends ConsumerWidget {
   }
 
   Widget _itemDetailsCol(Stock s) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(
         s.name ?? '-',
         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF0B2130)),
@@ -370,7 +373,7 @@ class StockPage extends ConsumerWidget {
         children: [
           Text('SKU :', style: TextStyle(color: Colors.grey.shade600, fontSize: 12, fontWeight: FontWeight.w600)),
           const SizedBox(width: 6),
-          Text(s.sku ?? '-', style: TextStyle(color: Colors.grey.shade700, fontSize: 12)),
+          Text(s.sku ?? '-', style: TextStyle(color: Colors.grey.shade700, fontSize: 12 ,overflow: TextOverflow.ellipsis)),
         ],
       ),
       const SizedBox(height: 6),

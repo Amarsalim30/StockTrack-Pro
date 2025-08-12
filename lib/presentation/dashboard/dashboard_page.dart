@@ -1,5 +1,4 @@
 import 'package:clean_arch_app/presentation/stock/stock_state.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/stock_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -81,7 +80,6 @@ class DashboardPage extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildInventoryHeader(viewModel, stockViewModel, stockState),
             const SizedBox(height: 12),
-            Expanded(child: StockList(stocks: stockState.stocks, isLoading: false,)),
           ],
         ),
       ),
