@@ -169,6 +169,7 @@ class StockViewModel extends StateNotifier<StockState> {
   // -----------------------
   void toggleBulkSelectionMode() {
     final newMode = !state.isBulkSelectionMode;
+    selectAll();
     state = state.copyWith(
       isBulkSelectionMode: newMode,
       selectedStockIds: newMode ? state.selectedStockIds : <String>{},

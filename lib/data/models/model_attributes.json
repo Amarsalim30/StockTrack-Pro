@@ -437,6 +437,78 @@
   },
   {
     "type": "class",
+    "name": "GoodsReceiptItemModel",
+    "fields": [
+      {
+        "name": "stockId",
+        "type": "String"
+      },
+      {
+        "name": "quantityReceived",
+        "type": "int"
+      },
+      {
+        "name": "unitPrice",
+        "type": "double"
+      },
+      {
+        "name": "totalPrice",
+        "type": "double"
+      },
+      {
+        "name": "expiryDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
+    "name": "GoodsReceiptModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "purchaseOrderId",
+        "type": "String"
+      },
+      {
+        "name": "receivedByUserId",
+        "type": "String"
+      },
+      {
+        "name": "createdAt",
+        "type": "DateTime"
+      },
+      {
+        "name": "receivedAtDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "items",
+        "type": "List<GoodsReceiptItemModel>"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "attachments",
+        "type": "List<String>"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      }
+    ]
+  },
+  {
+    "type": "class",
     "name": "PurchaseOrderDraftModel",
     "fields": [
       {
@@ -510,6 +582,22 @@
       {
         "name": "approvedByUserId",
         "type": "String?"
+      },
+      {
+        "name": "goodsReceiptId",
+        "type": "String?"
+      },
+      {
+        "name": "invoiceId",
+        "type": "String?"
+      },
+      {
+        "name": "totalAmount",
+        "type": "double"
+      },
+      {
+        "name": "attachments",
+        "type": "List<String>?"
       },
       {
         "name": "createdAt",
@@ -615,6 +703,52 @@
       "customer",
       "@JsonValue('warranty')",
       "warranty"
+    ]
+  },
+  {
+    "type": "class",
+    "name": "VendorInvoiceModel",
+    "fields": [
+      {
+        "name": "id",
+        "type": "String"
+      },
+      {
+        "name": "purchaseOrderId",
+        "type": "String"
+      },
+      {
+        "name": "invoiceNumber",
+        "type": "String"
+      },
+      {
+        "name": "supplierId",
+        "type": "String"
+      },
+      {
+        "name": "invoiceDate",
+        "type": "DateTime"
+      },
+      {
+        "name": "dueDate",
+        "type": "DateTime?"
+      },
+      {
+        "name": "totalAmount",
+        "type": "double"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "attachments",
+        "type": "List<String>?"
+      },
+      {
+        "name": "notes",
+        "type": "String?"
+      }
     ]
   },
   {

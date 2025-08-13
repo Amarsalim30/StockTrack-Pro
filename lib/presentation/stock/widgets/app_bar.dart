@@ -1,17 +1,36 @@
+// presentation/stock/widgets/production_top_app_bar.dart
+import 'package:clean_arch_app/core/enums/stock_status.dart';
 import 'package:clean_arch_app/di/injection.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+/// Production-grade AppBar with:
+/// - notification badge
+/// - avatar-as-menu (account/settings/logout)
+/// - select-mode toggle (shows checkboxes in the table)
+/// - bulk action icons when select-mode is active (delete / mark status)
 class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
+  // Optional callbacks to override default navigation/behaviour (useful for tests)
   final VoidCallback? onAccountTap;
   final VoidCallback? onSettingsTap;
   final Future<void> Function()? onLogout;
+
+  /// Optional override: if provided, the widget will use this boolean
+  /// instead of reading the provider directly. Useful for preview/tests.
+  final bool? selectionActive;
+
+  /// Optional override for toggling selection mode. If not provided,
+  /// the widget will call stockViewModelProvider.notifier.toggleBulkSelectionMode()
+  final VoidCallback? onToggleSelection;
 
   const ProductionTopAppBar({
     Key? key,
     this.onAccountTap,
     this.onSettingsTap,
     this.onLogout,
+    this.selectionActive,
+    this.onToggleSelection,
   }) : super(key: key);
 
   static const _bgColor = Color(0xFF0E2330);
@@ -19,13 +38,17 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Keep these reads minimal and purposeful
-    final state = ref.watch(di.stockViewModelProvider);
+    // Minimal provider reads:
+    final stockState = ref.watch(di.stockViewModelProvider);
+    final stockVm = ref.read(di.stockViewModelProvider.notifier);
     final notificationsState = ref.watch(di.notificationViewModelProvider);
 
-    final unreadCount = notificationsState.unreadCount; // expects NotificationState.unreadCount getter
-    final user = state.currentUser;
+    final unreadCount = notificationsState.unreadCount;
+    final user = stockState.currentUser;
     final initials = _initialsFromUser(user);
+
+    // Determine whether selection mode is active (prop overrides provider)
+    final bool active = selectionActive ?? stockState.isBulkSelectionMode;
 
     return AppBar(
       backgroundColor: _bgColor,
@@ -40,8 +63,8 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+              children: const [
+                Text(
                   'StockPro',
                   style: TextStyle(
                     color: Colors.white,
@@ -50,11 +73,11 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
                     letterSpacing: 0.2,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Professional Inventory Management',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white70,
                     fontSize: 12,
                   ),
                 ),
@@ -62,7 +85,7 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
             ),
           ),
 
-          // Actions: notifications, avatar-as-menu
+          // Actions area
           Row(
             children: [
               // Notifications with badge
@@ -75,12 +98,58 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
 
               const SizedBox(width: 10),
 
-              // Avatar that opens the profile menu (replaces three-dot overflow)
-              // PopupMenuButton has `child` parameter; using avatar as the trigger keeps built-in keyboard/semantic support.
+              // SELECT MODE TOGGLE (entry/exit)
+              Tooltip(
+                message: active ? 'Exit selection mode' : 'Select items',
+                child: IconButton(
+                  onPressed: () {
+                    if (onToggleSelection != null) {
+                      onToggleSelection!();
+                    } else {
+                      stockVm.toggleBulkSelectionMode();
+                    }
+                    // Optional: announce for accessibility
+                    // SemanticsService.announce(active ? 'Selection mode off' : 'Selection mode on', TextDirection.ltr);
+                  },
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 220),
+                    transitionBuilder: (child, anim) {
+                      return RotationTransition(turns: anim, child: child);
+                    },
+                    child: Icon(
+                      active ? Icons.close : Icons.select_all,
+                      key: ValueKey<bool>(active),
+                      color: Colors.white70,
+                    ),
+                  ),
+                  tooltip: active ? 'Exit selection mode' : 'Select items',
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              // When in selection mode show bulk action icons (delete + mark status)
+              if (active) ...[
+                // Bulk delete
+                IconButton(
+                  onPressed: () async {
+                    final confirmed = await _confirmBulkDelete(context);
+                    if (!confirmed) return;
+                    // call ViewModel bulk delete
+                    await stockVm.bulkDelete();
+                  },
+                  icon: const Icon(Icons.delete_outline),
+                  color: Colors.white70,
+                  tooltip: 'Delete selected items',
+                ),
+
+                const SizedBox(width: 8),
+              ],
+
+              // Avatar used as menu trigger (Account / Settings / Logout)
               PopupMenuButton<_MenuAction>(
                 color: Colors.white,
                 tooltip: 'Account menu',
-                // Use the avatar as the visible child that opens the menu
                 child: Semantics(
                   label: 'Account menu',
                   button: true,
@@ -141,11 +210,28 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
     );
   }
 
+  Future<bool> _confirmBulkDelete(BuildContext context) async {
+    final res = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete selected items'),
+        content: const Text('Are you sure you want to delete all selected items? This action cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
+          ElevatedButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete')),
+        ],
+      ),
+    );
+    return res == true;
+  }
+
   Future<void> _handleMenuSelection({
     required BuildContext context,
     required WidgetRef ref,
     required _MenuAction action,
   }) async {
+    final stockVm = ref.read(di.stockViewModelProvider.notifier);
+
     switch (action) {
       case _MenuAction.account:
         if (onAccountTap != null) {
@@ -159,7 +245,7 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
         if (onSettingsTap != null) {
           onSettingsTap!();
         } else {
-          Navigator.of(context).pushNamed('/settings');
+          context.go('/settings');
         }
         break;
 
@@ -181,6 +267,7 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
             await onLogout!();
           } else {
             try {
+              // Default behavior: navigate to login (adjust to your auth logic)
               Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
             } catch (_) {
               Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
@@ -194,6 +281,21 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
           }
         }
         break;
+    }
+  }
+
+  static IconData _statusIconForMenu(StockStatus s) {
+    switch (s) {
+      case StockStatus.lowStock:
+        return Icons.warning_amber_rounded;
+      case StockStatus.outOfStock:
+        return Icons.remove_circle_outline;
+      case StockStatus.inStock:
+        return Icons.check_circle_outline;
+      case StockStatus.discontinued:
+        return Icons.block;
+      default:
+        return Icons.info_outline;
     }
   }
 
@@ -215,6 +317,7 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
 
 enum _MenuAction { account, settings, logout }
 
+/// Small notification button with badge; kept separate to minimize rebuild surface.
 class _NotificationButton extends StatelessWidget {
   final int unreadCount;
   final VoidCallback onTap;

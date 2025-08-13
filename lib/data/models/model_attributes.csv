@@ -100,6 +100,21 @@ class,UnitModel,name,String
 class,UnitModel,description,String?
 class,UnitModel,conversionRate,double?
 class,UnitModel,props,get
+class,GoodsReceiptItemModel,stockId,String
+class,GoodsReceiptItemModel,quantityReceived,int
+class,GoodsReceiptItemModel,unitPrice,double
+class,GoodsReceiptItemModel,totalPrice,double
+class,GoodsReceiptItemModel,expiryDate,DateTime?
+class,GoodsReceiptItemModel,notes,String?
+class,GoodsReceiptModel,id,String
+class,GoodsReceiptModel,purchaseOrderId,String
+class,GoodsReceiptModel,receivedByUserId,String
+class,GoodsReceiptModel,createdAt,DateTime
+class,GoodsReceiptModel,receivedAtDate,DateTime?
+class,GoodsReceiptModel,items,List<GoodsReceiptItemModel>
+class,GoodsReceiptModel,status,String
+class,GoodsReceiptModel,attachments,List<String>
+class,GoodsReceiptModel,notes,String?
 class,PurchaseOrderDraftModel,id,String
 class,PurchaseOrderDraftModel,supplierId,String
 class,PurchaseOrderDraftModel,createdByUserId,String
@@ -115,6 +130,10 @@ class,PurchaseOrderModel,id,String
 class,PurchaseOrderModel,supplierId,String
 class,PurchaseOrderModel,createdByUserId,String
 class,PurchaseOrderModel,approvedByUserId,String?
+class,PurchaseOrderModel,goodsReceiptId,String?
+class,PurchaseOrderModel,invoiceId,String?
+class,PurchaseOrderModel,totalAmount,double
+class,PurchaseOrderModel,attachments,List<String>?
 class,PurchaseOrderModel,createdAt,DateTime
 class,PurchaseOrderModel,expectedDeliveryDate,DateTime?
 class,PurchaseOrderModel,receivedDate,DateTime?
@@ -141,6 +160,16 @@ enum,ReturnTypeModel,@JsonValue('customer'),enum value
 enum,ReturnTypeModel,customer,enum value
 enum,ReturnTypeModel,@JsonValue('warranty'),enum value
 enum,ReturnTypeModel,warranty,enum value
+class,VendorInvoiceModel,id,String
+class,VendorInvoiceModel,purchaseOrderId,String
+class,VendorInvoiceModel,invoiceNumber,String
+class,VendorInvoiceModel,supplierId,String
+class,VendorInvoiceModel,invoiceDate,DateTime
+class,VendorInvoiceModel,dueDate,DateTime?
+class,VendorInvoiceModel,totalAmount,double
+class,VendorInvoiceModel,status,String
+class,VendorInvoiceModel,attachments,List<String>?
+class,VendorInvoiceModel,notes,String?
 class,ProductionOrderModel,id,String
 class,ProductionOrderModel,productId,String
 class,ProductionOrderModel,quantityToProduce,int

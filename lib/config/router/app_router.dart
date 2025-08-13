@@ -17,13 +17,12 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authViewModelProvider);
 
   return GoRouter(
-    initialLocation: RouteNames.login,
+    initialLocation: RouteNames.stock,
     routes: [
       ShellRoute(
         builder: (context, state, child) => MainScaffold(child: child),
 
         routes: [
-
           GoRoute(
             path: RouteNames.login,
             name: RouteNames.login,

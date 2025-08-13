@@ -17,7 +17,7 @@ class StockPage extends ConsumerWidget {
 
     final List<Stock> stocks = state.filteredStocks;
     final isLoading = state.isLoading;
-    final selectable = false; // show checkboxes by default (change to state flag if you add one)
+    final selectable = state.isBulkSelectionMode; // show checkboxes by default (change to state flag if you add one)
     final selectedIds = state.selectedStockIds;
     final allSelected = state.allSelected;
 

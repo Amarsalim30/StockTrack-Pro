@@ -12,6 +12,12 @@ PurchaseOrderModel _$PurchaseOrderModelFromJson(Map<String, dynamic> json) =>
       supplierId: json['supplierId'] as String,
       createdByUserId: json['createdByUserId'] as String,
       approvedByUserId: json['approvedByUserId'] as String?,
+      goodsReceiptId: json['goodsReceiptId'] as String?,
+      invoiceId: json['invoiceId'] as String?,
+      totalAmount: (json['totalAmount'] as num).toDouble(),
+      attachments: (json['attachments'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       expectedDeliveryDate: json['expectedDeliveryDate'] == null
           ? null
@@ -34,6 +40,10 @@ Map<String, dynamic> _$PurchaseOrderModelToJson(PurchaseOrderModel instance) =>
       'supplierId': instance.supplierId,
       'createdByUserId': instance.createdByUserId,
       'approvedByUserId': instance.approvedByUserId,
+      'goodsReceiptId': instance.goodsReceiptId,
+      'invoiceId': instance.invoiceId,
+      'totalAmount': instance.totalAmount,
+      'attachments': instance.attachments,
       'createdAt': instance.createdAt.toIso8601String(),
       'expectedDeliveryDate': instance.expectedDeliveryDate?.toIso8601String(),
       'receivedDate': instance.receivedDate?.toIso8601String(),

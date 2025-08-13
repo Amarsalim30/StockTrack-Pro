@@ -12,7 +12,7 @@ Enum: ActivityType
 
 Enum: PermissionType
 - createOrder
-- approveOrder
+- approveOrdera
 - receiveStock
 - adjustStock
 - viewReports
