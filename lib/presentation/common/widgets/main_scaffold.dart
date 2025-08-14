@@ -13,20 +13,17 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   final ValueNotifier<bool> _dialOpen = ValueNotifier(false);
-
   int _selectedIndex = 0;
 
   final List<_NavItem> _navItems = [
     _NavItem(icon: Icons.inventory_outlined, label: 'Stock', route: '/'),
-    _NavItem(icon: Icons.cameraswitch_rounded, label: 'Purchase Order', route: '/health'),
+    _NavItem(icon: Icons.add_business_outlined, label: 'Purchase Order', route: '/health'),
     _NavItem(icon: Icons.bar_chart_sharp, label: 'Reporting', route: '/stats'),
-    _NavItem(icon: Icons.history_outlined, label: 'activity', route: '/profile'),
+    _NavItem(icon: Icons.history_outlined, label: 'Activity', route: '/profile'),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() => _selectedIndex = index);
     GoRouter.of(context).go(_navItems[index].route);
   }
 
@@ -36,8 +33,8 @@ class _MainScaffoldState extends State<MainScaffold> {
 
     return Scaffold(
       body: widget.child,
-      floatingActionButton: _buildFab(theme, 56, 28),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _buildFab(theme, 56),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
@@ -63,10 +60,8 @@ class _MainScaffoldState extends State<MainScaffold> {
                       item.label,
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight:
-                        selected ? FontWeight.w700 : FontWeight.w500,
-                        color:
-                        selected ? Colors.cyanAccent : Colors.white70,
+                        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                        color: selected ? Colors.cyanAccent : Colors.white70,
                       ),
                     ),
                   ],
@@ -79,47 +74,52 @@ class _MainScaffoldState extends State<MainScaffold> {
     );
   }
 
-  Widget _buildFab(ThemeData theme, double diameter, double iconSize) {
+  Widget _buildFab(ThemeData theme, double diameter) {
     final actions = <_ActionItem>[
-      _ActionItem(icon: LucideIcons.activity, label: 'Add blood pressure', route: '/bp'),
-      _ActionItem(icon: LucideIcons.weight, label: 'Add weight', route: '/weight'),
-      _ActionItem(icon: LucideIcons.pencil, label: 'Add activity', route: '/activity'),
-      _ActionItem(icon: Icons.run_circle_outlined, label: 'Track workout', route: '/workout'),
+      _ActionItem(icon: LucideIcons.scan, label: 'Scan Barcode', route: '/scan'),
+      _ActionItem(icon: Icons.inventory_2_outlined, label: 'New Stock Take', route: '/new-stock-take'),
+      _ActionItem(icon: Icons.precision_manufacturing, label: 'New Production', route: '/new-production'),
+      _ActionItem(icon: Icons.article_outlined, label: 'New BOM', route: '/new-bom'),
+      _ActionItem(icon: Icons.shopping_cart_outlined, label: 'New Order', route: '/new-order'),
     ];
 
     return SpeedDial(
-      icon: null,
-      child: AnimatedRotation(
-        duration: const Duration(milliseconds: 250),
-        turns: _dialOpen.value ? 0.125 : 0,
-        child: Container(
-          width: diameter,
-          height: diameter,
-          decoration: const BoxDecoration(
-            color: Color(0xFF0E2330),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.add, color: Colors.white, size: 28),
-        ),
-      ),
+      icon: null, // We handle our own icon animation
       openCloseDial: _dialOpen,
       overlayOpacity: 0.5,
       overlayColor: Colors.black,
       backgroundColor: Colors.transparent,
-      elevation: 0,
-      spacing: 10,
-      spaceBetweenChildren: 10,
+      elevation: 1,
+      spacing: 5,
+      spaceBetweenChildren: 5,
       children: actions
           .map((action) => SpeedDialChild(
         backgroundColor: const Color(0xFF0E2330),
-        child: Icon(action.icon, color: Colors.white, size: 20),
+        child: Icon(action.icon, color: Colors.white, size: 18), // smaller icon
         label: action.label,
-        labelStyle:
-        const TextStyle(color: Colors.white, fontSize: 14),
+        labelStyle: const TextStyle(color: Colors.white, fontSize: 13),
         labelBackgroundColor: Colors.transparent,
         onTap: () => GoRouter.of(context).push(action.route),
       ))
           .toList(),
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _dialOpen,
+        builder: (context, isOpen, _) {
+          return AnimatedRotation(
+            duration: const Duration(milliseconds: 250),
+            turns: isOpen ? 0.125 : 0, // 45° rotation
+            child: Container(
+              width: diameter,
+              height: diameter,
+              decoration: const BoxDecoration(
+                color: Color(0xFF0E2330),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 28),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -128,7 +128,6 @@ class _NavItem {
   final IconData icon;
   final String label;
   final String route;
-
   _NavItem({required this.icon, required this.label, required this.route});
 }
 
@@ -136,7 +135,5 @@ class _ActionItem {
   final IconData icon;
   final String label;
   final String route;
-
-  _ActionItem(
-      {required this.icon, required this.label, required this.route});
+  _ActionItem({required this.icon, required this.label, required this.route});
 }
