@@ -24,32 +24,36 @@ class StockPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
   appBar: ProductionTopAppBar(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // buildTopAppBar(context, vm),
-            // _buildTopBar(context, vm),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 12, 18, 6), // tightened
-              child: _buildTitleAndCount(stocks.length),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: SearchControlBar(),
-              // _buildSearchFilterRow(vm, state),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                child: isLoading
-                    ? _buildLoading()
-                    : stocks.isEmpty
-                    ? _buildEmpty()
-                    : _buildListView(stocks, selectable, selectedIds, allSelected, vm, ref),
+
+      body: RefreshIndicator(
+        onRefresh: ()=>vm.refresh(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // buildTopAppBar(context, vm),
+              // _buildTopBar(context, vm),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 12, 18, 6), // tightened
+                child: _buildTitleAndCount(stocks.length),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: SearchControlBar(),
+                // _buildSearchFilterRow(vm, state),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: isLoading
+                      ? _buildLoading()
+                      : stocks.isEmpty
+                      ? _buildEmpty()
+                      : _buildListView(stocks, selectable, selectedIds, allSelected, vm, ref),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

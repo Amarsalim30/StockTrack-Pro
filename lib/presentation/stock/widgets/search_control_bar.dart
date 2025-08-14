@@ -136,7 +136,7 @@ class _SearchControlBarState extends ConsumerState<SearchControlBar>
                     hintText: widget.hintText,
                     prefixIcon: const Icon(Icons.search, size: 20, color: Color(0xFF9AA6B2)),
                     filled: true,
-                    fillColor: const Color(0xFFF7F8FA),
+                    fillColor:Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,

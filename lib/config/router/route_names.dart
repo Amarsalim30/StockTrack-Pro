@@ -2,6 +2,7 @@ class RouteNames {
   static const String login = '/login';
   static const String dashboard = '/dashboard';
   static const String stock = '/stock';
+  static const String purchaseOrders = '/purchase-orders';
   static const String addProduct = '/add-product';
   static const String editProduct = '/edit-product';
   static const String suppliers = '/suppliers';

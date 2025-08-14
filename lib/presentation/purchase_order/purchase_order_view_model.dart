@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
+import 'package:clean_arch_app/presentation/purchase_order/mock_purchase_order_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/enums/purchase_order_status.dart';
@@ -23,7 +24,7 @@ class PurchaseOrderViewModel extends StateNotifier<PurchaseOrderState> {
   }
 
   void _init() {
-    _loadCurrentUser();
+    // _loadCurrentUser();
     loadPurchaseOrders();
   }
 
@@ -45,11 +46,11 @@ class PurchaseOrderViewModel extends StateNotifier<PurchaseOrderState> {
   Future<void> loadPurchaseOrders() async {
     state = state.copyWith(status: PurchaseOrderStateStatus.loading, errorMessage: null);
 
-    final result = await purchaseOrderUseCases.getAllPurchaseOrders();
-    result.fold(
-      (failure) => state = state.copyWith(status: PurchaseOrderStateStatus.error, errorMessage: 'Failed to load purchase orders'),
-      (orders) => state = state.copyWith(purchaseOrders: orders, status: PurchaseOrderStateStatus.success),
-    );
+    // final result = await purchaseOrderUseCases.getAllPurchaseOrders();
+    // result.fold(
+      // (failure) => state = state.copyWith(status: PurchaseOrderStateStatus.error, errorMessage: 'Failed to load purchase orders'),
+      (PurchaseOrder orders) => state = state.copyWith(purchaseOrders: mockPurchaseOrders, status: PurchaseOrderStateStatus.success);
+    // );
   }
 
   Future<void> refresh() async => loadPurchaseOrders();

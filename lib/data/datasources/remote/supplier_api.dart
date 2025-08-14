@@ -3,17 +3,11 @@ import '../../models/catalog/supplier_model.dart';
 
 abstract class SupplierApi {
   Future<List<SupplierModel>> getAllSuppliers();
-
   Future<SupplierModel> getSupplierById(String id);
-
   Future<SupplierModel> createSupplier(SupplierModel supplier);
-
   Future<SupplierModel> updateSupplier(SupplierModel supplier);
-
   Future<void> deleteSupplier(String id);
-
   Future<List<SupplierModel>> searchSuppliers(String query);
-
   Future<List<SupplierModel>> getActiveSuppliers();
 }
 
@@ -25,14 +19,14 @@ class SupplierApiImpl implements SupplierApi {
   @override
   Future<List<SupplierModel>> getAllSuppliers() async {
     final response = await _apiClient.get<List<dynamic>>('/suppliers');
-    return response.map((json) => SupplierModel.fromJson(json)).toList();
+    return response
+        .map((json) => SupplierModel.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   @override
   Future<SupplierModel> getSupplierById(String id) async {
-    final response = await _apiClient.get<Map<String, dynamic>>(
-      '/suppliers/$id',
-    );
+    final response = await _apiClient.get<Map<String, dynamic>>('/suppliers/$id');
     return SupplierModel.fromJson(response);
   }
 
@@ -65,7 +59,9 @@ class SupplierApiImpl implements SupplierApi {
       '/suppliers/search',
       queryParameters: {'q': query},
     );
-    return response.map((json) => SupplierModel.fromJson(json)).toList();
+    return response
+        .map((json) => SupplierModel.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -74,6 +70,8 @@ class SupplierApiImpl implements SupplierApi {
       '/suppliers',
       queryParameters: {'active': true},
     );
-    return response.map((json) => SupplierModel.fromJson(json)).toList();
+    return response
+        .map((json) => SupplierModel.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }
