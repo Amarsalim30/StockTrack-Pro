@@ -9,6 +9,8 @@ class RouteNames {
   static const String addSupplier = '/add-supplier';
   static const String editSupplier = '/edit-supplier';
   static const String users = '/users';
+  static const String reports = '/reports';
+
   static const String addUser = '/add-user';
   static const String editUser = '/edit-user';
   static const String settings = '/settings';

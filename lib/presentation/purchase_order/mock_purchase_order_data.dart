@@ -15,7 +15,34 @@ final mockPurchaseOrders = [
     createdAt: DateTime(2024, 1, 16),
     expectedDeliveryDate: DateTime(2024, 1, 22),
     receivedDate: null,
-    status: PurchaseOrderStatus.draft.toString(),
+    status: PurchaseOrderStatus.draft.code,
+    items: [
+      PurchaseOrderItem(
+        stockId: "stk-006",
+        quantityOrdered: 10,
+        unitCost: 5,
+      ),
+      PurchaseOrderItem(
+        stockId: "stk-001",
+        quantityOrdered: 50,
+        unitCost: 1,
+      ),
+    ],
+    notes: "Office supplies order",
+  ),
+  PurchaseOrder(
+    id: "PO-2024-004",
+    supplierId: "Office Supplies Co.",
+    createdByUserId: "user-1",
+    approvedByUserId: null,
+    goodsReceiptId: null,
+    invoiceId: null,
+    totalAmount: 890,
+    attachments: [],
+    createdAt: DateTime(2024, 1, 16),
+    expectedDeliveryDate: DateTime(2024, 1, 22),
+    receivedDate: null,
+    status: PurchaseOrderStatus.pendingApproval.code,
     items: [
       PurchaseOrderItem(
         stockId: "stk-006",
@@ -42,7 +69,7 @@ final mockPurchaseOrders = [
     createdAt: DateTime(2024, 1, 16),
     expectedDeliveryDate: DateTime(2024, 1, 30),
     receivedDate: null,
-    status: PurchaseOrderStatus.pendingApproval.toString(),
+    status: PurchaseOrderStatus.pendingApproval.code,
     items: [
       PurchaseOrderItem(
         stockId: "stk-001",
@@ -69,7 +96,7 @@ final mockPurchaseOrders = [
     createdAt: DateTime(2024, 1, 15),
     expectedDeliveryDate: DateTime(2024, 1, 25),
     receivedDate: null,
-    status: PurchaseOrderStatus.inProgress.toString(),
+    status: PurchaseOrderStatus.inProgress.code,
     items: [
       PurchaseOrderItem(
         stockId: "stk-001",
@@ -96,7 +123,7 @@ final mockPurchaseOrders = [
     createdAt: DateTime(2024, 1, 14),
     expectedDeliveryDate: DateTime(2024, 1, 21),
     receivedDate: null,
-    status: PurchaseOrderStatus.inProgress.toString(),
+    status: PurchaseOrderStatus.inProgress.code,
     items: [
       PurchaseOrderItem(
         stockId: "stk-001",

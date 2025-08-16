@@ -44,14 +44,41 @@ class PurchaseOrderViewModel extends StateNotifier<PurchaseOrderState> {
   bool get canCancelPurchaseOrder => hasPermission(PermissionType.approveOrder);
 
   Future<void> loadPurchaseOrders() async {
-    state = state.copyWith(status: PurchaseOrderStateStatus.loading, errorMessage: null);
+    state = state.copyWith(
+      status: PurchaseOrderStateStatus.loading,
+      errorMessage: null,
+    );
 
-    // final result = await purchaseOrderUseCases.getAllPurchaseOrders();
-    // result.fold(
-      // (failure) => state = state.copyWith(status: PurchaseOrderStateStatus.error, errorMessage: 'Failed to load purchase orders'),
-      (PurchaseOrder orders) => state = state.copyWith(purchaseOrders: mockPurchaseOrders, status: PurchaseOrderStateStatus.success);
-    // );
+    try {
+      // Simulate network delay for UX testing (remove in production)
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Real API call
+      // final result = await purchaseOrderUseCases.getAllPurchaseOrders();
+      // result.fold(
+      //   (failure) => state = state.copyWith(
+      //     status: PurchaseOrderStateStatus.error,
+      //     errorMessage: 'Failed to load purchase orders',
+      //   ),
+      //   (orders) => state = state.copyWith(
+      //     purchaseOrders: orders,
+      //     status: PurchaseOrderStateStatus.success,
+      //   ),
+      // );
+
+      // Mock data (for now)
+      state = state.copyWith(
+        purchaseOrders: mockPurchaseOrders,
+        status: PurchaseOrderStateStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: PurchaseOrderStateStatus.error,
+        errorMessage: e.toString(),
+      );
+    }
   }
+
 
   Future<void> refresh() async => loadPurchaseOrders();
 

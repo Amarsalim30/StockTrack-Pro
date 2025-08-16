@@ -3,6 +3,7 @@ import 'package:clean_arch_app/di/injection.dart'; // should export stockViewMod
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
+import 'package:clean_arch_app/presentation/stock/widgets/build_action_bar.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/search_control_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,8 +31,15 @@ class StockPage extends ConsumerWidget {
         child: SafeArea(
           child: Column(
             children: [
-              // buildTopAppBar(context, vm),
-              // _buildTopBar(context, vm),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: buildActionBar(context, ref),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(18, 12, 18, 6), // tightened
                 child: _buildTitleAndCount(stocks.length),
@@ -39,7 +47,6 @@ class StockPage extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: SearchControlBar(),
-                // _buildSearchFilterRow(vm, state),
               ),
               const SizedBox(height: 10),
               Expanded(
@@ -487,6 +494,5 @@ class StockPage extends ConsumerWidget {
     Text('Add items to your inventory to get started', style: TextStyle(color: Colors.grey.shade500)),
   ]));
 }
-
 // small enum for local action mapping
 enum _Action { view, delete }

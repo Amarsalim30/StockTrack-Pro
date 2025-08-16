@@ -18,7 +18,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   final List<_NavItem> _navItems = [
     _NavItem(icon: Icons.inventory_outlined, label: 'Stock', route: '/stock'),
     _NavItem(icon: Icons.add_business_outlined, label: 'Purchase Order', route: '/purchase-orders'),
-    _NavItem(icon: Icons.bar_chart_sharp, label: 'Reporting', route: '/stats'),
+    _NavItem(icon: Icons.bar_chart_sharp, label: 'Reporting', route: '/reports'),
     _NavItem(icon: Icons.history_outlined, label: 'Activity', route: '/profile'),
   ];
 

@@ -99,52 +99,6 @@ class ProductionTopAppBar extends ConsumerWidget implements PreferredSizeWidget 
               const SizedBox(width: 10),
 
               // SELECT MODE TOGGLE (entry/exit)
-              Tooltip(
-                message: active ? 'Exit selection mode' : 'Select items',
-                child: IconButton(
-                  onPressed: () {
-                    if (onToggleSelection != null) {
-                      onToggleSelection!();
-                    } else {
-                      stockVm.toggleBulkSelectionMode();
-                    }
-                    // Optional: announce for accessibility
-                    // SemanticsService.announce(active ? 'Selection mode off' : 'Selection mode on', TextDirection.ltr);
-                  },
-                  icon: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 220),
-                    transitionBuilder: (child, anim) {
-                      return RotationTransition(turns: anim, child: child);
-                    },
-                    child: Icon(
-                      active ? Icons.close : Icons.select_all,
-                      key: ValueKey<bool>(active),
-                      color: Colors.white70,
-                    ),
-                  ),
-                  tooltip: active ? 'Exit selection mode' : 'Select items',
-                ),
-              ),
-
-              const SizedBox(width: 8),
-
-              // When in selection mode show bulk action icons (delete + mark status)
-              if (active) ...[
-                // Bulk delete
-                IconButton(
-                  onPressed: () async {
-                    final confirmed = await _confirmBulkDelete(context);
-                    if (!confirmed) return;
-                    // call ViewModel bulk delete
-                    await stockVm.bulkDelete();
-                  },
-                  icon: const Icon(Icons.delete_outline),
-                  color: Colors.white70,
-                  tooltip: 'Delete selected items',
-                ),
-
-                const SizedBox(width: 8),
-              ],
 
               // Avatar used as menu trigger (Account / Settings / Logout)
               PopupMenuButton<_MenuAction>(

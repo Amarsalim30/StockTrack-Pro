@@ -458,4 +458,16 @@ class StockViewModel extends StateNotifier<StockState> {
     _searchDebounce?.cancel();
     super.dispose();
   }
+
+  void exportSelected() {
+  }
+
+  void importNew() {
+  }
+
+  void appendData() {
+  }
+
+  void exportTemplate() {
+  }
 }
