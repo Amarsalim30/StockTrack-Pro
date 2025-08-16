@@ -1,4 +1,7 @@
+import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
+import 'package:clean_arch_app/presentation/purchase_order/purchase_order_detail_page.dart';
 import 'package:clean_arch_app/presentation/purchase_order/purchase_order_page.dart';
+import 'package:clean_arch_app/presentation/reporting/reporting_page.dart';
 import 'package:clean_arch_app/presentation/stocktake/stocktake_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +49,21 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: RouteNames.purchaseOrders,
             builder: (context, state) => const PurchaseOrdersScreen(),
           ),
+
+          GoRoute(
+            path: RouteNames.reports,
+            name: RouteNames.reports,
+            builder: (context, state) => const ReportsPage(),
+          ),
+          GoRoute(
+            path: '/purchase-orders/:id',
+            name: 'purchaseOrderDetail',
+            builder: (context, state) {
+              final order = state.extra as PurchaseOrder;
+              return PurchaseOrderDetailPage(order: order);
+            },
+          ),
+
           GoRoute(
             path: RouteNames.stocktake,
             name: RouteNames.stocktake,
