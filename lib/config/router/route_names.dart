@@ -2,6 +2,8 @@ class RouteNames {
   static const String login = '/login';
   static const String dashboard = '/dashboard';
   static const String stock = '/stock';
+  static const String stocktake = '/stock-take';
+
   static const String purchaseOrders = '/purchase-orders';
   static const String addProduct = '/add-product';
   static const String editProduct = '/edit-product';
@@ -14,5 +16,4 @@ class RouteNames {
   static const String addUser = '/add-user';
   static const String editUser = '/edit-user';
   static const String settings = '/settings';
-  static const String stocktake = '/stocktake';
 }

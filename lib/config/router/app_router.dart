@@ -45,6 +45,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
 
           GoRoute(
+            path: RouteNames.stocktake,
+            name: RouteNames.stocktake,
+            builder: (context, state) => StockTakePage(),
+          ),
+          GoRoute(
             path: RouteNames.purchaseOrders,
             name: RouteNames.purchaseOrders,
             builder: (context, state) => const PurchaseOrdersScreen(),
@@ -62,12 +67,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               final order = state.extra as PurchaseOrder;
               return PurchaseOrderDetailPage(order: order);
             },
-          ),
-
-          GoRoute(
-            path: RouteNames.stocktake,
-            name: RouteNames.stocktake,
-            builder: (context, state) => StockTakePage(),
           ),
           GoRoute(
             path: RouteNames.addProduct,

@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/presentation/purchase_order/approval_progress_item.dart';
+import 'package:clean_arch_app/presentation/purchase_order/widgets/approval_progress_item.dart';
 import 'package:clean_arch_app/presentation/purchase_order/widgets/build_activity_content.dart';
 import 'package:clean_arch_app/presentation/purchase_order/widgets/build_invoice_content.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';

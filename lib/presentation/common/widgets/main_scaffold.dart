@@ -19,7 +19,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     _NavItem(icon: Icons.inventory_outlined, label: 'Stock', route: '/stock'),
     _NavItem(icon: Icons.add_business_outlined, label: 'Purchase Order', route: '/purchase-orders'),
     _NavItem(icon: Icons.bar_chart_sharp, label: 'Reporting', route: '/reports'),
-    _NavItem(icon: Icons.history_outlined, label: 'Activity', route: '/profile'),
+    _NavItem(icon: Icons.history_outlined, label: 'Activity', route: '/activity'),
   ];
 
   void _onItemTapped(int index) {
@@ -77,7 +77,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   Widget _buildFab(ThemeData theme, double diameter) {
     final actions = <_ActionItem>[
       _ActionItem(icon: LucideIcons.scan, label: 'Scan Barcode', route: '/scan'),
-      _ActionItem(icon: Icons.inventory_2_outlined, label: 'New Stock Take', route: '/new-stock-take'),
+      _ActionItem(icon: Icons.inventory_2_outlined, label: 'New Stock Take', route: '/stock-take'),
       _ActionItem(icon: Icons.precision_manufacturing, label: 'New Production', route: '/new-production'),
       _ActionItem(icon: Icons.article_outlined, label: 'New BOM', route: '/new-bom'),
       _ActionItem(icon: Icons.shopping_cart_outlined, label: 'New Order', route: '/new-order'),

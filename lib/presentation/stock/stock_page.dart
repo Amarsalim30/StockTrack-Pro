@@ -133,47 +133,47 @@ class StockPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchFilterRow(StockViewModel vm, dynamic state) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 40, // slightly smaller
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE6E9EE)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                const Icon(Icons.search, color: Color(0xFF9AA6B2), size: 18),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    onChanged: vm.updateSearch,
-                    decoration: const InputDecoration.collapsed(
-                      hintText: 'Search inventory...',
-                      hintStyle: TextStyle(color: Color(0xFF9AA6B2)),
-                    ),
-                    style: const TextStyle(fontSize: 14),
-                    textInputAction: TextInputAction.search,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        _smallActionButton(icon: Icons.filter_list, tooltip: 'Filter', onTap: () {
-          final current = state.filterStatus;
-          vm.setFilterStatus(current == StockStatus.inStock ? null : StockStatus.inStock);
-        }),
-        const SizedBox(width: 8),
-        _smallActionButton(icon: Icons.swap_vert, tooltip: 'Sort', onTap: vm.toggleSort),
-      ],
-    );
-  }
+  // Widget _buildSearchFilterRow(StockViewModel vm, dynamic state) {
+  //   return Row(
+  //     children: [
+  //       Expanded(
+  //         child: Container(
+  //           height: 40, // slightly smaller
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             border: Border.all(color: const Color(0xFFE6E9EE)),
+  //             borderRadius: BorderRadius.circular(8),
+  //           ),
+  //           padding: const EdgeInsets.symmetric(horizontal: 10),
+  //           child: Row(
+  //             children: [
+  //               const Icon(Icons.search, color: Color(0xFF9AA6B2), size: 18),
+  //               const SizedBox(width: 8),
+  //               Expanded(
+  //                 child: TextField(
+  //                   onChanged: vm.updateSearch,
+  //                   decoration: const InputDecoration.collapsed(
+  //                     hintText: 'Search inventory...',
+  //                     hintStyle: TextStyle(color: Color(0xFF9AA6B2)),
+  //                   ),
+  //                   style: const TextStyle(fontSize: 14),
+  //                   textInputAction: TextInputAction.search,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //       const SizedBox(width: 10),
+  //       _smallActionButton(icon: Icons.filter_list, tooltip: 'Filter', onTap: () {
+  //         final current = state.filterStatus;
+  //         vm.setFilterStatus(current == StockStatus.inStock ? null : StockStatus.inStock);
+  //       }),
+  //       const SizedBox(width: 8),
+  //       _smallActionButton(icon: Icons.swap_vert, tooltip: 'Sort', onTap: vm.toggleSort),
+  //     ],
+  //   );
+  // }
 
   Widget _smallActionButton({required IconData icon, String? tooltip, VoidCallback? onTap}) {
     return Material(

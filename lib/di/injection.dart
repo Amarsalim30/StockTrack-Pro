@@ -1,7 +1,10 @@
+import 'package:clean_arch_app/core/network/network_info.dart';
 import 'package:clean_arch_app/data/datasources/remote/notification_api.dart';
 import 'package:clean_arch_app/data/datasources/remote/purchase_order_api.dart';
+import 'package:clean_arch_app/data/datasources/remote/stock_take_api.dart';
 import 'package:clean_arch_app/data/repositories_impl/notification_repository_impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/purchase_order_repository_impl.dart';
+import 'package:clean_arch_app/data/repositories_impl/stock_take_repository_impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/supplier_repository_impl.dart';
 import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
 import 'package:clean_arch_app/domain/repositories/purchase_order_repository.dart';
@@ -29,7 +32,9 @@ import 'package:clean_arch_app/presentation/auth/auth_view_model.dart';
 import 'package:clean_arch_app/presentation/notification/notification_state.dart';
 import 'package:clean_arch_app/presentation/notification/notification_view_model.dart';
 import 'package:clean_arch_app/presentation/purchase_order/purchase_order_view_model.dart';
+import 'package:clean_arch_app/presentation/stocktake/stock_state.dart';
 import 'package:clean_arch_app/presentation/suppliers/supplier_state.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -87,7 +92,13 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 // ─────────────────────────────────────────────
 // DATA SOURCE PROVIDERS
 // ─────────────────────────────────────────────
-
+// Provider for Connectivity
+final connectivityProvider = Provider<Connectivity>((ref) {
+  return Connectivity();
+});
+final networkInfoProvider = Provider<NetworkInfo>((ref) {
+  return NetworkInfoImpl(ref.read(connectivityProvider));
+});
 final authApiProvider = Provider<AuthApiImpl>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return AuthApiImpl(apiClient);
@@ -124,6 +135,10 @@ final notificationUseCasesProvider = Provider<NotificationUseCases>((ref) {
   return NotificationUseCases.fromRepository(repo);
 });
 
+final stockTakeApiProvider = Provider<StockTakeApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return StockTakeApi(dio); // assuming you have a Retrofit/Dio StockTakeApi
+});
 
 // ─────────────────────────────────────────────
 // REPOSITORY PROVIDERS
@@ -182,16 +197,6 @@ final purchaseOrderViewModelProvider =
         authRepository: authRepo,
       );
     });
-//
-// final stockViewModelProvider =
-//     StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
-//       final stockRepo = ref.watch(stockRepositoryProvider);
-//       final authRepo = ref.watch(authRepositoryProvider);
-//       return StockViewModel(
-//         stockRepository: stockRepo,
-//         authRepository: authRepo,
-//       );
-//     });
 
 final notificationViewModelProvider =
 StateNotifierProvider<NotificationViewModel, NotificationState>((ref) {
@@ -240,9 +245,11 @@ StateNotifierProvider<AuthViewModel, AuthState>((ref) {
 });
 
 
-// Mock stock take repository for now
 final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
-  throw UnimplementedError('StockTakeRepository implementation needed');
+  final api = ref.watch(stockTakeApiProvider);
+  final networkInfo = ref.watch(networkInfoProvider);
+  return StockTakeRepositoryImpl(stockTakeApi: api, networkInfo:networkInfo);
+  // you probably want to pass real NetworkInfo instead of null
 });
 
 
