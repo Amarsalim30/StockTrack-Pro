@@ -1,0 +1,316 @@
+Alright — let’s build your **production-grade Auth UseCases** step-by-step in Clean Architecture + Riverpod, aligned with your 6-layer structure.
+I’ll cover **register**, **login**, **refresh token**, and **logout**, with proper entity separation, and explain **password handling** best practices.
+
+---
+
+## **1. Core Principles for Auth in Clean Architecture**
+
+Before jumping into files, here’s the golden rule for production auth:
+
+* **Password should never be stored or exposed in plain text** in your app’s `UserEntity` — only handle it in the **Auth flow** where absolutely necessary.
+* **Domain Entities** (`UserEntity`) are *safe* representations of business data — exclude sensitive fields like passwords.
+* **UseCases** handle the *intent* (register, login, etc.) and call **Repositories**.
+* **Repositories** talk to the API layer (Dio) and **never** store passwords.
+* **Encoding/Hashing** is handled on the **backend**, not Flutter.
+
+---
+
+## **2. File Layout in Your 6-layer Structure**
+
+```
+lib/
+  domain/
+    entities/
+      user_entity.dart
+    repositories/
+      auth_repository.dart
+    usecases/
+      register_usecase.dart
+      login_usecase.dart
+      refresh_token_usecase.dart
+      logout_usecase.dart
+
+  data/
+    apis/
+      auth_api.dart
+    models/
+      user_model.dart
+    mappers/
+      user_mapper.dart
+    repositories/
+      auth_repository_impl.dart
+```
+
+---
+
+## **3. Domain Layer (Safe, Pure)**
+
+### **`user_entity.dart`**
+
+```dart
+class UserEntity {
+  final String id;
+  final String username;
+  final String email;
+  final String? accessToken;
+  final String? refreshToken;
+
+  const UserEntity({
+    required this.id,
+    required this.username,
+    required this.email,
+    this.accessToken,
+    this.refreshToken,
+  });
+}
+```
+
+> ❌ **No password here.** Password exists only temporarily in the API request body during login/register.
+
+---
+
+### **`auth_repository.dart`**
+
+```dart
+abstract class AuthRepository {
+  Future<UserEntity> register({
+    required String username,
+    required String email,
+    required String password,
+  });
+
+  Future<UserEntity> login({
+    required String email,
+    required String password,
+  });
+
+  Future<UserEntity> refreshToken(String refreshToken);
+
+  Future<void> logout();
+}
+```
+
+---
+
+## **4. UseCases (One Action = One Class)**
+
+### **`register_usecase.dart`**
+
+```dart
+import '../entities/user_entity.dart';
+import '../repositories/auth_repository.dart';
+
+class RegisterUseCase {
+  final AuthRepository repository;
+
+  RegisterUseCase(this.repository);
+
+  Future<UserEntity> call({
+    required String username,
+    required String email,
+    required String password,
+  }) {
+    return repository.register(
+      username: username,
+      email: email,
+      password: password,
+    );
+  }
+}
+```
+
+---
+
+### **`login_usecase.dart`**
+
+```dart
+import '../entities/user_entity.dart';
+import '../repositories/auth_repository.dart';
+
+class LoginUseCase {
+  final AuthRepository repository;
+
+  LoginUseCase(this.repository);
+
+  Future<UserEntity> call({
+    required String email,
+    required String password,
+  }) {
+    return repository.login(
+      email: email,
+      password: password,
+    );
+  }
+}
+```
+
+---
+
+### **`refresh_token_usecase.dart`**
+
+```dart
+import '../entities/user_entity.dart';
+import '../repositories/auth_repository.dart';
+
+class RefreshTokenUseCase {
+  final AuthRepository repository;
+
+  RefreshTokenUseCase(this.repository);
+
+  Future<UserEntity> call(String refreshToken) {
+    return repository.refreshToken(refreshToken);
+  }
+}
+```
+
+---
+
+### **`logout_usecase.dart`**
+
+```dart
+import '../repositories/auth_repository.dart';
+
+class LogoutUseCase {
+  final AuthRepository repository;
+
+  LogoutUseCase(this.repository);
+
+  Future<void> call() {
+    return repository.logout();
+  }
+}
+```
+
+---
+
+## **5. Data Layer Implementation**
+
+### **`auth_api.dart`**
+
+```dart
+import 'package:dio/dio.dart';
+import '../models/user_model.dart';
+
+class AuthApi {
+  final Dio dio;
+
+  AuthApi(this.dio);
+
+  Future<UserModel> register(String username, String email, String password) async {
+    final response = await dio.post('/auth/register', data: {
+      'username': username,
+      'email': email,
+      'password': password, // sent to backend securely via HTTPS
+    });
+    return UserModel.fromJson(response.data);
+  }
+
+  Future<UserModel> login(String email, String password) async {
+    final response = await dio.post('/auth/login', data: {
+      'email': email,
+      'password': password,
+    });
+    return UserModel.fromJson(response.data);
+  }
+
+  Future<UserModel> refreshToken(String refreshToken) async {
+    final response = await dio.post('/auth/refresh', data: {
+      'refreshToken': refreshToken,
+    });
+    return UserModel.fromJson(response.data);
+  }
+
+  Future<void> logout() async {
+    await dio.post('/auth/logout');
+  }
+}
+```
+
+---
+
+### **`user_model.dart`**
+
+```dart
+import '../../domain/entities/user_entity.dart';
+
+class UserModel extends UserEntity {
+  const UserModel({
+    required super.id,
+    required super.username,
+    required super.email,
+    super.accessToken,
+    super.refreshToken,
+  });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      accessToken: json['accessToken'],
+      refreshToken: json['refreshToken'],
+    );
+  }
+}
+```
+
+---
+
+### **`auth_repository_impl.dart`**
+
+```dart
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../apis/auth_api.dart';
+import '../mappers/user_mapper.dart';
+
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthApi api;
+
+  AuthRepositoryImpl(this.api);
+
+  @override
+  Future<UserEntity> register({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
+    final model = await api.register(username, email, password);
+    return UserMapper.toEntity(model);
+  }
+
+  @override
+  Future<UserEntity> login({
+    required String email,
+    required String password,
+  }) async {
+    final model = await api.login(email, password);
+    return UserMapper.toEntity(model);
+  }
+
+  @override
+  Future<UserEntity> refreshToken(String refreshToken) async {
+    final model = await api.refreshToken(refreshToken);
+    return UserMapper.toEntity(model);
+  }
+
+  @override
+  Future<void> logout() {
+    return api.logout();
+  }
+}
+```
+
+---
+
+## **6. Security Notes for Password Handling**
+
+* ✅ Password is **only** in `AuthApi` request body, never stored in memory long-term.
+* ✅ Always use **HTTPS** when calling APIs.
+* ✅ Token storage (access/refresh) should be in **secure storage** (e.g., `flutter_secure_storage`), not SharedPreferences.
+* ❌ Don’t add `password` to `UserEntity` or `UserModel` — it’s not part of business logic, just API input.
+
+---
+
+If you want, next I can **hook this into Riverpod ViewModel** so `login`, `register`, and token refresh work seamlessly with your MVVM flow.
+That’s where we’ll handle **UI binding, error states, and token persistence**.

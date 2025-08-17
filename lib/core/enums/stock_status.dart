@@ -1,19 +1,15 @@
 enum StockStatus {
-  available,
   lowStock,
   outOfStock,
   reserved,
   damaged,
   expired,
   inTransit,
-
   inStock,
   discontinued;
 
   String get displayName {
     switch (this) {
-      case StockStatus.available:
-        return 'Available';
       case StockStatus.lowStock:
         return 'Low Stock';
       case StockStatus.outOfStock:
@@ -27,18 +23,15 @@ enum StockStatus {
       case StockStatus.inTransit:
         return 'In Transit';
       case StockStatus.inStock:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'In Stock';
       case StockStatus.discontinued:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'Discontinued';
     }
   }
 
   String get code {
     switch (this) {
-      case StockStatus.available:
-        return 'AVAILABLE';
+
       case StockStatus.lowStock:
         return 'LOW_STOCK';
       case StockStatus.outOfStock:
@@ -52,18 +45,17 @@ enum StockStatus {
       case StockStatus.inTransit:
         return 'IN_TRANSIT';
       case StockStatus.inStock:
-        // TODO: Handle this case.
-        throw UnimplementedError();
-      case StockStatus.discontinued:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return 'IN_STOCK';
+        case StockStatus.discontinued:
+        return 'DISCONTINUED';
+
     }
   }
 
   static StockStatus fromString(String status) {
     return StockStatus.values.firstWhere(
       (e) => e.code == status.toUpperCase(),
-      orElse: () => StockStatus.available,
+      orElse: () => StockStatus.discontinued,
     );
   }
 }

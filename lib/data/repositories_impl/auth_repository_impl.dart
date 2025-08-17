@@ -50,10 +50,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Exception, void>> changePassword(
-    String oldPassword,
-    String newPassword,
-  ) async {
+  Future<Either<Exception, void>> changePassword(String oldPassword,
+      String newPassword,) async {
     try {
       await _authApi.changePassword(oldPassword, newPassword);
       return const Right(null);
@@ -104,7 +102,22 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Exception, User>> register(
+      String username,
+      String email,
+      String password,
+      ) async {
+    try {
+      final userModel = await _authApi.register(username, email, password);
+      return Right(userModel as User);
+    } catch (e) {
+      return Left(_mapToException(e));
+    }
+  }
+
+  @override
   void clearToken() {
     // TODO: implement clearToken
   }
+
 }

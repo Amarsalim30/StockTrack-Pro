@@ -5,6 +5,13 @@ import '../../models/auth/user_model.dart';
 abstract class AuthApi {
   Future<Map<String, dynamic>> login(String email, String password);
 
+  Future<UserModel> register(
+      String username,
+    String email,
+    String password,
+
+  );
+
   Future<void> logout();
 
   Future<UserModel> getCurrentUser();
@@ -70,5 +77,11 @@ class AuthApiImpl implements AuthApi {
       '/auth/refresh',
     );
     return response;
+  }
+
+  @override
+  Future<UserModel> register(String username, String email, String password) {
+    // TODO: implement register
+    throw UnimplementedError();
   }
 }

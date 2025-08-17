@@ -14,8 +14,8 @@ abstract class StockApi {
   @GET("/stocks/{id}")
   Future<StockModel> getStockById(@Path("id") String id);
 
-  @POST("/stocks")
-  Future<void> createStock(@Body() StockModel stock);
+  @POST("/stocks/add")
+  Future<void> addStock(@Body() StockModel stock);
 
   @PUT("/stocks/{id}")
   Future<void> updateStock(@Path("id") String id, @Body() StockModel stock);

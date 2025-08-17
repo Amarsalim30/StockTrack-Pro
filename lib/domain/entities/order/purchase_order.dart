@@ -7,6 +7,11 @@ class PurchaseOrder extends Equatable {
   final String supplierId;
   final String createdByUserId;
   final String? approvedByUserId;
+  // Optional fields
+  final String? goodsReceiptId;
+  final String? invoiceId;
+  final double totalAmount;
+  final List<String>? attachments;
   final DateTime createdAt;
   final DateTime? expectedDeliveryDate;
   final DateTime? receivedDate;
@@ -19,6 +24,10 @@ class PurchaseOrder extends Equatable {
     required this.supplierId,
     required this.createdByUserId,
     this.approvedByUserId,
+    this.goodsReceiptId,
+    this.invoiceId,
+    required this.totalAmount,
+    this.attachments,
     required this.createdAt,
     this.expectedDeliveryDate,
     this.receivedDate,
@@ -35,6 +44,10 @@ class PurchaseOrder extends Equatable {
       supplierId: supplierId ?? this.supplierId,
       createdByUserId: createdByUserId ?? this.createdByUserId,
       approvedByUserId: approvedByUserId ?? this.approvedByUserId,
+      goodsReceiptId: goodsReceiptId ?? this.goodsReceiptId,
+      invoiceId: invoiceId ?? this.invoiceId,
+      totalAmount: totalAmount,
+      attachments: attachments ?? this.attachments,
       createdAt: createdAt ?? this.createdAt,
       expectedDeliveryDate: expectedDeliveryDate ?? this.expectedDeliveryDate,
       receivedDate: receivedDate ?? this.receivedDate,

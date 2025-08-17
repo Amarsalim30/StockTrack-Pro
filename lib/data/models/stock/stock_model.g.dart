@@ -85,7 +85,6 @@ Map<String, dynamic> _$StockModelToJson(StockModel instance) =>
     };
 
 const _$StockStatusEnumMap = {
-  StockStatus.available: 'available',
   StockStatus.lowStock: 'lowStock',
   StockStatus.outOfStock: 'outOfStock',
   StockStatus.reserved: 'reserved',

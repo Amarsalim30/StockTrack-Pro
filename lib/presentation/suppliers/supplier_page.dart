@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../di/injection.dart';
 import '../../domain/entities/catalog/supplier.dart';
 import 'supplier_view_model.dart';
 
@@ -8,7 +9,7 @@ class SupplierPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final suppliers = ref.watch(supplierViewModelProvider); // ⬅ state (list)
+    final suppliersState = ref.watch(supplierViewModelProvider); // ⬅ state (list)
     final viewModel = ref.watch(supplierViewModelProvider.notifier); // ⬅ logic
 
     return Scaffold(
@@ -29,12 +30,12 @@ class SupplierPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: suppliers.isEmpty
+      body: suppliersState.suppliers.isEmpty
           ? const Center(child: Text('No suppliers found.'))
           : ListView.builder(
-              itemCount: suppliers.length,
+              itemCount: suppliersState.suppliers.length,
               itemBuilder: (context, index) {
-                final supplier = suppliers[index];
+                final supplier = suppliersState.suppliers[index];
                 return ListTile(
                   title: Text(supplier.name),
                   subtitle: Text(supplier.contactInfo?['contactPerson'] ?? '—'),
@@ -98,7 +99,7 @@ class SupplierPage extends ConsumerWidget {
       SupplierViewModel viewModel,
     Supplier supplier,
   ) {
-    viewModel.deleteSupplier(supplier.id);
+    viewModel.removeSupplier(supplier.id);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Supplier deleted')),
     );

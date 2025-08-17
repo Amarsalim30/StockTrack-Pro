@@ -129,6 +129,25 @@ Model: UnitModel
 - conversionRate: double?
 - props: get
 
+Model: GoodsReceiptItemModel
+- stockId: String
+- quantityReceived: int
+- unitPrice: double
+- totalPrice: double
+- expiryDate: DateTime?
+- notes: String?
+
+Model: GoodsReceiptModel
+- id: String
+- purchaseOrderId: String
+- receivedByUserId: String
+- createdAt: DateTime
+- receivedAtDate: DateTime?
+- items: List<GoodsReceiptItemModel>
+- status: String
+- attachments: List<String>
+- notes: String?
+
 Model: PurchaseOrderDraftModel
 - id: String
 - supplierId: String
@@ -149,6 +168,10 @@ Model: PurchaseOrderModel
 - supplierId: String
 - createdByUserId: String
 - approvedByUserId: String?
+- goodsReceiptId: String?
+- invoiceId: String?
+- totalAmount: double
+- attachments: List<String>?
 - createdAt: DateTime
 - expectedDeliveryDate: DateTime?
 - receivedDate: DateTime?
@@ -181,6 +204,18 @@ Enum: ReturnTypeModel
 - customer
 - @JsonValue('warranty')
 - warranty
+
+Model: VendorInvoiceModel
+- id: String
+- purchaseOrderId: String
+- invoiceNumber: String
+- supplierId: String
+- invoiceDate: DateTime
+- dueDate: DateTime?
+- totalAmount: double
+- status: String
+- attachments: List<String>?
+- notes: String?
 
 Model: ProductionOrderModel
 - id: String

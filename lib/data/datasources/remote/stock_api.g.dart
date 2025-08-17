@@ -74,7 +74,7 @@ class _StockApi implements StockApi {
   }
 
   @override
-  Future<void> createStock(StockModel stock) async {
+  Future<void> addStock(StockModel stock) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -84,7 +84,7 @@ class _StockApi implements StockApi {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/stocks',
+            '/stocks/add',
             queryParameters: queryParameters,
             data: _data,
           )

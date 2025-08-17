@@ -11,6 +11,11 @@ class PurchaseOrderModel extends Equatable {
   final String supplierId;
   final String createdByUserId;
   final String? approvedByUserId;
+  // Optional fields
+  final String? goodsReceiptId;
+  final String? invoiceId;
+  final double totalAmount;
+  final List<String>? attachments;
   final DateTime createdAt;
   final DateTime? expectedDeliveryDate;
   final DateTime? receivedDate;
@@ -23,12 +28,17 @@ class PurchaseOrderModel extends Equatable {
     required this.supplierId,
     required this.createdByUserId,
     this.approvedByUserId,
+    this.goodsReceiptId,
+    this.invoiceId,
+    required this.totalAmount,
+    this.attachments,
     required this.createdAt,
     this.expectedDeliveryDate,
     this.receivedDate,
     required this.status,
     required this.items,
     this.notes,
+
   });
 
   factory PurchaseOrderModel.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +51,10 @@ class PurchaseOrderModel extends Equatable {
     supplierId: supplierId,
     createdByUserId: createdByUserId,
     approvedByUserId: approvedByUserId,
+    goodsReceiptId: goodsReceiptId,
+    invoiceId: invoiceId,
+    totalAmount: totalAmount,
+    attachments: attachments,
     createdAt: createdAt,
     expectedDeliveryDate: expectedDeliveryDate,
     receivedDate: receivedDate,
@@ -54,6 +68,10 @@ class PurchaseOrderModel extends Equatable {
     supplierId: ent.supplierId,
     createdByUserId: ent.createdByUserId,
     approvedByUserId: ent.approvedByUserId,
+    goodsReceiptId: ent.goodsReceiptId,
+    invoiceId: ent.invoiceId,
+    totalAmount: ent.totalAmount,
+    attachments: ent.attachments,
     createdAt: ent.createdAt,
     expectedDeliveryDate: ent.expectedDeliveryDate,
     receivedDate: ent.receivedDate,
@@ -67,6 +85,10 @@ class PurchaseOrderModel extends Equatable {
     String? supplierId,
     String? createdByUserId,
     String? approvedByUserId,
+    String? goodsReceiptId,
+    String? invoiceId,
+    double? totalAmount,
+    List<String>? attachments,
     DateTime? createdAt,
     DateTime? expectedDeliveryDate,
     DateTime? receivedDate,
@@ -79,6 +101,10 @@ class PurchaseOrderModel extends Equatable {
       supplierId: supplierId ?? this.supplierId,
       createdByUserId: createdByUserId ?? this.createdByUserId,
       approvedByUserId: approvedByUserId ?? this.approvedByUserId,
+      goodsReceiptId: goodsReceiptId ?? this.goodsReceiptId,
+      invoiceId: invoiceId ?? this.invoiceId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      attachments: attachments ?? this.attachments,
       createdAt: createdAt ?? this.createdAt,
       expectedDeliveryDate: expectedDeliveryDate ?? this.expectedDeliveryDate,
       receivedDate: receivedDate ?? this.receivedDate,
@@ -94,6 +120,10 @@ class PurchaseOrderModel extends Equatable {
     supplierId,
     createdByUserId,
     approvedByUserId,
+    goodsReceiptId,
+    invoiceId,
+    totalAmount,
+    attachments,
     createdAt,
     expectedDeliveryDate,
     receivedDate,

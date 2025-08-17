@@ -1,61 +1,66 @@
+import 'package:clean_arch_app/domain/usecases/catalog/supplier/supplier_usecases.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'mock_data.dart'; // contains List<Supplier> mockSuppliers
 import '../../domain/entities/catalog/supplier.dart';
+import 'supplier_state.dart';
 
-// Sorting & Status enums
-enum SortOption { name, recent, location }
-enum Status { active, inactive }
+class SupplierViewModel extends StateNotifier<SupplierState> {
+  final SupplierUseCases useCases;
 
-
-// ViewModel
-class SupplierViewModel extends StateNotifier<List<Supplier>> {
-  SupplierViewModel() : super(mockSuppliers);
-
-  void addSupplier(Supplier supplier) {
-    state = [...state, supplier];
+  SupplierViewModel({required this.useCases})
+      : super(const SupplierState(suppliers: [])) {
+    loadSuppliers();
   }
 
-  void editSupplier(String id, Supplier updatedSupplier) {
-    state = [
-      for (final supplier in state)
-        if (supplier.id == id) updatedSupplier else supplier,
-    ];
+  Future<void> loadSuppliers() async {
+    state = state.copyWith(isLoading: true);
+    final result = await useCases.getAllSuppliers();
+    result.fold(
+          (failure) => state = state.copyWith(isLoading: false, error: failure.toString()),
+          (suppliers) => state = state.copyWith(isLoading: false, suppliers: suppliers),
+    );
   }
 
-  void deleteSupplier(String id) {
-    state = state.where((supplier) => supplier.id != id).toList();
+  Future<void> addNewSupplier(Supplier supplier) async {
+    final result = await useCases.createSupplier(supplier);
+    // result.fold(
+    //       (failure) => state = state.copyWith(error: failure.message),
+          (_) => loadSuppliers();
+    // );
   }
 
-  void searchSuppliers(String query) {
-    final q = query.toLowerCase();
-    final filtered = state.where((supplier) {
-      final contactPerson = supplier.contactInfo?['contactPerson'] ?? '';
-      final email = supplier.contactInfo?['email'] ?? '';
-      return supplier.name.toLowerCase().contains(q) ||
-          contactPerson.toLowerCase().contains(q) ||
-          email.toLowerCase().contains(q);
-    }).toList();
-
-    state = filtered;
+  Future<void> updateSupplier(String id, Supplier updatedSupplier) async {
+    final result = await useCases.updateSupplier( updatedSupplier);
+    // result.fold(
+    //       (failure) => state = state.copyWith(error: failure.message),
+          (_) => loadSuppliers();
+    // );
   }
 
-  void filterByStatus(Status status) {
-    // Note: Status filtering would need to be added to the Supplier entity
-    // For now, this is a placeholder
-    state = state.where((supplier) => true).toList();
+  Future<void> removeSupplier(String id) async {
+    final result = await useCases.deleteSupplier(id);
+    // result.fold(
+    //       (failure) => state = state.copyWith(error: failure.message),
+           loadSuppliers();
+    // );
+  }
+
+  Future<void> search(String query) async {
+    final result = await useCases.searchSuppliers(query);
+    result.fold(
+          (failure) => state = state.copyWith(error: failure.toString()),
+          (suppliers) => state = state.copyWith(suppliers: suppliers),
+    );
   }
 
   void sortBy(SortOption option) {
-    final sorted = [...state];
+    final sorted = [...state.suppliers];
 
     switch (option) {
       case SortOption.name:
         sorted.sort((a, b) => a.name.compareTo(b.name));
         break;
       case SortOption.recent:
-        // Note: createdAt would need to be added to the Supplier entity
-        // For now, sorting by name as fallback
-        sorted.sort((a, b) => a.name.compareTo(b.name));
+        sorted.sort((a, b) => a.id.compareTo(b.id)); // Placeholder for createdAt
         break;
       case SortOption.location:
         sorted.sort((a, b) {
@@ -66,12 +71,8 @@ class SupplierViewModel extends StateNotifier<List<Supplier>> {
         break;
     }
 
-    state = sorted;
+    state = state.copyWith(suppliers: sorted, sortOption: option);
   }
 }
 
-// Provider
-final supplierViewModelProvider =
-StateNotifierProvider<SupplierViewModel, List<Supplier>>((ref) {
-      return SupplierViewModel();
-    });
+

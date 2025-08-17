@@ -8,7 +8,6 @@ class AddStockUseCase {
   final StockRepository repository;
   AddStockUseCase(this.repository);
 
-  Future<Either<Failure, Stock>> call(Stock stock) {
     return repository.addStock(stock);
   }
 }
