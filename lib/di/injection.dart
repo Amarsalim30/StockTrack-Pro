@@ -5,7 +5,6 @@ import 'package:clean_arch_app/data/datasources/remote/purchase_order_api.dart';
 import 'package:clean_arch_app/data/datasources/remote/stock_take_api.dart';
 import 'package:clean_arch_app/data/repositories_impl/notification_repository_impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/purchase_order_repository_impl.dart';
-import 'package:clean_arch_app/data/repositories_impl/stock_repository_Impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/stock_take_repository_impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/supplier_repository_impl.dart';
 import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
@@ -54,6 +53,7 @@ import '../data/datasources/remote/user_api.dart';
 
 // Repository Implementations
 import '../data/repositories_impl/auth_repository_impl.dart';
+import '../data/repositories_impl/product_repository_impl.dart';
 import '../data/repositories_impl/stock_repository_impl.dart';
 import '../data/repositories_impl/user_repository_impl.dart';
 
@@ -125,6 +125,7 @@ final stockRemoteDataSourceProvider = Provider<StockApi>((ref) {
   final dio = ref.watch(dioProvider);
   return StockApi(dio);
 });
+
 // Provide the generated Retrofit API
 final notificationApiProvider = Provider<NotificationApi>((ref) {
   final dio = ref.read(dioProvider);

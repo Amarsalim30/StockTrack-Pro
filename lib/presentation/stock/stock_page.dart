@@ -386,31 +386,84 @@ class StockPage extends ConsumerWidget {
   }
 
   Widget _itemDetailsCol(Stock s) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      Text(
-        s.name ?? '-',
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF0B2130)),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      const SizedBox(height: 4), // tightened
-      Row(
-        children: [
-          Text('SKU :', style: TextStyle(color: Colors.grey.shade600, fontSize: 12, fontWeight: FontWeight.w600)),
-          const SizedBox(width: 6),
-          Text(s.sku ?? '-', style: TextStyle(color: Colors.grey.shade700, fontSize: 12 ,overflow: TextOverflow.ellipsis)),
-        ],
-      ),
-      const SizedBox(height: 6),
-      Row(children: [
-        Text(s.categoryId?.toString() ?? '-', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-        const SizedBox(width: 12),
-        const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
-        const SizedBox(width: 4),
-        Flexible(child: Text(s.location?.toString() ?? '-', overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.grey.shade600, fontSize: 12))),
-      ]),
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Product Name
+        Text(
+          s.name ?? '-',
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: Color(0xFF0B2130),
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 4),
+
+        // SKU Row
+        Row(
+          children: [
+            Text(
+              'SKU:',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                s.sku ?? '-',
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                  fontSize: 12,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+
+        // Category + Location Row
+        Row(
+          children: [
+            Flexible(
+              child: Text(
+                s.categoryId?.toString() ?? '-',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+            const SizedBox(width: 4),
+            Flexible(
+              flex: 2,
+              child: Text(
+                s.location?.toString() ?? '-',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
+
 
   Widget _stockCol(Stock s) {
     final qty = s.quantity ?? 0;
