@@ -182,7 +182,7 @@ StateNotifierProvider<DashboardViewModel, DashboardState>(
 
 final purchaseOrderRepositoryProvider = Provider<PurchaseOrderRepository>((
     ref) {
-  final api = ref.read(purchaseOrderApiProvider);
+  final api = ref.watch(purchaseOrderApiProvider);
   return PurchaseOrderRepositoryImpl(api);
 });
 
@@ -226,26 +226,28 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
   final api = ref.watch(productApiProvider);
   return ProductRepositoryImpl(api);
 });
+
+final productUsecasesProvider = Provider((ref) {
+  final productRepo = ref.watch(productRepositoryProvider);
+  return ProductUseCases(
+    getAll: GetAllProductsUseCase(productRepo),
+    getById: GetProductByIdUseCase(productRepo),
+    create: CreateProductUseCase(productRepo),
+    update: UpdateProductUseCase(productRepo),
+    delete: DeleteProductUseCase(productRepo),
+    search: SearchProductsUseCase(productRepo),
+    getByCategory: GetProductsByCategoryUseCase(productRepo),
+    getBySupplier: GetProductsBySupplierUseCase(productRepo),
+    getLowStock: GetLowStockProductsUseCase(productRepo),
+    getOutOfStock: GetOutOfStockProductsUseCase(productRepo),
+  );
+});
+
 final productViewModelProvider =
 StateNotifierProvider<ProductViewModel, ProductState>((ref) {
   final usecases = ref.read(productUsecasesProvider);
   return ProductViewModel(usecases);
 });
-final productUsecasesProvider = Provider((ref) {
-  final productRepo = ref.watch(productRepositoryProvider);
-  return ProductUseCases(
-      getAll: GetAllProductsUseCase(productRepo),
-      getById: GetProductByIdUseCase(productRepo),
-      create: CreateProductUseCase(productRepo),
-      update: UpdateProductUseCase(productRepo),
-      delete: DeleteProductUseCase(productRepo),
-      search: SearchProductsUseCase(productRepo),
-      getByCategory: GetProductsByCategoryUseCase(productRepo),
-      getBySupplier: GetProductsBySupplierUseCase(productRepo),
-      getLowStock: GetLowStockProductsUseCase(productRepo),
-      getOutOfStock: GetOutOfStockProductsUseCase(productRepo),
-  );
-  });
 
   final stockUsecasesProvider = Provider((ref) {
     final stockRepo = ref.watch(stockRepositoryProvider);

@@ -1,25 +1,31 @@
-
 import 'package:clean_arch_app/domain/entities/catalog/product.dart';
 
 class ProductState {
-  final List<Product> products;
   final bool isLoading;
+  final List<Product> products;
+  final String? error;
   final String searchQuery;
 
   ProductState({
-    this.products = const [],
     this.isLoading = false,
+    this.products = const [],
+    this.error,
     this.searchQuery = '',
   });
 
+  bool get hasError => error != null && error!.isNotEmpty;
+
   ProductState copyWith({
-    List<Product>? products,
     bool? isLoading,
+    List<Product>? products,
+    String? error,
     String? searchQuery,
-  }) =>
-      ProductState(
-        products: products ?? this.products,
-        isLoading: isLoading ?? this.isLoading,
-        searchQuery: searchQuery ?? this.searchQuery,
-      );
+  }) {
+    return ProductState(
+      isLoading: isLoading ?? this.isLoading,
+      products: products ?? this.products,
+      error: error,
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
 }

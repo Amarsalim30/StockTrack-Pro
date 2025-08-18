@@ -16,7 +16,7 @@ abstract class ProductApi {
 
   Future<List<ProductModel>> getProductsByCategory(String category);
 
-  Future<List<ProductModel>> getProductsBySupplierId(String supplierId);
+  Future<List<ProductModel>> getProductsBySupplier(String supplierId);
 
   Future<List<ProductModel>> getLowStockProducts();
 
@@ -84,7 +84,7 @@ class ProductApiImpl implements ProductApi {
   }
 
   @override
-  Future<List<ProductModel>> getProductsBySupplierId(String supplierId) async {
+  Future<List<ProductModel>> getProductsBySupplier(String supplierId) async {
     final response = await _apiClient.get<List<dynamic>>(
       '/products',
       queryParameters: {'supplierId': supplierId},

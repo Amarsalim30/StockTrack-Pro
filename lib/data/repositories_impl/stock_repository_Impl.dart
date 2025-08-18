@@ -102,7 +102,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Either<Exception, List<Product>>> getProductsBySupplierId(String supplierId) async {
     try {
-      final productModels = await api.getProductsBySupplierId(supplierId);
+      final productModels = await api.getProductsBySupplier(supplierId);
       final products = productModels.map(ProductMapper.toEntity).toList();
       return Right(products);
     } on ServerException catch (e) {

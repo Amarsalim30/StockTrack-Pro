@@ -10,7 +10,6 @@ class ManageStockPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     const primaryColor = Color(0xFF0E2330);
     const indicatorColor = Color(0xFF10B981); // green indicator for active tab
     const unselectedColor = Colors.white70;
