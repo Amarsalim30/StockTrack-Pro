@@ -1,128 +1,140 @@
 import 'package:dartz/dartz.dart';
-import '../../core/enums/stock_status.dart';
-import '../../core/error/failures.dart';
-import '../../core/error/exceptions.dart';
-import '../../domain/entities/stock/stock.dart';
-import '../../domain/repositories/stock_repository.dart';
-import '../datasources/remote/stock_api.dart';
-import '../models/stock/stock_model.dart';
+import 'package:clean_arch_app/core/error/Exceptions.dart';
+import 'package:clean_arch_app/data/datasources/remote/product_api.dart';
+import 'package:clean_arch_app/data/mappers/catalog/product_mapper.dart';
+import 'package:clean_arch_app/domain/entities/catalog/product.dart';
+import 'package:clean_arch_app/domain/repositories/product_repository.dart';
 
-class StockRepositoryImpl implements StockRepository {
-  final StockApi api;
+class ProductRepositoryImpl implements ProductRepository {
+  final ProductApi api;
 
-  StockRepositoryImpl(this.api);
+  ProductRepositoryImpl(this.api);
 
   @override
-  Future<Either<Failure, List<Stock>>> getAllStocks() async {
+  Future<Either<Exception, List<Product>>> getAllProducts() async {
     try {
-      final stockModels = await api.getStocks();
-      final stocks = stockModels.map((model) => model.toEntity()).toList();
-      return Right(stocks);
+      final productModels = await api.getAllProducts();
+      final products = productModels.map(ProductMapper.toEntity).toList();
+      return Right(products);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch stocks: $e'));
+      return Left(ServerException('Failed to fetch products: $e'));
     }
   }
 
   @override
-  Future<Either<Failure, void>> addStock(Stock stock) async {
+  Future<Either<Exception, Product>> getProductById(String id) async {
     try {
-      final stockModel = StockModel.fromDomain(stock);
-      await api.addStock(stockModel);
+      final productModel = await api.getProductById(id);
+      return Right(ProductMapper.toEntity(productModel));
+    } on ServerException catch (e) {
+      return Left(ServerException(e.message ?? 'Server error'));
+    } catch (e) {
+      return Left(ServerException('Failed to fetch product: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, Product>> createProduct(Product product) async {
+    try {
+      final productModel = ProductMapper.fromEntity(product);
+      final createdModel = await api.createProduct(productModel);
+      return Right(ProductMapper.toEntity(createdModel));
+    } on ServerException catch (e) {
+      return Left(ServerException(e.message ?? 'Server error'));
+    } catch (e) {
+      return Left(ServerException('Failed to create product: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, Product>> updateProduct(Product product) async {
+    try {
+      final productModel = ProductMapper.fromEntity(product);
+      await api.updateProduct(productModel);
+      return Right(product);
+    } on ServerException catch (e) {
+      return Left(ServerException(e.message ?? 'Server error'));
+    } catch (e) {
+      return Left(ServerException('Failed to update product: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> deleteProduct(String id) async {
+    try {
+      await api.deleteProduct(id);
       return const Right(null);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to add stock: $e'));
+      return Left(ServerException('Failed to delete product: $e'));
     }
   }
 
   @override
-  Future<Either<Failure, Stock>> getStockById(String id) async {
+  Future<Either<Exception, List<Product>>> searchProducts(String query) async {
     try {
-      final stockModel = await api.getStockById(id);
-      return Right(stockModel.toEntity());
+      final productModels = await api.searchProducts(query);
+      final products = productModels.map(ProductMapper.toEntity).toList();
+      return Right(products);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch stock: $e'));
-    }
-  }
-
-
-  @override
-  Future<Either<Failure, Stock>> updateStock(Stock stock) async {
-    try {
-      final stockModel = StockModel.fromDomain(stock);
-      await api.updateStock(stock.id, stockModel);
-      return Right(stock);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update stock: $e'));
+      return Left(ServerException('Failed to search products: $e'));
     }
   }
 
   @override
-  Future<Either<Failure, void>> deleteStock(String id) async {
+  Future<Either<Exception, List<Product>>> getProductsByCategory(String category) async {
     try {
-      await api.deleteStock(id);
-      return const Right(null);
+      final productModels = await api.getProductsByCategory(category);
+      final products = productModels.map(ProductMapper.toEntity).toList();
+      return Right(products);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message ?? 'Server error'));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to delete stock: $e'));
+      return Left(ServerException('Failed to fetch products by category: $e'));
     }
   }
 
   @override
-  Future<Either<Failure, void>> deleteStocks(List<String> ids) async {
+  Future<Either<Exception, List<Product>>> getProductsBySupplierId(String supplierId) async {
     try {
-      await api.deleteStocks({'ids': ids});
-      return const Right(null);
+      final productModels = await api.getProductsBySupplierId(supplierId);
+      final products = productModels.map(ProductMapper.toEntity).toList();
+      return Right(products);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to delete stocks: $e'));
+      return Left(ServerException('Failed to fetch products by supplier: $e'));
     }
   }
 
   @override
-  Future<Either<Failure, void>> updateStockStatus(String id,
-      StockStatus status) async {
+  Future<Either<Exception, List<Product>>> getLowStockProducts() async {
     try {
-      await api.updateStockStatus({'ids': id, 'status': status.code});
-      return const Right(null);
+      final productModels = await api.getLowStockProducts();
+      final products = productModels.map(ProductMapper.toEntity).toList();
+      return Right(products);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update stock status: $e'));
-    }
-  }
-  Future<Either<Failure ,void>> updateMultipleStockStatus(
-      List<String> ids, StockStatus status) async {
-    try {
-      await api.updateStockStatus({'ids': ids, 'status': status.code});
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update stock statuses: $e'));
+      return Left(ServerException('Failed to fetch low stock products: $e'));
     }
   }
 
   @override
-  Future<Either<Failure, void>> adjustStock(String stockId, int adjustment,
-      String reason) async {
+  Future<Either<Exception, List<Product>>> getOutOfStockProducts() async {
     try {
-      await api.adjustStock(
-          stockId, {'adjustment': adjustment, 'reason': reason});
-      return const Right(null);
+      final productModels = await api.getOutOfStockProducts();
+      final products = productModels.map(ProductMapper.toEntity).toList();
+      return Right(products);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
+      return Left(ServerException(e.message ?? 'Server error'));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to adjust stock: $e'));
+      return Left(ServerException('Failed to fetch out-of-stock products: $e'));
     }
   }
 }

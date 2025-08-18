@@ -1,4 +1,5 @@
 import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
+import 'package:clean_arch_app/presentation/catalog/manage_stock_page.dart';
 import 'package:clean_arch_app/presentation/purchase_order/purchase_order_detail_page.dart';
 import 'package:clean_arch_app/presentation/purchase_order/purchase_order_page.dart';
 import 'package:clean_arch_app/presentation/reporting/reporting_page.dart';
@@ -53,6 +54,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RouteNames.purchaseOrders,
             name: RouteNames.purchaseOrders,
             builder: (context, state) => const PurchaseOrdersScreen(),
+          ),
+          GoRoute(
+            path: RouteNames.manageStock,
+            name: RouteNames.manageStock,
+            builder: (context, state) => const ManageStockPage(),
           ),
 
           GoRoute(

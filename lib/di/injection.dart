@@ -1,14 +1,18 @@
 import 'package:clean_arch_app/core/network/network_info.dart';
 import 'package:clean_arch_app/data/datasources/remote/notification_api.dart';
+import 'package:clean_arch_app/data/datasources/remote/product_api.dart';
 import 'package:clean_arch_app/data/datasources/remote/purchase_order_api.dart';
 import 'package:clean_arch_app/data/datasources/remote/stock_take_api.dart';
 import 'package:clean_arch_app/data/repositories_impl/notification_repository_impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/purchase_order_repository_impl.dart';
+import 'package:clean_arch_app/data/repositories_impl/stock_repository_Impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/stock_take_repository_impl.dart';
 import 'package:clean_arch_app/data/repositories_impl/supplier_repository_impl.dart';
 import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
 import 'package:clean_arch_app/domain/repositories/purchase_order_repository.dart';
 import 'package:clean_arch_app/domain/repositories/supplier_repository.dart';
+import 'package:clean_arch_app/domain/usecases/catalog/product/product_usecase.dart';
+import 'package:clean_arch_app/domain/usecases/catalog/product/product_usecases.dart';
 import 'package:clean_arch_app/domain/usecases/catalog/supplier/create_supplier_usecase.dart';
 import 'package:clean_arch_app/domain/usecases/catalog/supplier/delete_supplier_usecase.dart';
 import 'package:clean_arch_app/domain/usecases/catalog/supplier/get_active_suppliers.dart';
@@ -29,6 +33,8 @@ import 'package:clean_arch_app/domain/usecases/order/purchase_order_usecases.dar
 import 'package:clean_arch_app/domain/usecases/order/update_purchase_order_usecase.dart';
 import 'package:clean_arch_app/presentation/auth/auth_state.dart';
 import 'package:clean_arch_app/presentation/auth/auth_view_model.dart';
+import 'package:clean_arch_app/presentation/catalog/product/product_state.dart';
+import 'package:clean_arch_app/presentation/catalog/product/product_view_model.dart';
 import 'package:clean_arch_app/presentation/notification/notification_state.dart';
 import 'package:clean_arch_app/presentation/notification/notification_view_model.dart';
 import 'package:clean_arch_app/presentation/purchase_order/purchase_order_view_model.dart';
@@ -39,21 +45,26 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/network/api_client.dart';
+
 // Data Sources
 import '../data/datasources/remote/auth_api.dart';
 import '../data/datasources/remote/stock_api.dart';
 import '../data/datasources/remote/supplier_api.dart';
 import '../data/datasources/remote/user_api.dart';
+
 // Repository Implementations
 import '../data/repositories_impl/auth_repository_impl.dart';
 import '../data/repositories_impl/stock_repository_impl.dart';
 import '../data/repositories_impl/user_repository_impl.dart';
+
 // Repositories (Interfaces)
 import '../domain/repositories/auth_repository.dart';
+import '../domain/repositories/product_repository.dart' show ProductRepository;
 import '../domain/repositories/stock_repository.dart';
 import '../domain/repositories/stock_take_repository.dart';
 import '../domain/repositories/user_repository.dart';
 import '../domain/usecases/login_user.dart';
+
 // ViewModels
 import '../domain/usecases/stock/add_stock_usecase.dart';
 import '../domain/usecases/stock/adjust_stock_usecase.dart';
@@ -72,7 +83,8 @@ import '../domain/usecases/stock/update_stock_usecase.dart';
 import '../presentation/auth/login_view_model.dart';
 import '../presentation/dashboard/dashboard_state.dart';
 import '../presentation/dashboard/dashboard_view_model.dart';
-import '../presentation/purchase_order/purchase_order_state.dart' show PurchaseOrderState;
+import '../presentation/purchase_order/purchase_order_state.dart'
+    show PurchaseOrderState;
 import '../presentation/stock/stock_state.dart';
 import '../presentation/stock/stock_view_model.dart';
 import '../presentation/stocktake/stocktake_view_model.dart';
@@ -164,11 +176,12 @@ final stockRepositoryProvider = Provider<StockRepository>((ref) {
 // ─────────────────────────────────────────────
 
 final dashboardViewModelProvider =
-    StateNotifierProvider<DashboardViewModel, DashboardState>(
+StateNotifierProvider<DashboardViewModel, DashboardState>(
       (ref) => DashboardViewModel(),
-    );
+);
 
-final purchaseOrderRepositoryProvider = Provider<PurchaseOrderRepository>((ref) {
+final purchaseOrderRepositoryProvider = Provider<PurchaseOrderRepository>((
+    ref) {
   final api = ref.read(purchaseOrderApiProvider);
   return PurchaseOrderRepositoryImpl(api);
 });
@@ -189,14 +202,14 @@ final purchaseOrderUseCasesProvider = Provider((ref) {
 
 
 final purchaseOrderViewModelProvider =
-    StateNotifierProvider<PurchaseOrderViewModel, PurchaseOrderState>((ref) {
-      final PurchasUseCases = ref.watch(purchaseOrderUseCasesProvider);
-      final authRepo = ref.watch(authRepositoryProvider);
-      return PurchaseOrderViewModel(
-        purchaseOrderUseCases: PurchasUseCases,
-        authRepository: authRepo,
-      );
-    });
+StateNotifierProvider<PurchaseOrderViewModel, PurchaseOrderState>((ref) {
+  final PurchasUseCases = ref.watch(purchaseOrderUseCasesProvider);
+  final authRepo = ref.watch(authRepositoryProvider);
+  return PurchaseOrderViewModel(
+    purchaseOrderUseCases: PurchasUseCases,
+    authRepository: authRepo,
+  );
+});
 
 final notificationViewModelProvider =
 StateNotifierProvider<NotificationViewModel, NotificationState>((ref) {
@@ -204,104 +217,134 @@ StateNotifierProvider<NotificationViewModel, NotificationState>((ref) {
   return NotificationViewModel(notificationUseCases: usecases);
 });
 
-final stockUsecasesProvider = Provider((ref) {
-  final stockRepo = ref.watch(stockRepositoryProvider);
-  return StockUseCases(
-    addStock: AddStockUseCase(stockRepo),
-    adjustStock: AdjustStockUseCase(stockRepo),
-    deleteMultipleStocks: DeleteMultipleStocksUseCase(stockRepo),
-    deleteStock: DeleteStockUseCase(stockRepo),
-    filterStocks: FilterStocksUseCase(),
-    getAllStocks: GetAllStocksUseCase(stockRepo),
-    getStockById: GetStockByIdUseCase(stockRepo),
-    searchStocks: SearchStocksUseCase(),
-    sortStocks: SortStocksUseCase(),
-    toggleStockSelection: ToggleStockSelectionUseCase(),
-    updateMultipleStockStatus:
-        UpdateMultipleStockStatusUseCase(stockRepo),
-    updateStockStatus: UpdateStockStatusUseCase(stockRepo),
-    updateStock: UpdateStockUseCase(stockRepo),
+final productApiProvider = Provider<ProductApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return ProductApiImpl(ApiClient(dio: dio));
+});
+
+final productRepositoryProvider = Provider<ProductRepository>((ref) {
+  final api = ref.watch(productApiProvider);
+  return ProductRepositoryImpl(api);
+});
+final productViewModelProvider =
+StateNotifierProvider<ProductViewModel, ProductState>((ref) {
+  final usecases = ref.read(productUsecasesProvider);
+  return ProductViewModel(usecases);
+});
+final productUsecasesProvider = Provider((ref) {
+  final productRepo = ref.watch(productRepositoryProvider);
+  return ProductUseCases(
+      getAll: GetAllProductsUseCase(productRepo),
+      getById: GetProductByIdUseCase(productRepo),
+      create: CreateProductUseCase(productRepo),
+      update: UpdateProductUseCase(productRepo),
+      delete: DeleteProductUseCase(productRepo),
+      search: SearchProductsUseCase(productRepo),
+      getByCategory: GetProductsByCategoryUseCase(productRepo),
+      getBySupplier: GetProductsBySupplierUseCase(productRepo),
+      getLowStock: GetLowStockProductsUseCase(productRepo),
+      getOutOfStock: GetOutOfStockProductsUseCase(productRepo),
   );
-});
-final stockViewModelProvider =
-StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
-  final stockUseCases =ref.watch(stockUsecasesProvider);
-  final authRepo = ref.watch(authRepositoryProvider);
-  return StockViewModel(
-    stockUseCases: stockUseCases,
-    authRepository: authRepo,
-  );
-});
+  });
 
-final loginViewModelProvider =
-    StateNotifierProvider<LoginViewModel, LoginState>((ref) {
-      final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
-      return LoginViewModel(loginUseCase);
-    });
+  final stockUsecasesProvider = Provider((ref) {
+    final stockRepo = ref.watch(stockRepositoryProvider);
+    return StockUseCases(
+      addStock: AddStockUseCase(stockRepo),
+      adjustStock: AdjustStockUseCase(stockRepo),
+      deleteMultipleStocks: DeleteMultipleStocksUseCase(stockRepo),
+      deleteStock: DeleteStockUseCase(stockRepo),
+      filterStocks: FilterStocksUseCase(),
+      getAllStocks: GetAllStocksUseCase(stockRepo),
+      getStockById: GetStockByIdUseCase(stockRepo),
+      searchStocks: SearchStocksUseCase(),
+      sortStocks: SortStocksUseCase(),
+      toggleStockSelection: ToggleStockSelectionUseCase(),
+      updateMultipleStockStatus:
+      UpdateMultipleStockStatusUseCase(stockRepo),
+      updateStockStatus: UpdateStockStatusUseCase(stockRepo),
+      updateStock: UpdateStockUseCase(stockRepo),
+    );
+  });
+  final stockViewModelProvider =
+  StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
+    final stockUseCases = ref.watch(stockUsecasesProvider);
+    final authRepo = ref.watch(authRepositoryProvider);
+    return StockViewModel(
+      stockUseCases: stockUseCases,
+      authRepository: authRepo,
+    );
+  });
 
-final authViewModelProvider =
-StateNotifierProvider<AuthViewModel, AuthState>((ref) {
-  return AuthViewModel(ref.read(authRepositoryProvider));
-});
+  final loginViewModelProvider =
+  StateNotifierProvider<LoginViewModel, LoginState>((ref) {
+    final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
+    return LoginViewModel(loginUseCase);
+  });
+
+  final authViewModelProvider =
+  StateNotifierProvider<AuthViewModel, AuthState>((ref) {
+    return AuthViewModel(ref.read(authRepositoryProvider));
+  });
 
 
-final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
-  final api = ref.watch(stockTakeApiProvider);
-  final networkInfo = ref.watch(networkInfoProvider);
-  return StockTakeRepositoryImpl(stockTakeApi: api, networkInfo:networkInfo);
-  // you probably want to pass real NetworkInfo instead of null
-});
+  final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
+    final api = ref.watch(stockTakeApiProvider);
+    final networkInfo = ref.watch(networkInfoProvider);
+    return StockTakeRepositoryImpl(stockTakeApi: api, networkInfo: networkInfo);
+    // you probably want to pass real NetworkInfo instead of null
+  });
 
 
 // Provider definition
-final stockTakeViewModelProvider =
-StateNotifierProvider<StockTakeViewModel, StockTakeState>((ref) {
-  final repository = ref.watch(stockTakeRepositoryProvider);
-  return StockTakeViewModel(repository);
-});
+  final stockTakeViewModelProvider =
+  StateNotifierProvider<StockTakeViewModel, StockTakeState>((ref) {
+    final repository = ref.watch(stockTakeRepositoryProvider);
+    return StockTakeViewModel(repository);
+  });
 
 
-final supplierApiProvider = Provider<SupplierApi>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return SupplierApiImpl(apiClient);
-});
+  final supplierApiProvider = Provider<SupplierApi>((ref) {
+    final apiClient = ref.watch(apiClientProvider);
+    return SupplierApiImpl(apiClient);
+  });
 
 // ─────────────────────────────────────────────
 // SUPPLIER REPOSITORY PROVIDER
 // ─────────────────────────────────────────────
 
-final supplierRepositoryProvider = Provider<SupplierRepository>((ref) {
-  final api = ref.watch(supplierApiProvider);
-  return SupplierRepositoryImpl(api);
-});
+  final supplierRepositoryProvider = Provider<SupplierRepository>((ref) {
+    final api = ref.watch(supplierApiProvider);
+    return SupplierRepositoryImpl(api);
+  });
 
 // ─────────────────────────────────────────────
 // SUPPLIER USECASES PROVIDER
 // ─────────────────────────────────────────────
 
-final supplierUseCasesProvider = Provider<SupplierUseCases>((ref) {
-  final repo = ref.watch(supplierRepositoryProvider);
-  return SupplierUseCases(
-    getAllSuppliers: GetAllSuppliersUseCase(repo),
-    getSupplierById: GetSupplierByIdUseCase(repo),
-    createSupplier: CreateSupplierUseCase(repo),
-    updateSupplier: UpdateSupplierUseCase(repo),
-    deleteSupplier: DeleteSupplierUseCase(repo),
-    searchSuppliers: SearchSuppliersUseCase(repo),
-    getActiveSuppliers: GetActiveSuppliersUseCase(repo),
-  );
-});
+  final supplierUseCasesProvider = Provider<SupplierUseCases>((ref) {
+    final repo = ref.watch(supplierRepositoryProvider);
+    return SupplierUseCases(
+      getAllSuppliers: GetAllSuppliersUseCase(repo),
+      getSupplierById: GetSupplierByIdUseCase(repo),
+      createSupplier: CreateSupplierUseCase(repo),
+      updateSupplier: UpdateSupplierUseCase(repo),
+      deleteSupplier: DeleteSupplierUseCase(repo),
+      searchSuppliers: SearchSuppliersUseCase(repo),
+      getActiveSuppliers: GetActiveSuppliersUseCase(repo),
+    );
+  });
 
 // ─────────────────────────────────────────────
 // SUPPLIER VIEWMODEL PROVIDER
 // ─────────────────────────────────────────────
 
-final supplierViewModelProvider =
-StateNotifierProvider<SupplierViewModel, SupplierState>((ref) {
-  final usecases = ref.watch(supplierUseCasesProvider);
-  final authRepo = ref.watch(authRepositoryProvider);
-  return SupplierViewModel(
-    useCases: usecases,
-    // authRepository: authRepo, useCases: null,
-  );
-});
+  final supplierViewModelProvider =
+  StateNotifierProvider<SupplierViewModel, SupplierState>((ref) {
+    final usecases = ref.watch(supplierUseCasesProvider);
+    final authRepo = ref.watch(authRepositoryProvider);
+    return SupplierViewModel(
+      useCases: usecases,
+      // authRepository: authRepo, useCases: null,
+    );
+  });

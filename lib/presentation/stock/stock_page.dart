@@ -1,9 +1,11 @@
 import 'package:clean_arch_app/core/enums/stock_status.dart';
 import 'package:clean_arch_app/di/injection.dart'; // should export stockViewModelProvider
 import 'package:clean_arch_app/domain/entities/stock/stock.dart';
+import 'package:clean_arch_app/presentation/catalog/manage_stock_page.dart';
 import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/build_action_bar.dart';
+import 'package:clean_arch_app/presentation/stock/widgets/build_manage_stocks.dart';
 import 'package:clean_arch_app/presentation/stock/widgets/search_control_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +38,8 @@ class StockPage extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: buildActionBar(context, ref),
+                    child: buildManageStockButton(context),
+                    // buildActionBar(context, ref),
                   ),
                 ],
               ),
@@ -175,17 +178,17 @@ class StockPage extends ConsumerWidget {
   //   );
   // }
 
-  Widget _smallActionButton({required IconData icon, String? tooltip, VoidCallback? onTap}) {
-    return Material(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(side: BorderSide(color: const Color(0xFFE6E9EE)), borderRadius: BorderRadius.circular(8)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: SizedBox(width: 40, height: 40, child: Center(child: Icon(icon, color: const Color(0xFF374151), size: 18))),
-      ),
-    );
-  }
+  // Widget _smallActionButton({required IconData icon, String? tooltip, VoidCallback? onTap}) {
+  //   return Material(
+  //     color: Colors.white,
+  //     shape: RoundedRectangleBorder(side: BorderSide(color: const Color(0xFFE6E9EE)), borderRadius: BorderRadius.circular(8)),
+  //     child: InkWell(
+  //       onTap: onTap,
+  //       borderRadius: BorderRadius.circular(8),
+  //       child: SizedBox(width: 40, height: 40, child: Center(child: Icon(icon, color: const Color(0xFF374151), size: 18))),
+  //     ),
+  //   );
+  // }
 
   Widget _buildListView(List<Stock> stocks, bool selectable, Set<String> selectedIds, bool allSelected, StockViewModel vm, WidgetRef ref) {
     return Container(

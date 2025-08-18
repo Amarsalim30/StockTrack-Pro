@@ -3,6 +3,8 @@ class RouteNames {
   static const String dashboard = '/dashboard';
   static const String stock = '/stock';
   static const String stocktake = '/stock-take';
+  static const String manageStock = '/manage-stock';
+
 
   static const String purchaseOrders = '/purchase-orders';
   static const String addProduct = '/add-product';
@@ -11,6 +13,7 @@ class RouteNames {
   static const String addSupplier = '/add-supplier';
   static const String editSupplier = '/edit-supplier';
   static const String users = '/users';
+
   static const String reports = '/reports';
 
   static const String addUser = '/add-user';
