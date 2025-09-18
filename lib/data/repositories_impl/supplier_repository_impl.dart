@@ -1,7 +1,7 @@
-import 'package:clean_arch_app/data/datasources/remote/supplier_api.dart';
-import 'package:clean_arch_app/data/mappers/catalog/supplier_mapper.dart';
-import 'package:clean_arch_app/domain/entities/catalog/supplier.dart';
-import 'package:clean_arch_app/domain/repositories/supplier_repository.dart';
+import 'package:stocktrack_pro/data/datasources/remote/supplier_api.dart';
+import 'package:stocktrack_pro/data/mappers/catalog/supplier_mapper.dart';
+import 'package:stocktrack_pro/domain/entities/catalog/supplier.dart';
+import 'package:stocktrack_pro/domain/repositories/supplier_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class SupplierRepositoryImpl implements SupplierRepository {

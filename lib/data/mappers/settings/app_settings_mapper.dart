@@ -1,6 +1,6 @@
-import 'package:clean_arch_app/data/mappers/settings/feature_toggle_mapper.dart';
-import 'package:clean_arch_app/data/models/settings/app_settings_model.dart';
-import 'package:clean_arch_app/domain/entities/settings/app_settings.dart';
+import 'package:stocktrack_pro/data/mappers/settings/feature_toggle_mapper.dart';
+import 'package:stocktrack_pro/data/models/settings/app_settings_model.dart';
+import 'package:stocktrack_pro/domain/entities/settings/app_settings.dart';
 import 'production_settings_mapper.dart';
 import 'reorder_workflow_settings_mapper.dart';
 import 'stock_take_settings_mapper.dart';

@@ -1,5 +1,5 @@
-import 'package:clean_arch_app/domain/repositories/auth_repository.dart';
-import 'package:clean_arch_app/presentation/auth/auth_state.dart';
+import 'package:stocktrack_pro/domain/repositories/auth_repository.dart';
+import 'package:stocktrack_pro/presentation/auth/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthViewModel extends StateNotifier<AuthState> {

@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/data/models/convert_helpers/production_order_status_converter.dart';
+import 'package:stocktrack_pro/data/models/convert_helpers/production_order_status_converter.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 

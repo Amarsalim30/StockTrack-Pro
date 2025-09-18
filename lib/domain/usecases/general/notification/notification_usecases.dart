@@ -1,6 +1,6 @@
 // domain/usecases/notification/notification_usecases.dart
-import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
-import 'package:clean_arch_app/domain/usecases/general/notification/mark_all_as_read.dart';
+import 'package:stocktrack_pro/domain/repositories/notification_repository.dart';
+import 'package:stocktrack_pro/domain/usecases/general/notification/mark_all_as_read.dart';
 import 'package:dartz/dartz.dart';
 
 import 'get_notifications.dart';

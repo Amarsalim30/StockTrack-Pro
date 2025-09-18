@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/domain/entities/auth/user.dart';
+import 'package:stocktrack_pro/domain/entities/auth/user.dart';
 
 class AuthState {
   final User? currentUser;

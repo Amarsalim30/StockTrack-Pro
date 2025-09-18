@@ -35,12 +35,24 @@ class UserApi {
         '/users/$id/permissions', data: {'permissions': permissions});
   }
 
-  Future<void> toggleUserStatus(String id, bool isActive) async {
-    await _dio.put('/users/$id/${isActive ? "activate" : "deactivate"}');
-  }
 
   Future<Map<String, dynamic>> getUserStats() async {
     final response = await _dio.get('/users/stats');
     return response.data;
+  }
+
+  Future<void> resetUserPassword(String id) async {
+    await _dio.post('/users/$id/reset-password');
+  }
+
+  Future<List<UserModel>> searchUsers(String query) async {
+    final response = await _dio.get('/users/search', queryParameters: {'q': query});
+    final data = response.data['data'] as List;
+    return data.map((json) => UserModel.fromJson(json)).toList();
+  }
+
+  Future<UserModel> toggleUserStatus(String id) async {
+    final response = await _dio.put('/users/$id/toggle-status');
+    return UserModel.fromJson(response.data);
   }
 }

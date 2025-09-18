@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/presentation/stock/stock_state.dart';
+import 'package:stocktrack_pro/presentation/stock/stock_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';

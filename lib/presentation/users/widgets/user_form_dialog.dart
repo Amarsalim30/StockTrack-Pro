@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/auth/user.dart';
 import '../../../domain/entities/auth/role.dart';
-import '../user_view_model.dart';
 import 'role_selector_dropdown.dart';
 
 class UserFormDialog extends StatefulWidget {

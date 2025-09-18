@@ -1,5 +1,5 @@
-import 'package:clean_arch_app/domain/entities/catalog/supplier.dart';
-import 'package:clean_arch_app/domain/entities/general/location.dart';
+import 'package:stocktrack_pro/domain/entities/catalog/supplier.dart';
+import 'package:stocktrack_pro/domain/entities/general/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

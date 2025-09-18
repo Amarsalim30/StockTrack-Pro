@@ -1,6 +1,6 @@
 // notification_view_model.dart
 import 'dart:async';
-import 'package:clean_arch_app/domain/usecases/general/notification/notification_usecases.dart';
+import 'package:stocktrack_pro/domain/usecases/general/notification/notification_usecases.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'notification_state.dart';
 import '../../domain/entities/general/notification.dart'; // adapt

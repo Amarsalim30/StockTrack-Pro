@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/data/models/production/production_order_status_model.dart';
+import 'package:stocktrack_pro/data/models/production/production_order_status_model.dart';
 
 class ProductionOrderStatusMapper {
   static ProductionOrderStatusModel toModel(String status) {

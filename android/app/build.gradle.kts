@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.clean_arch_app"
+    namespace = "com.stocktrackpro.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.13599879"
 
@@ -21,10 +21,10 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.clean_arch_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        applicationId = "com.stocktrackpro.app"
+        // Updated for StockTrack Pro production app
+        // Firebase requires minimum SDK 23
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:clean_arch_app/core/error/failures.dart';
-import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
+import 'package:stocktrack_pro/domain/entities/order/purchase_order.dart';
 
 abstract class PurchaseOrderRepository {
   Future<Either<Failure, void>> createPurchaseOrder(PurchaseOrder order);

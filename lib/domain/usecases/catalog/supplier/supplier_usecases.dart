@@ -1,10 +1,10 @@
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/create_supplier_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/delete_supplier_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/get_active_suppliers.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/get_all_suppliers_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/get_supplier_by_id_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/search_suppliers_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/update_supplier_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/create_supplier_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/delete_supplier_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/get_active_suppliers.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/get_all_suppliers_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/get_supplier_by_id_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/search_suppliers_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/update_supplier_usecase.dart';
 
 
 class SupplierUseCases {

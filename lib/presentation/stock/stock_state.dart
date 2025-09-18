@@ -1,7 +1,7 @@
 // stock_state.dart
-import 'package:clean_arch_app/domain/entities/auth/user.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/core/enums/stock_status.dart';
+import 'package:stocktrack_pro/domain/entities/auth/user.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock.dart';
+import 'package:stocktrack_pro/core/enums/stock_status.dart';
 
 enum SortBy { nameAsc, nameDesc, quantityAsc, quantityDesc, lastUpdated }
 

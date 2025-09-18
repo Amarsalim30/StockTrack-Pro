@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/data/models/auth/permission_type_model.dart';
+import 'package:stocktrack_pro/data/models/auth/permission_type_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/auth/role.dart';

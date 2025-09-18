@@ -1,6 +1,6 @@
-import 'package:clean_arch_app/config/router/route_names.dart';
-import 'package:clean_arch_app/core/enums/purchase_order_status.dart';
-import 'package:clean_arch_app/presentation/purchase_order/purchase_order_view_model.dart';
+import 'package:stocktrack_pro/config/router/route_names.dart';
+import 'package:stocktrack_pro/core/enums/purchase_order_status.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/purchase_order_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/order/purchase_order.dart';

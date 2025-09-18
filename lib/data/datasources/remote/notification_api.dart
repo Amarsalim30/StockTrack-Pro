@@ -1,5 +1,5 @@
 // data/remote/notifications_api.dart
-import 'package:clean_arch_app/data/models/general/notification_model.dart';
+import 'package:stocktrack_pro/data/models/general/notification_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 

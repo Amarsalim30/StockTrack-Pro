@@ -1,7 +1,7 @@
-import 'package:clean_arch_app/presentation/purchase_order/widgets/approval_progress_item.dart';
-import 'package:clean_arch_app/presentation/purchase_order/widgets/build_activity_content.dart';
-import 'package:clean_arch_app/presentation/purchase_order/widgets/build_invoice_content.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/widgets/approval_progress_item.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/widgets/build_activity_content.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/widgets/build_invoice_content.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/order/purchase_order.dart';

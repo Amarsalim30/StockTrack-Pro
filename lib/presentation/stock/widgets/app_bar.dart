@@ -1,6 +1,6 @@
 // presentation/stock/widgets/production_top_app_bar.dart
-import 'package:clean_arch_app/core/enums/stock_status.dart';
-import 'package:clean_arch_app/di/injection.dart' as di;
+import 'package:stocktrack_pro/core/enums/stock_status.dart';
+import 'package:stocktrack_pro/di/injection.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

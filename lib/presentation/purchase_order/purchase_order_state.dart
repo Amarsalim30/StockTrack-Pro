@@ -1,7 +1,7 @@
 // purchase_order_state.dart
-import 'package:clean_arch_app/domain/entities/auth/user.dart';
-import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
-import 'package:clean_arch_app/core/enums/purchase_order_status.dart';
+import 'package:stocktrack_pro/domain/entities/auth/user.dart';
+import 'package:stocktrack_pro/domain/entities/order/purchase_order.dart';
+import 'package:stocktrack_pro/core/enums/purchase_order_status.dart';
 
 enum PurchaseOrderSortBy { orderDate, deliveryDate, totalAmount }
 enum PurchaseOrderSortOrder { ascending, descending }

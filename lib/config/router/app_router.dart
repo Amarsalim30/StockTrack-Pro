@@ -1,9 +1,9 @@
-import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
-import 'package:clean_arch_app/presentation/catalog/manage_stock_page.dart';
-import 'package:clean_arch_app/presentation/purchase_order/purchase_order_detail_page.dart';
-import 'package:clean_arch_app/presentation/purchase_order/purchase_order_page.dart';
-import 'package:clean_arch_app/presentation/reporting/reporting_page.dart';
-import 'package:clean_arch_app/presentation/stocktake/stocktake_page.dart';
+import 'package:stocktrack_pro/domain/entities/order/purchase_order.dart';
+import 'package:stocktrack_pro/presentation/catalog/manage_stock_page.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/purchase_order_detail_page.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/purchase_order_page.dart';
+import 'package:stocktrack_pro/presentation/reporting/reporting_page.dart';
+import 'package:stocktrack_pro/presentation/stocktake/stocktake_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

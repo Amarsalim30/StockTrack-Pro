@@ -1,12 +1,12 @@
-import 'package:clean_arch_app/core/enums/stock_status.dart';
-import 'package:clean_arch_app/di/injection.dart'; // should export stockViewModelProvider
-import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/presentation/catalog/manage_stock_page.dart';
-import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/build_action_bar.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/build_manage_stocks.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/search_control_bar.dart';
+import 'package:stocktrack_pro/core/enums/stock_status.dart';
+import 'package:stocktrack_pro/di/injection.dart'; // should export stockViewModelProvider
+import 'package:stocktrack_pro/domain/entities/stock/stock.dart';
+import 'package:stocktrack_pro/presentation/catalog/manage_stock_page.dart';
+import 'package:stocktrack_pro/presentation/stock/stock_view_model.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/app_bar.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/build_action_bar.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/build_manage_stocks.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/search_control_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

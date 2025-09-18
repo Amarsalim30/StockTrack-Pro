@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../core/error/exceptions.dart';
 import '../../models/activity/activity_model.dart';
-import 'package:meta/meta.dart';
 
 abstract class RemoteActivityDataSource {
   Future<List<ActivityModel>> getActivities({

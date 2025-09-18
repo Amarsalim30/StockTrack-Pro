@@ -1,6 +1,6 @@
-import 'package:clean_arch_app/di/injection.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock_take.dart';
+import 'package:stocktrack_pro/di/injection.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock_take.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

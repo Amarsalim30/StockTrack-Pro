@@ -152,9 +152,9 @@ String _buildMapper(
   final modelFile = modelClass[0].toLowerCase() + modelClass.substring(1);
   final entityFile = entityClass[0].toLowerCase() + entityClass.substring(1);
 
-  final im1 = "import 'package:clean_arch_app/data/models/$modelFile.dart';";
+  final im1 = "import 'package:stocktrack_pro/data/models/$modelFile.dart';";
   final im2 =
-      "import 'package:clean_arch_app/domain/entities/$entityFile.dart';";
+      "import 'package:stocktrack_pro/domain/entities/$entityFile.dart';";
 
   final toEntity = fields
       .map((f) {

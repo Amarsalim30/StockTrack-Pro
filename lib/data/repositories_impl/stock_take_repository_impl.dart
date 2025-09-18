@@ -5,8 +5,10 @@ import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/stock/stock_take.dart';
 import '../../domain/entities/stock/stock_take_item.dart';
+import '../../domain/entities/stock/discrepancy_report.dart';
 import '../../domain/repositories/stock_take_repository.dart';
 import '../datasources/remote/stock_take_api.dart';
+import '../mappers/stock/discrepancy_report_mapper.dart';
 
 class StockTakeRepositoryImpl implements StockTakeRepository {
   final StockTakeApi stockTakeApi;
@@ -210,14 +212,15 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
   }
 
   @override
-  Future<Either<Failure, Map<String, dynamic>>> generateDiscrepancyReport(
+  Future<Either<Failure, DiscrepancyReport>> generateDiscrepancyReport(
     String stockTakeId,
   ) async {
     if (await networkInfo.isConnected) {
       try {
-        final report = await stockTakeApi.generateDiscrepancyReport(
+        final reportModel = await stockTakeApi.generateDiscrepancyReport(
           stockTakeId,
         );
+        final report = DiscrepancyReportMapper.toEntity(reportModel);
         return Right(report);
       } on ServerException catch (e) {
         return Left(
@@ -292,9 +295,8 @@ class StockTakeRepositoryImpl implements StockTakeRepository {
           file,
         );
 
-        final photoUrl = response['url'] as String?;
-        if (photoUrl != null) {
-          return Right(photoUrl);
+        if (response.success) {
+          return Right(response.url);
         } else {
           return const Left(ServerFailure(message: 'Failed to upload photo'));
         }

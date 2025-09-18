@@ -1,6 +1,6 @@
-import 'package:clean_arch_app/domain/entities/catalog/product.dart';
-import 'package:clean_arch_app/domain/usecases/catalog/product/product_usecases.dart';
-import 'package:clean_arch_app/presentation/catalog/product/mock_product.dart';
+import 'package:stocktrack_pro/domain/entities/catalog/product.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/product/product_usecases.dart';
+import 'package:stocktrack_pro/presentation/catalog/product/mock_product.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'product_state.dart';

@@ -1,5 +1,5 @@
 
-import 'package:clean_arch_app/domain/repositories/purchase_order_repository.dart';
+import 'package:stocktrack_pro/domain/repositories/purchase_order_repository.dart';
 
 class CancelPurchaseOrderUseCase {
   final PurchaseOrderRepository repository;

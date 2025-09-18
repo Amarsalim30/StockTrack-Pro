@@ -1,5 +1,5 @@
 // domain/repositories/notification_repository.dart
-import 'package:clean_arch_app/core/error/failures.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import '../entities/general/notification.dart'; // adapt path if needed
 

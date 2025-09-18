@@ -1,6 +1,6 @@
-import 'package:clean_arch_app/core/enums/stock_status.dart';
-import 'package:clean_arch_app/core/error/failures.dart';
-import 'package:clean_arch_app/domain/repositories/stock_repository.dart';
+import 'package:stocktrack_pro/core/enums/stock_status.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
+import 'package:stocktrack_pro/domain/repositories/stock_repository.dart';
 import 'package:dartz/dartz.dart';
 
 /// 7. Update stock status for one item

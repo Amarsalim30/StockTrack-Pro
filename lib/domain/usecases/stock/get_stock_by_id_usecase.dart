@@ -1,5 +1,5 @@
-import 'package:clean_arch_app/core/error/failures.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../repositories/stock_repository.dart';

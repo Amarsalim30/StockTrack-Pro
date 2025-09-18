@@ -309,14 +309,14 @@ class _StockTakeApi implements StockTakeApi {
   }
 
   @override
-  Future<Map<String, dynamic>> generateDiscrepancyReport(
+  Future<DiscrepancyReportModel> generateDiscrepancyReport(
     String stockTakeId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Map<String, dynamic>>(
+    final _options = _setStreamType<DiscrepancyReportModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -327,12 +327,9 @@ class _StockTakeApi implements StockTakeApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Map<String, dynamic> _value;
+    late DiscrepancyReportModel _value;
     try {
-      _value = _result.data!.map(
-        (k, dynamic v) =>
-            MapEntry(k, dynamic.fromJson(v as Map<String, dynamic>)),
-      );
+      _value = DiscrepancyReportModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -341,7 +338,7 @@ class _StockTakeApi implements StockTakeApi {
   }
 
   @override
-  Future<Map<String, dynamic>> uploadStockTakePhoto(
+  Future<PhotoUploadResponseModel> uploadStockTakePhoto(
     String stockTakeId,
     String itemId,
     File photo,
@@ -359,7 +356,7 @@ class _StockTakeApi implements StockTakeApi {
         ),
       ),
     );
-    final _options = _setStreamType<Map<String, dynamic>>(
+    final _options = _setStreamType<PhotoUploadResponseModel>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -375,12 +372,9 @@ class _StockTakeApi implements StockTakeApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Map<String, dynamic> _value;
+    late PhotoUploadResponseModel _value;
     try {
-      _value = _result.data!.map(
-        (k, dynamic v) =>
-            MapEntry(k, dynamic.fromJson(v as Map<String, dynamic>)),
-      );
+      _value = PhotoUploadResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -414,8 +408,4 @@ class _StockTakeApi implements StockTakeApi {
 
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
-}
-
-extension on Type {
-  fromJson(Map<String, dynamic> v) {}
 }

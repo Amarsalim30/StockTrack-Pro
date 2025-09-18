@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/presentation/stocktake/mock_stock_take.dart';
+import 'package:stocktrack_pro/presentation/stocktake/mock_stock_take.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../domain/entities/stock/stock_take.dart';

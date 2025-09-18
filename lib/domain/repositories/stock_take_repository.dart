@@ -1,7 +1,8 @@
-import 'package:clean_arch_app/domain/entities/stock/stock_take_item.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock_take_item.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
 import '../entities/stock/stock_take.dart';
+import '../entities/stock/discrepancy_report.dart';
 
 abstract class StockTakeRepository {
   // Stock Take Session Operations
@@ -43,7 +44,7 @@ abstract class StockTakeRepository {
   });
 
   // Reporting
-  Future<Either<Failure, Map<String, dynamic>>> generateDiscrepancyReport(
+  Future<Either<Failure, DiscrepancyReport>> generateDiscrepancyReport(
     String stockTakeId,
   );
 

@@ -1,7 +1,7 @@
 // search_control_bar_fixed.dart
-import 'package:clean_arch_app/core/enums/stock_status.dart';
-import 'package:clean_arch_app/presentation/stock/stock_state.dart';
-import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
+import 'package:stocktrack_pro/core/enums/stock_status.dart';
+import 'package:stocktrack_pro/presentation/stock/stock_state.dart';
+import 'package:stocktrack_pro/presentation/stock/stock_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../di/injection.dart' as di;

@@ -77,27 +77,45 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, List<User>>> fetchUsers() {
-    // TODO: implement fetchUsers
-    throw UnimplementedError();
+  Future<Either<Failure, List<User>>> fetchUsers() async {
+    try {
+      final models = await _userApi.getAllUsers();
+      final users = models.map((model) => model.toEntity()).toList();
+      return Right(users);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
   }
 
   @override
-  Future<Either<Failure, void>> resetUserPassword(String id) {
-    // TODO: implement resetUserPassword
-    throw UnimplementedError();
+  Future<Either<Failure, void>> resetUserPassword(String id) async {
+    try {
+      await _userApi.resetUserPassword(id);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
   }
 
   @override
-  Future<Either<Exception, List<User>>> searchUsers(String query) {
-    // TODO: implement searchUsers
-    throw UnimplementedError();
+  Future<Either<Exception, List<User>>> searchUsers(String query) async {
+    try {
+      final models = await _userApi.searchUsers(query);
+      final users = models.map((model) => model.toEntity()).toList();
+      return Right(users);
+    } catch (e) {
+      return Left(Exception(e.toString()));
+    }
   }
 
   @override
-  Future<Either<Failure, User>> toggleUserStatus(String id) {
-    // TODO: implement toggleUserStatus
-    throw UnimplementedError();
+  Future<Either<Failure, User>> toggleUserStatus(String id) async {
+    try {
+      final model = await _userApi.toggleUserStatus(id);
+      return Right(model.toEntity());
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
   }
 
   // Add more methods as needed like toggleUserStatus, getStats, etc.

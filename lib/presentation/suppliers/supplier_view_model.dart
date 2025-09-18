@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/domain/usecases/catalog/supplier/supplier_usecases.dart';
+import 'package:stocktrack_pro/domain/usecases/catalog/supplier/supplier_usecases.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/catalog/supplier.dart';
 import 'supplier_state.dart';
@@ -52,26 +52,46 @@ class SupplierViewModel extends StateNotifier<SupplierState> {
     );
   }
 
-  void sortBy(SortOption option) {
+  void sortBy(String sortOption) {
     final sorted = [...state.suppliers];
 
-    switch (option) {
-      case SortOption.name:
+    switch (sortOption) {
+      case 'name_asc':
         sorted.sort((a, b) => a.name.compareTo(b.name));
         break;
-      case SortOption.recent:
+      case 'name_desc':
+        sorted.sort((a, b) => b.name.compareTo(a.name));
+        break;
+      case 'date_asc':
         sorted.sort((a, b) => a.id.compareTo(b.id)); // Placeholder for createdAt
         break;
-      case SortOption.location:
-        sorted.sort((a, b) {
-          final locationA = a.contactInfo?['city'] ?? '';
-          final locationB = b.contactInfo?['city'] ?? '';
-          return locationA.compareTo(locationB);
-        });
+      case 'date_desc':
+        sorted.sort((a, b) => b.id.compareTo(a.id)); // Placeholder for createdAt
         break;
     }
 
-    state = state.copyWith(suppliers: sorted, sortOption: option);
+    state = state.copyWith(suppliers: sorted);
+  }
+
+  Future<void> searchSuppliers(String query) async {
+    state = state.copyWith(isLoading: true);
+    final result = await useCases.searchSuppliers(query);
+    result.fold(
+      (failure) => state = state.copyWith(isLoading: false, error: failure.toString()),
+      (suppliers) => state = state.copyWith(isLoading: false, suppliers: suppliers),
+    );
+  }
+
+  void filterByStatus(bool isActive) {
+    // Since Supplier doesn't have isActive field, we'll implement this filter logic
+    // based on other criteria or add the field to the entity later
+    // For now, just return all suppliers
+    final filtered = state.suppliers;
+    state = state.copyWith(suppliers: filtered);
+  }
+
+  void clearFilters() {
+    loadSuppliers(); // Reload all suppliers
   }
 }
 

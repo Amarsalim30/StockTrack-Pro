@@ -1,8 +1,8 @@
-import 'package:clean_arch_app/domain/usecases/auth/get_current_user_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/auth/login_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/auth/logout_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/auth/refresh_token_usecase.dart';
-import 'package:clean_arch_app/domain/usecases/auth/register_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/auth/get_current_user_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/auth/login_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/auth/logout_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/auth/refresh_token_usecase.dart';
+import 'package:stocktrack_pro/domain/usecases/auth/register_usecase.dart';
 
 class AuthUseCases {
   final GetCurrentUserUseCase getCurrentUserUseCase;

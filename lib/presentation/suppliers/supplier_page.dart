@@ -52,15 +52,120 @@ class SupplierPage extends ConsumerWidget {
 
   // Actions
   void _showSearch(BuildContext context, SupplierViewModel viewModel) {
-    // TODO: Implement search UI and call viewModel.searchSuppliers()
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Search Suppliers'),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'Enter supplier name...',
+            prefixIcon: Icon(Icons.search),
+          ),
+          onSubmitted: (query) {
+            Navigator.of(context).pop();
+            if (query.isNotEmpty) {
+              viewModel.searchSuppliers(query);
+            }
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showFilterOptions(BuildContext context, SupplierViewModel viewModel) {
-    // TODO: Implement filter UI and call viewModel.filterByStatus()
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Filter by Status',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              title: const Text('All Suppliers'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.clearFilters();
+              },
+            ),
+            ListTile(
+              title: const Text('Active Only'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.filterByStatus(true);
+              },
+            ),
+            ListTile(
+              title: const Text('Inactive Only'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.filterByStatus(false);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showSortOptions(BuildContext context, SupplierViewModel viewModel) {
-    // TODO: Implement sort UI and call viewModel.sortBy()
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Sort By',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              title: const Text('Name (A-Z)'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.sortBy('name_asc');
+              },
+            ),
+            ListTile(
+              title: const Text('Name (Z-A)'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.sortBy('name_desc');
+              },
+            ),
+            ListTile(
+              title: const Text('Date Created (Newest)'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.sortBy('date_desc');
+              },
+            ),
+            ListTile(
+              title: const Text('Date Created (Oldest)'),
+              onTap: () {
+                Navigator.of(context).pop();
+                viewModel.sortBy('date_asc');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildActions(

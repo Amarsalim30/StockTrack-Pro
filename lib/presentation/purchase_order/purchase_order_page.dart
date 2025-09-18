@@ -1,7 +1,7 @@
-import 'package:clean_arch_app/di/injection.dart';
-import 'package:clean_arch_app/presentation/purchase_order/purchase_order_state.dart';
-import 'package:clean_arch_app/presentation/purchase_order/widgets/purchase_order_search_bar.dart';
-import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
+import 'package:stocktrack_pro/di/injection.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/purchase_order_state.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/widgets/purchase_order_search_bar.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/enums/purchase_order_status.dart';

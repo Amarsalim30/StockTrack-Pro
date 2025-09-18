@@ -1,9 +1,9 @@
 // data/repositories/notification_repository_impl.dart
-import 'package:clean_arch_app/core/error/failures.dart';
-import 'package:clean_arch_app/data/datasources/remote/notification_api.dart';
-import 'package:clean_arch_app/data/mappers/general/notification_mapper.dart';
-import 'package:clean_arch_app/domain/entities/general/notification.dart' as entity;
-import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
+import 'package:stocktrack_pro/data/datasources/remote/notification_api.dart';
+import 'package:stocktrack_pro/data/mappers/general/notification_mapper.dart';
+import 'package:stocktrack_pro/domain/entities/general/notification.dart' as entity;
+import 'package:stocktrack_pro/domain/repositories/notification_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 class NotificationRepositoryImpl implements NotificationRepository {

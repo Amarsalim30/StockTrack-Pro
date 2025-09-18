@@ -1,6 +1,6 @@
 
-import 'package:clean_arch_app/domain/entities/stock/stock_take.dart';
-import 'package:clean_arch_app/domain/entities/stock/stock_take_item.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock_take.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock_take_item.dart';
 
 class StockTakeState {
   final bool isLoading;

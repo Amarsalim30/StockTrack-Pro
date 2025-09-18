@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/di/injection.dart';
+import 'package:stocktrack_pro/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

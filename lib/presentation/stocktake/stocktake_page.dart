@@ -1,5 +1,5 @@
-import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
-import 'package:clean_arch_app/presentation/stocktake/widgets/stock_take_stats.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/app_bar.dart';
+import 'package:stocktrack_pro/presentation/stocktake/widgets/stock_take_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

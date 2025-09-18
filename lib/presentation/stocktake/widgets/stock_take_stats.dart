@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/presentation/stock/stock_view_model.dart';
+import 'package:stocktrack_pro/presentation/stock/stock_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/enums/purchase_order_status.dart';

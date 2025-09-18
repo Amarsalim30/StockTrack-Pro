@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:clean_arch_app/data/models/order/purchase_order_model.dart';
+import 'package:stocktrack_pro/data/models/order/purchase_order_model.dart';
 
 part 'purchase_order_api.g.dart';
 

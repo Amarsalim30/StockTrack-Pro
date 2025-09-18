@@ -1,10 +1,10 @@
 // stock_view_model.dart
 import 'dart:async';
 
-import 'package:clean_arch_app/data/mappers/auth/user_mapper.dart';
-import 'package:clean_arch_app/data/models/auth/user_model.dart';
-import 'package:clean_arch_app/domain/entities/auth/user.dart';
-import 'package:clean_arch_app/presentation/stock/mock_stock_data.dart';
+import 'package:stocktrack_pro/data/mappers/auth/user_mapper.dart';
+import 'package:stocktrack_pro/data/models/auth/user_model.dart';
+import 'package:stocktrack_pro/domain/entities/auth/user.dart';
+import 'package:stocktrack_pro/presentation/stock/mock_stock_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/enums/stock_status.dart';

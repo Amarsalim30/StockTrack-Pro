@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:clean_arch_app/core/error/failures.dart';
-import 'package:clean_arch_app/data/datasources/remote/purchase_order_api.dart';
-import 'package:clean_arch_app/data/mappers/order/purchase_order_mapper.dart';
-import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
-import 'package:clean_arch_app/domain/repositories/purchase_order_repository.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
+import 'package:stocktrack_pro/data/datasources/remote/purchase_order_api.dart';
+import 'package:stocktrack_pro/data/mappers/order/purchase_order_mapper.dart';
+import 'package:stocktrack_pro/domain/entities/order/purchase_order.dart';
+import 'package:stocktrack_pro/domain/repositories/purchase_order_repository.dart';
 
 class PurchaseOrderRepositoryImpl implements PurchaseOrderRepository {
   final PurchaseOrderApi api;

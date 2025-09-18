@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../models/stock/stock_take_model.dart';
+import '../../models/stock/discrepancy_report_model.dart';
+import '../../models/stock/photo_upload_response_model.dart';
 
 part 'stock_take_api.g.dart';
 
@@ -57,14 +59,14 @@ abstract class StockTakeApi {
 
   // Reporting APIs
   @GET('/stock-takes/{stockTakeId}/report/discrepancy')
-  Future<Map<String, dynamic>> generateDiscrepancyReport(
+  Future<DiscrepancyReportModel> generateDiscrepancyReport(
     @Path('stockTakeId') String stockTakeId,
   );
 
   // Photo Upload
   @POST('/stock-takes/{stockTakeId}/items/{itemId}/photo')
   @MultiPart()
-  Future<Map<String, dynamic>> uploadStockTakePhoto(
+  Future<PhotoUploadResponseModel> uploadStockTakePhoto(
     @Path('stockTakeId') String stockTakeId,
     @Path('itemId') String itemId,
     @Part(name: 'photo') File photo,

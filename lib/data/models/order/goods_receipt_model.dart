@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/data/models/order/goods_receipt_item_model.dart';
+import 'package:stocktrack_pro/data/models/order/goods_receipt_item_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'goods_receipt_model.g.dart';

@@ -1,5 +1,5 @@
-import 'package:clean_arch_app/domain/entities/catalog/product.dart';
-import 'package:clean_arch_app/domain/repositories/product_repository.dart';
+import 'package:stocktrack_pro/domain/entities/catalog/product.dart';
+import 'package:stocktrack_pro/domain/repositories/product_repository.dart';
 import 'package:dartz/dartz.dart';
 
 

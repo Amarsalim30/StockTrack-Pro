@@ -1,5 +1,5 @@
 
-import 'package:clean_arch_app/domain/repositories/supplier_repository.dart';
+import 'package:stocktrack_pro/domain/repositories/supplier_repository.dart';
 
 class DeleteSupplierUseCase {
   final SupplierRepository repository;

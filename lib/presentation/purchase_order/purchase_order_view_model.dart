@@ -1,8 +1,8 @@
 // purchase_order_view_model.dart
 import 'dart:async';
 
-import 'package:clean_arch_app/domain/entities/order/purchase_order.dart';
-import 'package:clean_arch_app/presentation/purchase_order/mock_purchase_order_data.dart';
+import 'package:stocktrack_pro/domain/entities/order/purchase_order.dart';
+import 'package:stocktrack_pro/presentation/purchase_order/mock_purchase_order_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/enums/purchase_order_status.dart';

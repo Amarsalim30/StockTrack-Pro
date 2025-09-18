@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/presentation/stock/widgets/app_bar.dart';
+import 'package:stocktrack_pro/presentation/stock/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
 class ReportsPage extends StatelessWidget {

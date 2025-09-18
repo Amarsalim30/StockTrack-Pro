@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/domain/entities/catalog/product.dart';
+import 'package:stocktrack_pro/domain/entities/catalog/product.dart';
 
 final List<Product>mockProducts = [
   Product(id: '',

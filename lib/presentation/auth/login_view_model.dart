@@ -1,4 +1,4 @@
-import 'package:clean_arch_app/domain/entities/auth/user.dart';
+import 'package:stocktrack_pro/domain/entities/auth/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/usecases/login_user.dart';
 

@@ -1,4 +1,4 @@
-import '../../../core/constants/api_endpoints.dart';
+import '../../../core/error/exceptions.dart';
 import '../../../core/network/api_client.dart';
 import '../../models/auth/user_model.dart';
 
@@ -80,8 +80,20 @@ class AuthApiImpl implements AuthApi {
   }
 
   @override
-  Future<UserModel> register(String username, String email, String password) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<UserModel> register(String username, String email, String password) async {
+    try {
+      final response = await _apiClient.post(
+        '/auth/register',
+        data: {
+          'username': username,
+          'email': email,
+          'password': password,
+        },
+      );
+
+      return UserModel.fromJson(response.data['user']);
+    } catch (e) {
+      throw ServerException('Registration failed: ${e.toString()}');
+    }
   }
 }

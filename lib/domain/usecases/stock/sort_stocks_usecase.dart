@@ -1,6 +1,6 @@
 // sort_stocks_usecase.dart
-import 'package:clean_arch_app/domain/entities/stock/stock.dart';
-import 'package:clean_arch_app/presentation/stock/stock_state.dart';
+import 'package:stocktrack_pro/domain/entities/stock/stock.dart';
+import 'package:stocktrack_pro/presentation/stock/stock_state.dart';
 
 class SortStocksUseCase {
   List<Stock> call(

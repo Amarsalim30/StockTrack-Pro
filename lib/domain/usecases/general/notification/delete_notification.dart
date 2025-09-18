@@ -1,6 +1,6 @@
 // domain/usecases/notification/delete_notification.dart
-import 'package:clean_arch_app/core/error/failures.dart';
-import 'package:clean_arch_app/domain/repositories/notification_repository.dart';
+import 'package:stocktrack_pro/core/error/failures.dart';
+import 'package:stocktrack_pro/domain/repositories/notification_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class DeleteNotification {
