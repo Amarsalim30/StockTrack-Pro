@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "103793370884",
+    "project_id": "stocktrack-pro-8754b",
+    "storage_bucket": "stocktrack-pro-8754b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103793370884:android:826065a66a4424ab561251",
+        "android_client_info": {
+          "package_name": "com.stocktrackpro.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ_XMA2Il1ikSU0AxUxz09orM_Eeiqpbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

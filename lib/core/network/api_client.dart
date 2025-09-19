@@ -24,7 +24,7 @@ class ApiClient {
         onRequest: (options, handler) async {
           // Add auth token if available
           if (_cacheService != null) {
-            final token = await _cacheService!.getString(CacheKeys.authToken);
+            final token = await _cacheService.getString(CacheKeys.authToken);
             if (token != null) {
               options.headers['Authorization'] = 'Bearer $token';
             }
@@ -35,7 +35,7 @@ class ApiClient {
           // Handle 401 Unauthorized errors
           if (error.response?.statusCode == 401 && _cacheService != null) {
             // Try to refresh token
-            final refreshToken = await _cacheService!.getString(
+            final refreshToken = await _cacheService.getString(
               CacheKeys.refreshToken,
             );
             if (refreshToken != null) {
@@ -50,8 +50,8 @@ class ApiClient {
                 }
               } catch (e) {
                 // Refresh token failed, clear tokens and propagate error
-                await _cacheService!.remove(CacheKeys.authToken);
-                await _cacheService!.remove(CacheKeys.refreshToken);
+                await _cacheService.remove(CacheKeys.authToken);
+                await _cacheService.remove(CacheKeys.refreshToken);
               }
             }
           }
@@ -214,9 +214,9 @@ class ApiClient {
       if (response.data != null && response.data!.containsKey('accessToken')) {
         final newToken = response.data!['accessToken'] as String;
         if (_cacheService != null) {
-          await _cacheService!.setString(CacheKeys.authToken, newToken);
+          await _cacheService.setString(CacheKeys.authToken, newToken);
           if (response.data!.containsKey('refreshToken')) {
-            await _cacheService!.setString(
+            await _cacheService.setString(
               CacheKeys.refreshToken,
               response.data!['refreshToken'] as String,
             );

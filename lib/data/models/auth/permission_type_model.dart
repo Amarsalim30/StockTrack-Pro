@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../../domain/entities/auth/permission_type.dart';
 
+part 'permission_type_model.g.dart';
+
 /// Mirrors the PermissionType enum in domain layer.
 @JsonEnum(alwaysCreate: true)
 enum PermissionTypeModel {

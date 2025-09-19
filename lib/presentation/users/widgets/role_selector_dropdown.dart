@@ -86,10 +86,10 @@ class RoleSelectorDropdown extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: _getRoleColor(selectedRole.toString()).withOpacity(0.1),
+              color: _getRoleColor(selectedRole.toString()).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: _getRoleColor(selectedRole.toString()).withOpacity(0.3),
+                color: _getRoleColor(selectedRole.toString()).withValues(alpha: 0.3),
               ),
             ),
             child: Column(

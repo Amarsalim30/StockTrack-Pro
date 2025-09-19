@@ -50,7 +50,7 @@ class _FiltersSelectionState extends State<FiltersSelection> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
@@ -175,7 +175,7 @@ class _FiltersSelectionState extends State<FiltersSelection> {
       },
       deleteIcon: const Icon(Icons.close, size: 18),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      backgroundColor: color.withOpacity(0.12),
+      backgroundColor: color.withValues(alpha: 0.12),
       labelStyle: TextStyle(
         color: color,
         fontWeight: FontWeight.w500,

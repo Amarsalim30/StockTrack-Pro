@@ -221,7 +221,7 @@ class _SearchControlBarState extends ConsumerState<SearchControlBar>
         child: TextButton(
         style: TextButton.styleFrom(
         backgroundColor: Colors.transparent, // No fill
-        foregroundColor: Colors.blue.withOpacity(0.9), // Slight transparency
+        foregroundColor: Colors.blue.withValues(alpha: 0.9), // Slight transparency
         padding: const EdgeInsets.symmetric(horizontal: 8),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         minimumSize: Size.zero,

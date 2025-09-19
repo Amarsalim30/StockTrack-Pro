@@ -40,7 +40,7 @@ class UserItemCard extends StatelessWidget {
                       style: TextStyle(fontSize: 12)),
                 backgroundColor: _getRoleColor(
                     user.roles.isNotEmpty ? user.roles.first.name : 'Viewer')
-                      .withOpacity(0.2),
+                      .withValues(alpha: 0.2),
                 ),
                 SizedBox(width: 8),
                 if (!user.isActive)

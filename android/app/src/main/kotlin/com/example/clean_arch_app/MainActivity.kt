@@ -1,4 +1,4 @@
-package com.example.clean_arch_app
+package com.stocktrackpro.app
 
 import io.flutter.embedding.android.FlutterActivity
 

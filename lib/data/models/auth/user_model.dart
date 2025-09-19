@@ -12,15 +12,21 @@ class UserModel extends Equatable {
   final String id;
   final String username;
   final String email;
-  final List<RoleModel> roles;
+  final List<RoleModel>? roles;
   final bool isActive;
+  final bool? isEmailVerified;
+  final DateTime? createdAt;
+  final DateTime? lastLoginAt;
 
   const UserModel({
     required this.id,
     required this.username,
     required this.email,
-    required this.roles,
+    this.roles,
     this.isActive = true,
+    this.isEmailVerified,
+    this.createdAt,
+    this.lastLoginAt,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -34,7 +40,9 @@ class UserModel extends Equatable {
     String? email,
     List<RoleModel>? roles,
     bool? isActive,
-    DateTime? updatedAt,
+    bool? isEmailVerified,
+    DateTime? createdAt,
+    DateTime? lastLoginAt,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -42,6 +50,9 @@ class UserModel extends Equatable {
       email: email ?? this.email,
       roles: roles ?? this.roles,
       isActive: isActive ?? this.isActive,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      createdAt: createdAt ?? this.createdAt,
+      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
     );
   }
 
@@ -50,7 +61,7 @@ class UserModel extends Equatable {
     id: id,
     username: username,
     email: email,
-    roles: roles.map((r) => r.toDomain()).toList(),
+    roles: roles?.map((r) => r.toDomain()).toList() ?? [],
     isActive: isActive,
   );
 
@@ -67,10 +78,11 @@ class UserModel extends Equatable {
   static UserModel fromEntity(User user) => fromDomain(user);
 
   bool hasPermission(PermissionType permission) {
+    if (roles == null) return false;
     final permissionModel = PermissionTypeModelExtension.fromDomain(permission);
-    return roles.any((role) => role.permissions.contains(permissionModel));
+    return roles!.any((role) => role.permissions.contains(permissionModel));
   }
 
   @override
-  List<Object?> get props => [id, username, email, roles, isActive];
+  List<Object?> get props => [id, username, email, roles, isActive, isEmailVerified, createdAt, lastLoginAt];
 }

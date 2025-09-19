@@ -10,7 +10,7 @@ class UserMapper {
       id: model.id,
       username: model.username,
       email: model.email,
-      roles: model.roles.map((e) => RoleMapper.toEntity(e)).toList(),
+      roles: model.roles?.map((e) => RoleMapper.toEntity(e)).toList() ?? [],
       isActive: model.isActive,
     );
   }

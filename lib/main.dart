@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
-import 'di/injection.dart'; // if you're using get_it or manual DI
+// import 'di/injection.dart'; // if you're using get_it or manual DI
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,7 @@ void main() async {
   await Hive.initFlutter();
   // Initialize Firebase
   await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
 
   final container = ProviderContainer();

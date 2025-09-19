@@ -100,6 +100,7 @@ class StockRepositoryImpl implements StockRepository {
       return Left(ServerFailure(message: 'Failed to update stock status: $e'));
     }
   }
+  @override
   Future<Either<Failure ,void>> updateMultipleStockStatus(
       List<String> ids, StockStatus status) async {
     try {

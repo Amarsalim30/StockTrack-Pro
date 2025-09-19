@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import '../../../domain/entities/order/return_type.dart';
 
+part 'return_type_model.g.dart';
+
 /// Mirrors the ReturnType enum in domain
 @JsonEnum(alwaysCreate: true)
 enum ReturnTypeModel {

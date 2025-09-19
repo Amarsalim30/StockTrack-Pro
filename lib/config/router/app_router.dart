@@ -7,7 +7,6 @@ import 'package:stocktrack_pro/presentation/stocktake/stocktake_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../di/injection.dart';
 import '../../presentation/auth/login_page.dart';
 import '../../presentation/common/widgets/main_scaffold.dart';
 import '../../presentation/dashboard/dashboard_page.dart';
@@ -19,7 +18,7 @@ import '../../presentation/settings/settings_page.dart';
 import 'route_names.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authViewModelProvider);
+  // final authState = ref.watch(authViewModelProvider);
 
   return GoRouter(
     initialLocation: RouteNames.stock,

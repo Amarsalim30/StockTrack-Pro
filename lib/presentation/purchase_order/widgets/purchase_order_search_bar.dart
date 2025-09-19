@@ -134,12 +134,12 @@ class _IconButtonWithBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isActive ? Colors.blue.withOpacity(0.1) : Colors.white,
+        color: isActive ? Colors.blue.withValues(alpha: 0.1) : Colors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isActive
               ? Colors.blueAccent
-              : Colors.grey.withOpacity(0.3),
+              : Colors.grey.withValues(alpha: 0.3),
         ),
       ),
       child: IconButton(

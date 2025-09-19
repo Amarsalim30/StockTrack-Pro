@@ -174,7 +174,7 @@ class _SupplierDialogState extends ConsumerState<SupplierDialog> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.05),
+                color: theme.colorScheme.primary.withValues(alpha: 0.05),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
@@ -207,7 +207,7 @@ class _SupplierDialogState extends ConsumerState<SupplierDialog> {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
-                color: theme.colorScheme.error.withOpacity(0.1),
+                color: theme.colorScheme.error.withValues(alpha: 0.1),
                 child: Row(
                   children: [
                     Icon(Icons.error_outline, color: theme.colorScheme.error),

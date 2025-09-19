@@ -74,7 +74,7 @@ Widget _buildMinimalAction({
           style: TextStyle(
             color: isPrimary
                 ? Colors.blue // faint blue for primary actions
-                : Colors.white.withOpacity(0.9),
+                : Colors.white.withValues(alpha: 0.9),
             fontSize: 12, // compact
             fontWeight: FontWeight.w400,
           ),

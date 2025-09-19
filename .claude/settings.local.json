@@ -4,7 +4,10 @@
       "Read(//c/Users/USER/Documents/CODING/**)",
       "Bash(flutter analyze:*)",
       "Bash(flutter build:*)",
-      "Bash(flutter clean:*)"
+      "Bash(flutter clean:*)",
+      "Bash(flutter doctor:*)",
+      "Bash(taskkill:*)",
+      "Bash(flutter packages pub run build_runner build:*)"
     ],
     "deny": [],
     "ask": []

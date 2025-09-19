@@ -204,11 +204,11 @@ final purchaseOrderUseCasesProvider = Provider((ref) {
 
 final purchaseOrderViewModelProvider =
 StateNotifierProvider<PurchaseOrderViewModel, PurchaseOrderState>((ref) {
-  final PurchasUseCases = ref.watch(purchaseOrderUseCasesProvider);
-  final authRepo = ref.watch(authRepositoryProvider);
+  final purchaseUseCases = ref.watch(purchaseOrderUseCasesProvider);
+  // final authRepo = ref.watch(authRepositoryProvider);
   return PurchaseOrderViewModel(
-    purchaseOrderUseCases: PurchasUseCases,
-    authRepository: authRepo,
+    purchaseOrderUseCases: purchaseUseCases,
+    authRepository: ref.watch(authRepositoryProvider),
   );
 });
 
@@ -345,7 +345,7 @@ StateNotifierProvider<ProductViewModel, ProductState>((ref) {
   final supplierViewModelProvider =
   StateNotifierProvider<SupplierViewModel, SupplierState>((ref) {
     final usecases = ref.watch(supplierUseCasesProvider);
-    final authRepo = ref.watch(authRepositoryProvider);
+    // final authRepo = ref.watch(authRepositoryProvider);
     return SupplierViewModel(
       useCases: usecases,
       // authRepository: authRepo, useCases: null,

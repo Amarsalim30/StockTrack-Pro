@@ -80,7 +80,7 @@ class _ProfileSection extends ConsumerWidget {
           // Avatar
           CircleAvatar(
             radius: 60,
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             backgroundImage: state.avatarUrl.isNotEmpty
                 ? NetworkImage(state.avatarUrl)
                 : null,
@@ -397,7 +397,7 @@ class _DataManagementSection extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.orange),
             ),

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/exceptions.dart' hide ServerException;
 import '../../core/error/Exceptions.dart';
 import '../../domain/entities/catalog/product.dart';
 import '../../domain/repositories/product_repository.dart';
