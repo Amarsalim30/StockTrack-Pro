@@ -54,4 +54,10 @@ abstract class ProductRepository {
   /// Bulk operations
   Future<Either<Failure, List<Product>>> createMultipleProducts(List<Product> products);
   Future<Either<Failure, void>> deleteMultipleProducts(List<String> productIds);
+
+  /// CSV operations
+  Future<Either<Failure, String>> exportProductsToCsv(List<Product> products);
+  Future<Either<Failure, List<Product>>> importProductsFromCsv(String csvContent);
+  Future<Either<Failure, bool>> validateCsvFormat(String csvContent);
+  Future<Either<Failure, String>> getCsvTemplate();
 }

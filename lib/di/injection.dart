@@ -190,12 +190,13 @@ final stockRepositoryProvider = Provider<StockRepository>((ref) {
 // ─────────────────────────────────────────────
 
 final dashboardViewModelProvider =
-StateNotifierProvider<DashboardViewModel, DashboardState>(
+    StateNotifierProvider<DashboardViewModel, DashboardState>(
       (ref) => DashboardViewModel(),
-);
+    );
 
 final purchaseOrderRepositoryProvider = Provider<PurchaseOrderRepository>((
-    ref) {
+  ref,
+) {
   final api = ref.watch(purchaseOrderApiProvider);
   return PurchaseOrderRepositoryImpl(api);
 });
@@ -214,25 +215,26 @@ final purchaseOrderUseCasesProvider = Provider((ref) {
   );
 });
 
-
 final purchaseOrderViewModelProvider =
-StateNotifierProvider<PurchaseOrderViewModel, PurchaseOrderState>((ref) {
-  final purchaseUseCases = ref.watch(purchaseOrderUseCasesProvider);
-  // final authRepo = ref.watch(authRepositoryProvider);
-  return PurchaseOrderViewModel(
-    purchaseOrderUseCases: purchaseUseCases,
-    authRepository: ref.watch(authRepositoryProvider),
-  );
-});
+    StateNotifierProvider<PurchaseOrderViewModel, PurchaseOrderState>((ref) {
+      final purchaseUseCases = ref.watch(purchaseOrderUseCasesProvider);
+      // final authRepo = ref.watch(authRepositoryProvider);
+      return PurchaseOrderViewModel(
+        purchaseOrderUseCases: purchaseUseCases,
+        authRepository: ref.watch(authRepositoryProvider),
+      );
+    });
 
 final notificationViewModelProvider =
-StateNotifierProvider<NotificationViewModel, NotificationState>((ref) {
-  final usecases = ref.read(notificationUseCasesProvider);
-  return NotificationViewModel(notificationUseCases: usecases);
-});
+    StateNotifierProvider<NotificationViewModel, NotificationState>((ref) {
+      final usecases = ref.read(notificationUseCasesProvider);
+      return NotificationViewModel(notificationUseCases: usecases);
+    });
 
 // Firebase Data Source Provider
-final productFirebaseDataSourceProvider = Provider<ProductFirebaseDataSource>((ref) {
+final productFirebaseDataSourceProvider = Provider<ProductFirebaseDataSource>((
+  ref,
+) {
   return ProductFirebaseDataSourceImpl(FirebaseFirestore.instance);
 });
 
@@ -263,71 +265,72 @@ final productUsecasesProvider = Provider<ProductUseCases>((ref) {
     isSkuExists: IsSkuExistsUseCase(productRepo),
     createMultiple: CreateMultipleProductsUseCase(productRepo),
     deleteMultiple: DeleteMultipleProductsUseCase(productRepo),
+    exportToCsv: ExportProductsToCsvUseCase(productRepo),
+    importFromCsv: ImportProductsFromCsvUseCase(productRepo),
+    validateCsv: ValidateCsvFormatUseCase(productRepo),
+    getCsvTemplate: GetCsvTemplateUseCase(productRepo),
   );
 });
 
 final productViewModelProvider =
-StateNotifierProvider<ProductViewModel, ProductState>((ref) {
-  final usecases = ref.read(productUsecasesProvider);
-  return ProductViewModel(usecases);
+    StateNotifierProvider<ProductViewModel, ProductState>((ref) {
+      final usecases = ref.read(productUsecasesProvider);
+      return ProductViewModel(usecases);
+    });
+
+final stockUsecasesProvider = Provider((ref) {
+  final stockRepo = ref.watch(stockRepositoryProvider);
+  return StockUseCases(
+    addStock: AddStockUseCase(stockRepo),
+    adjustStock: AdjustStockUseCase(stockRepo),
+    deleteMultipleStocks: DeleteMultipleStocksUseCase(stockRepo),
+    deleteStock: DeleteStockUseCase(stockRepo),
+    filterStocks: FilterStocksUseCase(),
+    getAllStocks: GetAllStocksUseCase(stockRepo),
+    getStockById: GetStockByIdUseCase(stockRepo),
+    searchStocks: SearchStocksUseCase(),
+    sortStocks: SortStocksUseCase(),
+    toggleStockSelection: ToggleStockSelectionUseCase(),
+    updateMultipleStockStatus: UpdateMultipleStockStatusUseCase(stockRepo),
+    updateStockStatus: UpdateStockStatusUseCase(stockRepo),
+    updateStock: UpdateStockUseCase(stockRepo),
+  );
+});
+final stockViewModelProvider =
+    StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
+      final stockUseCases = ref.watch(stockUsecasesProvider);
+      final authRepo = ref.watch(authRepositoryProvider);
+      return StockViewModel(
+        stockUseCases: stockUseCases,
+        authRepository: authRepo,
+      );
+    });
+
+final loginViewModelProvider =
+    StateNotifierProvider<LoginViewModel, LoginState>((ref) {
+      final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
+      return LoginViewModel(loginUseCase);
+    });
+
+final authViewModelProvider = StateNotifierProvider<AuthViewModel, AuthState>((
+  ref,
+) {
+  return AuthViewModel(ref.read(authRepositoryProvider));
 });
 
-  final stockUsecasesProvider = Provider((ref) {
-    final stockRepo = ref.watch(stockRepositoryProvider);
-    return StockUseCases(
-      addStock: AddStockUseCase(stockRepo),
-      adjustStock: AdjustStockUseCase(stockRepo),
-      deleteMultipleStocks: DeleteMultipleStocksUseCase(stockRepo),
-      deleteStock: DeleteStockUseCase(stockRepo),
-      filterStocks: FilterStocksUseCase(),
-      getAllStocks: GetAllStocksUseCase(stockRepo),
-      getStockById: GetStockByIdUseCase(stockRepo),
-      searchStocks: SearchStocksUseCase(),
-      sortStocks: SortStocksUseCase(),
-      toggleStockSelection: ToggleStockSelectionUseCase(),
-      updateMultipleStockStatus:
-      UpdateMultipleStockStatusUseCase(stockRepo),
-      updateStockStatus: UpdateStockStatusUseCase(stockRepo),
-      updateStock: UpdateStockUseCase(stockRepo),
-    );
-  });
-  final stockViewModelProvider =
-  StateNotifierProvider.autoDispose<StockViewModel, StockState>((ref) {
-    final stockUseCases = ref.watch(stockUsecasesProvider);
-    final authRepo = ref.watch(authRepositoryProvider);
-    return StockViewModel(
-      stockUseCases: stockUseCases,
-      authRepository: authRepo,
-    );
-  });
-
-  final loginViewModelProvider =
-  StateNotifierProvider<LoginViewModel, LoginState>((ref) {
-    final loginUseCase = LoginUser(ref.watch(authRepositoryProvider));
-    return LoginViewModel(loginUseCase);
-  });
-
-  final authViewModelProvider =
-  StateNotifierProvider<AuthViewModel, AuthState>((ref) {
-    return AuthViewModel(ref.read(authRepositoryProvider));
-  });
-
-
-  final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
-    final api = ref.watch(stockTakeApiProvider);
-    final networkInfo = ref.watch(networkInfoProvider);
-    return StockTakeRepositoryImpl(stockTakeApi: api, networkInfo: networkInfo);
-    // you probably want to pass real NetworkInfo instead of null
-  });
-
+final stockTakeRepositoryProvider = Provider<StockTakeRepository>((ref) {
+  final api = ref.watch(stockTakeApiProvider);
+  final networkInfo = ref.watch(networkInfoProvider);
+  return StockTakeRepositoryImpl(stockTakeApi: api, networkInfo: networkInfo);
+  // you probably want to pass real NetworkInfo instead of null
+});
 
 // Provider definition
-  final stockTakeViewModelProvider =
-  StateNotifierProvider<StockTakeViewModel, StockTakeState>((ref) {
-    final repository = ref.watch(stockTakeRepositoryProvider);
-    return StockTakeViewModel(repository);
-  });
-
+final stockTakeViewModelProvider =
+    StateNotifierProvider<StockTakeViewModel, StockTakeState>((ref) {
+      final repository = ref.watch(stockTakeRepositoryProvider);
+      return StockTakeViewModel(repository);
+    });
 
 final supplierApiProvider = Provider<SupplierApi>((ref) {
   final apiClient = ref.watch(apiClientProvider);
@@ -395,19 +398,20 @@ final unitUseCasesProvider = Provider<UnitUseCases>((ref) {
 // ─────────────────────────────────────────────
 
 final supplierViewModelProvider =
-StateNotifierProvider<SupplierViewModel, SupplierState>((ref) {
-  final usecases = ref.watch(supplierUseCasesProvider);
-  return SupplierViewModel(useCases: usecases);
-});
+    StateNotifierProvider<SupplierViewModel, SupplierState>((ref) {
+      final usecases = ref.watch(supplierUseCasesProvider);
+      return SupplierViewModel(useCases: usecases);
+    });
 
 final categoryViewModelProvider =
-StateNotifierProvider<CategoryViewModel, CategoryState>((ref) {
-  final usecases = ref.watch(categoryUseCasesProvider);
-  return CategoryViewModel(usecases);
-});
+    StateNotifierProvider<CategoryViewModel, CategoryState>((ref) {
+      final usecases = ref.watch(categoryUseCasesProvider);
+      return CategoryViewModel(usecases);
+    });
 
-final unitViewModelProvider =
-StateNotifierProvider<UnitViewModel, UnitState>((ref) {
+final unitViewModelProvider = StateNotifierProvider<UnitViewModel, UnitState>((
+  ref,
+) {
   final usecases = ref.watch(unitUseCasesProvider);
   return UnitViewModel(usecases);
 });

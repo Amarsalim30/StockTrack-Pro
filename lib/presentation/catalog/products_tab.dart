@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stocktrack_pro/presentation/catalog/product/product_view_model.dart';
 import '../../domain/entities/catalog/product.dart';
 import '../../di/injection.dart';
 import 'product/add_product_dialog.dart';
 import 'product/edit_product_dialog.dart';
 import 'product/product_filter_dialog.dart';
 import 'product/product_state.dart';
+import 'product/csv_import_export_dialog.dart';
+import 'product/enhanced_product_card.dart';
 
 class ProductsTab extends ConsumerWidget {
   const ProductsTab({super.key});
@@ -35,7 +38,8 @@ class ProductsTab extends ConsumerWidget {
                       alignment: Alignment.center,
                       children: [
                         const Icon(Icons.search, size: 20),
-                        if (productsState.loadingState == ProductLoadingState.loading)
+                        if (productsState.loadingState ==
+                            ProductLoadingState.loading)
                           const SizedBox(
                             width: 16,
                             height: 16,
@@ -112,18 +116,81 @@ class ProductsTab extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: vm.clearError,
-                  child: Text('Dismiss', style: TextStyle(color: Colors.red[700])),
+                  child: Text(
+                    'Dismiss',
+                    style: TextStyle(color: Colors.red[700]),
+                  ),
                 ),
               ],
             ),
           ),
 
-        // Add Product Button (FAB-style)
+        // Action Buttons
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // CSV Actions
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.upload_file),
+                    label: const Text('Import CSV'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const CsvImportExportDialog(
+                          products: [],
+                          isExport: false,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.download),
+                    label: const Text('Export CSV'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                    ),
+                    onPressed: productsState.hasProducts
+                        ? () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CsvImportExportDialog(
+                                products: productsState.products,
+                                isExport: true,
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                ],
+              ),
+
+              // Add Product Button
               ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('Add Product'),
@@ -134,7 +201,10 @@ class ProductsTab extends ConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                 ),
                 onPressed: () {
                   showDialog(
@@ -147,24 +217,34 @@ class ProductsTab extends ConsumerWidget {
           ),
         ),
 
+        // Bulk Actions Bar
+        if (productsState.hasSelectedProducts)
+          _buildBulkActionsBar(context, vm, productsState),
+
         // Product List / Cards
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: RefreshIndicator(
               onRefresh: vm.fetchAllProducts,
-              child: productsState.loadingState == ProductLoadingState.loading && products.isEmpty
+              child:
+                  productsState.loadingState == ProductLoadingState.loading &&
+                      products.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : products.isEmpty
                   ? _buildEmptyState(context, vm)
                   : ListView.separated(
-                itemCount: products.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 8),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return _productCard(context, product, vm, productsState);
-                },
-              ),
+                      itemCount: products.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return EnhancedProductCard(
+                          product: product,
+                          state: productsState,
+                          vm: vm,
+                        );
+                      },
+                    ),
             ),
           ),
         ),
@@ -172,109 +252,105 @@ class ProductsTab extends ConsumerWidget {
     );
   }
 
-  Widget _productCard(BuildContext context, Product product, dynamic vm, ProductState state) {
-    final isDeleting = state.isProductDeleting(product.id);
-
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 2,
-      color: Colors.white,
-      child: Stack(
+  Widget _buildBulkActionsBar(
+    BuildContext context,
+    ProductViewModel vm,
+    ProductState state,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0E2330).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF0E2330).withOpacity(0.3)),
+      ),
+      child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-            // Top Row: Product Name + Actions
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    product.name,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      showDialog(
-                        context: context,
-                        builder: (context) => EditProductDialog(product: product),
-                      );
-                    } else if (value == 'delete') {
-                      _showDeleteConfirmation(context, product, vm);
-                    }
-                  },
-                  itemBuilder: (_) => const [
-                    PopupMenuItem(value: 'edit', child: Text('Edit')),
-                    PopupMenuItem(value: 'delete', child: Text('Delete')),
-                  ],
-                  icon: const Icon(Icons.more_vert, size: 20),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-
-            // Metadata Row: SKU, Category, Unit, Supplier
-            Wrap(
-              spacing: 12,
-              runSpacing: 6,
-              children: [
-                _chipLabel('SKU', product.sku),
-                _chipLabel('Category', product.categoryId),
-                _chipLabel('Unit', product.unitId),
-                _chipLabel('Supplier', product.supplierId),
-                if (product.price != null) _chipLabel('Price', '\$${product.price!.toStringAsFixed(2)}'),
-                if (!product.isActive) _chipLabel('Status', 'Inactive'),
-              ],
-            ),
-
-            if (product.description != null && product.description!.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Text(
-                product.description!,
-                style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-              ],
+          Icon(Icons.check_circle, color: const Color(0xFF0E2330), size: 20),
+          const SizedBox(width: 8),
+          Text(
+            '${state.selectedProductsCount} products selected',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0E2330),
             ),
           ),
-          if (isDeleting)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(10),
+          const Spacer(),
+          Row(
+            children: [
+              // Select All button
+              TextButton.icon(
+                onPressed: () => vm.selectAllProducts(),
+                icon: const Icon(Icons.select_all, size: 16),
+                label: const Text('Select All'),
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF0E2330),
                 ),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+              const SizedBox(width: 8),
+              // Clear Selection button
+              TextButton.icon(
+                onPressed: () => vm.clearSelection(),
+                icon: const Icon(Icons.clear, size: 16),
+                label: const Text('Clear'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.grey.shade600,
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Delete Selected button
+              ElevatedButton.icon(
+                onPressed: state.isBulkOperating
+                    ? null
+                    : () => _confirmBulkDelete(context, vm),
+                icon: const Icon(Icons.delete, size: 16),
+                label: const Text('Delete Selected'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
-            ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _chipLabel(String label, String? value) {
-    return Chip(
-      label: Text(
-        '$label: ${value ?? "-"}',
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+  void _confirmBulkDelete(BuildContext context, ProductViewModel vm) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Selected Products'),
+        content: Text(
+          'Are you sure you want to delete ${vm.state.selectedProductsCount} products? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              vm.deleteSelectedProducts();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete All'),
+          ),
+        ],
       ),
-      backgroundColor: const Color(0xFFF3F4F6),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.compact,
     );
-  }Widget _buildEmptyState(BuildContext context, dynamic vm) {
+  }
+
+  Widget _buildEmptyState(BuildContext context, dynamic vm) {
     return ListView(
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.2),
@@ -282,15 +358,19 @@ class ProductsTab extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.inventory_2_outlined, size: 48, color: Colors.grey.shade400),
+              Icon(
+                Icons.inventory_2_outlined,
+                size: 48,
+                color: Colors.grey.shade400,
+              ),
               const SizedBox(height: 12),
               Text(
                 'No products found',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey.shade700,
-                  fontWeight: FontWeight.w700
-                )
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: 6),
               Text(
@@ -308,7 +388,10 @@ class ProductsTab extends ConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                 ),
                 onPressed: () {
                   showDialog(
@@ -324,7 +407,11 @@ class ProductsTab extends ConsumerWidget {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, Product product, dynamic vm) {
+  void _showDeleteConfirmation(
+    BuildContext context,
+    Product product,
+    dynamic vm,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -359,4 +446,3 @@ class ProductsTab extends ConsumerWidget {
     );
   }
 }
-

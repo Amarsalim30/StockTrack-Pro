@@ -4,6 +4,7 @@ import '../../../domain/repositories/product_repository.dart';
 import '../../../core/error/failures.dart';
 import '../../datasources/remote/catalog/product_firebase_data_source.dart';
 import '../../mappers/catalog/product_mapper.dart';
+import '../../services/csv_service.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   final ProductFirebaseDataSource _firebaseDataSource;
@@ -184,7 +185,68 @@ class ProductRepositoryImpl implements ProductRepository {
     return await _firebaseDataSource.deleteMultipleProducts(productIds);
   }
 
+  @override
+  Future<Either<Failure, String>> exportProductsToCsv(List<Product> products) async {
+    return CsvService.exportProductsToCsv(products);
+  }
+
+  @override
+  Future<Either<Failure, List<Product>>> importProductsFromCsv(String csvContent) async {
+    final parseResult = CsvService.importProductsFromCsv(csvContent);
+    return parseResult.fold(
+      (failure) => Left(failure),
+      (products) async {
+        // Validate and create products
+        final validationResult = _validateProducts(products);
+        if (validationResult != null) {
+          return Left(validationResult);
+        }
+
+        // Check for duplicate SKUs
+        final skus = products.map((p) => p.sku).toList();
+        final uniqueSkus = skus.toSet();
+        if (skus.length != uniqueSkus.length) {
+          return const Left(ValidationFailure(message: 'Duplicate SKUs found in CSV'));
+        }
+
+        // Check if any SKUs already exist in database
+        for (final product in products) {
+          final skuCheckResult = await _firebaseDataSource.isSkuExists(product.sku);
+          final skuExists = skuCheckResult.fold(
+            (_) => false,
+            (exists) => exists,
+          );
+          if (skuExists) {
+            return Left(ValidationFailure(message: 'SKU "${product.sku}" already exists'));
+          }
+        }
+
+        return Right(products);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, bool>> validateCsvFormat(String csvContent) async {
+    return CsvService.validateCsvFormat(csvContent);
+  }
+
+  @override
+  Future<Either<Failure, String>> getCsvTemplate() async {
+    return CsvService.getCsvTemplate();
+  }
+
   // Validation helper
+  ValidationFailure? _validateProducts(List<Product> products) {
+    for (final product in products) {
+      final validationResult = _validateProduct(product);
+      if (validationResult != null) {
+        return validationResult;
+      }
+    }
+    return null;
+  }
+
   ValidationFailure? _validateProduct(Product product) {
     if (product.name.trim().isEmpty) {
       return const ValidationFailure(message: 'Product name cannot be empty');

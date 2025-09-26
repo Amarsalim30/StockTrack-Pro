@@ -54,8 +54,7 @@ class DeleteProductUseCase implements ProductUseCase<void, String> {
   DeleteProductUseCase(this.repository);
 
   @override
-  Future<Either<Failure, void>> call(String id) =>
-      repository.deleteProduct(id);
+  Future<Either<Failure, void>> call(String id) => repository.deleteProduct(id);
 }
 
 /// Search products
@@ -69,7 +68,8 @@ class SearchProductsUseCase implements ProductUseCase<List<Product>, String> {
 }
 
 /// Get products by category
-class GetProductsByCategoryUseCase implements ProductUseCase<List<Product>, String> {
+class GetProductsByCategoryUseCase
+    implements ProductUseCase<List<Product>, String> {
   final ProductRepository repository;
   GetProductsByCategoryUseCase(this.repository);
 
@@ -79,7 +79,8 @@ class GetProductsByCategoryUseCase implements ProductUseCase<List<Product>, Stri
 }
 
 /// Get products by supplier
-class GetProductsBySupplierUseCase implements ProductUseCase<List<Product>, String> {
+class GetProductsBySupplierUseCase
+    implements ProductUseCase<List<Product>, String> {
   final ProductRepository repository;
   GetProductsBySupplierUseCase(this.repository);
 
@@ -89,7 +90,8 @@ class GetProductsBySupplierUseCase implements ProductUseCase<List<Product>, Stri
 }
 
 /// Get products by unit
-class GetProductsByUnitUseCase implements ProductUseCase<List<Product>, String> {
+class GetProductsByUnitUseCase
+    implements ProductUseCase<List<Product>, String> {
   final ProductRepository repository;
   GetProductsByUnitUseCase(this.repository);
 
@@ -109,7 +111,8 @@ class GetActiveProductsUseCase implements ProductUseCase<List<Product>, void> {
 }
 
 /// Get inactive products
-class GetInactiveProductsUseCase implements ProductUseCase<List<Product>, void> {
+class GetInactiveProductsUseCase
+    implements ProductUseCase<List<Product>, void> {
   final ProductRepository repository;
   GetInactiveProductsUseCase(this.repository);
 
@@ -119,7 +122,8 @@ class GetInactiveProductsUseCase implements ProductUseCase<List<Product>, void> 
 }
 
 /// Low stock products
-class GetLowStockProductsUseCase implements ProductUseCase<List<Product>, void> {
+class GetLowStockProductsUseCase
+    implements ProductUseCase<List<Product>, void> {
   final ProductRepository repository;
   GetLowStockProductsUseCase(this.repository);
 
@@ -129,7 +133,8 @@ class GetLowStockProductsUseCase implements ProductUseCase<List<Product>, void> 
 }
 
 /// Out of stock products
-class GetOutOfStockProductsUseCase implements ProductUseCase<List<Product>, void> {
+class GetOutOfStockProductsUseCase
+    implements ProductUseCase<List<Product>, void> {
   final ProductRepository repository;
   GetOutOfStockProductsUseCase(this.repository);
 
@@ -152,11 +157,12 @@ class GetProductsByPriceRangeUseCase
   GetProductsByPriceRangeUseCase(this.repository);
 
   @override
-  Future<Either<Failure, List<Product>>> call(GetProductsByPriceRangeParams params) =>
-      repository.getProductsByPriceRange(
-        minPrice: params.minPrice,
-        maxPrice: params.maxPrice,
-      );
+  Future<Either<Failure, List<Product>>> call(
+    GetProductsByPriceRangeParams params,
+  ) => repository.getProductsByPriceRange(
+    minPrice: params.minPrice,
+    maxPrice: params.maxPrice,
+  );
 }
 
 /// Check if SKU exists
@@ -172,12 +178,13 @@ class IsSkuExistsUseCase implements ProductUseCase<bool, IsSkuExistsParams> {
   IsSkuExistsUseCase(this.repository);
 
   @override
-  Future<Either<Failure, bool>> call(IsSkuExistsParams params) =>
-      repository.isSkuExists(params.sku, excludeProductId: params.excludeProductId);
+  Future<Either<Failure, bool>> call(IsSkuExistsParams params) => repository
+      .isSkuExists(params.sku, excludeProductId: params.excludeProductId);
 }
 
 /// Create multiple products
-class CreateMultipleProductsUseCase implements ProductUseCase<List<Product>, List<Product>> {
+class CreateMultipleProductsUseCase
+    implements ProductUseCase<List<Product>, List<Product>> {
   final ProductRepository repository;
   CreateMultipleProductsUseCase(this.repository);
 
@@ -187,11 +194,54 @@ class CreateMultipleProductsUseCase implements ProductUseCase<List<Product>, Lis
 }
 
 /// Delete multiple products
-class DeleteMultipleProductsUseCase implements ProductUseCase<void, List<String>> {
+class DeleteMultipleProductsUseCase
+    implements ProductUseCase<void, List<String>> {
   final ProductRepository repository;
   DeleteMultipleProductsUseCase(this.repository);
 
   @override
   Future<Either<Failure, void>> call(List<String> productIds) =>
       repository.deleteMultipleProducts(productIds);
+}
+
+/// Export products to CSV
+class ExportProductsToCsvUseCase
+    implements ProductUseCase<String, List<Product>> {
+  final ProductRepository repository;
+  ExportProductsToCsvUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, String>> call(List<Product> products) =>
+      repository.exportProductsToCsv(products);
+}
+
+/// Import products from CSV
+class ImportProductsFromCsvUseCase
+    implements ProductUseCase<List<Product>, String> {
+  final ProductRepository repository;
+  ImportProductsFromCsvUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, List<Product>>> call(String csvContent) =>
+      repository.importProductsFromCsv(csvContent);
+}
+
+/// Validate CSV format
+class ValidateCsvFormatUseCase implements ProductUseCase<bool, String> {
+  final ProductRepository repository;
+  ValidateCsvFormatUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, bool>> call(String csvContent) =>
+      repository.validateCsvFormat(csvContent);
+}
+
+/// Get CSV template
+class GetCsvTemplateUseCase implements ProductUseCase<String, void> {
+  final ProductRepository repository;
+  GetCsvTemplateUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, String>> call(void params) =>
+      repository.getCsvTemplate();
 }

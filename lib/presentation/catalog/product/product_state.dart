@@ -10,6 +10,9 @@ enum ProductLoadingState {
   deleting,
   searching,
   bulk,
+  importing,
+  exporting,
+  validating,
 }
 
 enum ProductSortOption {
@@ -22,10 +25,7 @@ enum ProductSortOption {
   supplier,
 }
 
-enum SortDirection {
-  ascending,
-  descending,
-}
+enum SortDirection { ascending, descending }
 
 class ProductState extends Equatable {
   final ProductLoadingState loadingState;
@@ -40,6 +40,10 @@ class ProductState extends Equatable {
   final SortDirection sortDirection;
   final bool showInactiveProducts;
   final Product? selectedProduct;
+  final String? csvTemplate;
+  final String? csvValidationError;
+  final int? csvImportProgress;
+  final int? csvTotalRows;
 
   const ProductState({
     this.loadingState = ProductLoadingState.idle,
@@ -54,6 +58,10 @@ class ProductState extends Equatable {
     this.sortDirection = SortDirection.ascending,
     this.showInactiveProducts = false,
     this.selectedProduct,
+    this.csvTemplate,
+    this.csvValidationError,
+    this.csvImportProgress,
+    this.csvTotalRows,
   });
 
   // Computed properties
@@ -65,8 +73,17 @@ class ProductState extends Equatable {
   bool get isDeleting => loadingState == ProductLoadingState.deleting;
   bool get isSearching => loadingState == ProductLoadingState.searching;
   bool get isBulkOperating => loadingState == ProductLoadingState.bulk;
+  bool get isImporting => loadingState == ProductLoadingState.importing;
+  bool get isExporting => loadingState == ProductLoadingState.exporting;
+  bool get isValidating => loadingState == ProductLoadingState.validating;
   bool get hasSelectedProducts => selectedProductIds.isNotEmpty;
   bool get hasProducts => products.isNotEmpty;
+  bool get hasCsvValidationError =>
+      csvValidationError != null && csvValidationError!.isNotEmpty;
+  double get csvImportProgressPercentage =>
+      csvTotalRows != null && csvTotalRows! > 0
+      ? (csvImportProgress ?? 0) / csvTotalRows!
+      : 0.0;
 
   bool isProductDeleting(String productId) =>
       isDeleting && deletingProductId == productId;
@@ -83,27 +100,35 @@ class ProductState extends Equatable {
       final queryLower = searchQuery.toLowerCase();
       result = result.where((product) {
         return product.name.toLowerCase().contains(queryLower) ||
-               product.sku.toLowerCase().contains(queryLower) ||
-               (product.description?.toLowerCase().contains(queryLower) ?? false);
+            product.sku.toLowerCase().contains(queryLower) ||
+            (product.description?.toLowerCase().contains(queryLower) ?? false);
       }).toList();
     }
 
     // Apply filters
     if (filters != null) {
       if (filters!.categoryId != null) {
-        result = result.where((p) => p.categoryId == filters!.categoryId).toList();
+        result = result
+            .where((p) => p.categoryId == filters!.categoryId)
+            .toList();
       }
       if (filters!.supplierId != null) {
-        result = result.where((p) => p.supplierId == filters!.supplierId).toList();
+        result = result
+            .where((p) => p.supplierId == filters!.supplierId)
+            .toList();
       }
       if (filters!.unitId != null) {
         result = result.where((p) => p.unitId == filters!.unitId).toList();
       }
       if (filters!.minPrice != null) {
-        result = result.where((p) => p.price != null && p.price! >= filters!.minPrice!).toList();
+        result = result
+            .where((p) => p.price != null && p.price! >= filters!.minPrice!)
+            .toList();
       }
       if (filters!.maxPrice != null) {
-        result = result.where((p) => p.price != null && p.price! <= filters!.maxPrice!).toList();
+        result = result
+            .where((p) => p.price != null && p.price! <= filters!.maxPrice!)
+            .toList();
       }
       if (!showInactiveProducts) {
         result = result.where((p) => p.isActive).toList();
@@ -121,12 +146,14 @@ class ProductState extends Equatable {
           comparison = a.sku.compareTo(b.sku);
           break;
         case ProductSortOption.createdDate:
-          comparison = (a.createdAt ?? DateTime.now())
-              .compareTo(b.createdAt ?? DateTime.now());
+          comparison = (a.createdAt ?? DateTime.now()).compareTo(
+            b.createdAt ?? DateTime.now(),
+          );
           break;
         case ProductSortOption.updatedDate:
-          comparison = (a.updatedAt ?? DateTime.now())
-              .compareTo(b.updatedAt ?? DateTime.now());
+          comparison = (a.updatedAt ?? DateTime.now()).compareTo(
+            b.updatedAt ?? DateTime.now(),
+          );
           break;
         case ProductSortOption.price:
           comparison = (a.price ?? 0.0).compareTo(b.price ?? 0.0);
@@ -138,7 +165,9 @@ class ProductState extends Equatable {
           comparison = a.supplierId.compareTo(b.supplierId);
           break;
       }
-      return sortDirection == SortDirection.ascending ? comparison : -comparison;
+      return sortDirection == SortDirection.ascending
+          ? comparison
+          : -comparison;
     });
 
     return result;
@@ -162,6 +191,10 @@ class ProductState extends Equatable {
     SortDirection? sortDirection,
     bool? showInactiveProducts,
     Product? selectedProduct,
+    String? csvTemplate,
+    String? csvValidationError,
+    int? csvImportProgress,
+    int? csvTotalRows,
   }) {
     return ProductState(
       loadingState: loadingState ?? this.loadingState,
@@ -176,22 +209,26 @@ class ProductState extends Equatable {
       sortDirection: sortDirection ?? this.sortDirection,
       showInactiveProducts: showInactiveProducts ?? this.showInactiveProducts,
       selectedProduct: selectedProduct,
+      csvTemplate: csvTemplate ?? this.csvTemplate,
+      csvValidationError: csvValidationError,
+      csvImportProgress: csvImportProgress,
+      csvTotalRows: csvTotalRows,
     );
   }
 
   @override
   List<Object?> get props => [
-        loadingState,
-        products,
-        allProducts,
-        error,
-        searchQuery,
-        filters,
-        deletingProductId,
-        selectedProductIds,
-        sortOption,
-        sortDirection,
-        showInactiveProducts,
-        selectedProduct,
-      ];
+    loadingState,
+    products,
+    allProducts,
+    error,
+    searchQuery,
+    filters,
+    deletingProductId,
+    selectedProductIds,
+    sortOption,
+    sortDirection,
+    showInactiveProducts,
+    selectedProduct,
+  ];
 }

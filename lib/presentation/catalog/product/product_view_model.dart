@@ -230,13 +230,12 @@ class ProductViewModel extends StateNotifier<ProductState> {
   Future<void> deleteSelectedProducts() async {
     if (state.selectedProductIds.isEmpty) return;
 
-    state = state.copyWith(
-      loadingState: ProductLoadingState.bulk,
-      error: null,
-    );
+    state = state.copyWith(loadingState: ProductLoadingState.bulk, error: null);
 
     try {
-      final result = await useCases.deleteMultiple.call(state.selectedProductIds);
+      final result = await useCases.deleteMultiple.call(
+        state.selectedProductIds,
+      );
       result.fold(
         (failure) => state = state.copyWith(
           loadingState: ProductLoadingState.idle,
@@ -259,10 +258,7 @@ class ProductViewModel extends StateNotifier<ProductState> {
   }
 
   Future<void> createMultipleProducts(List<Product> products) async {
-    state = state.copyWith(
-      loadingState: ProductLoadingState.bulk,
-      error: null,
-    );
+    state = state.copyWith(loadingState: ProductLoadingState.bulk, error: null);
 
     try {
       final result = await useCases.createMultiple.call(products);
@@ -381,9 +377,7 @@ class ProductViewModel extends StateNotifier<ProductState> {
 
   // Status management
   void toggleShowInactiveProducts() {
-    state = state.copyWith(
-      showInactiveProducts: !state.showInactiveProducts,
-    );
+    state = state.copyWith(showInactiveProducts: !state.showInactiveProducts);
     _updateFilteredProducts();
   }
 
@@ -438,6 +432,157 @@ class ProductViewModel extends StateNotifier<ProductState> {
 
   void clearSelectedProduct() {
     state = state.copyWith(selectedProduct: null);
+  }
+
+  // CSV Operations
+  Future<void> exportProductsToCsv(List<Product> products) async {
+    state = state.copyWith(
+      loadingState: ProductLoadingState.exporting,
+      error: null,
+    );
+
+    try {
+      final result = await useCases.exportToCsv.call(products);
+      result.fold(
+        (failure) => state = state.copyWith(
+          loadingState: ProductLoadingState.idle,
+          error: failure.message ?? 'Failed to export products to CSV',
+        ),
+        (csvContent) {
+          state = state.copyWith(
+            loadingState: ProductLoadingState.idle,
+            csvTemplate: csvContent,
+            error: null,
+          );
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(
+        loadingState: ProductLoadingState.idle,
+        error: 'Unexpected error occurred: $e',
+      );
+    }
+  }
+
+  Future<void> importProductsFromCsv(String csvContent) async {
+    state = state.copyWith(
+      loadingState: ProductLoadingState.importing,
+      error: null,
+      csvValidationError: null,
+    );
+
+    try {
+      // First validate the CSV format
+      final validationResult = await useCases.validateCsv.call(csvContent);
+      final isValid = validationResult.fold((failure) {
+        state = state.copyWith(
+          loadingState: ProductLoadingState.idle,
+          csvValidationError: failure.message ?? 'CSV validation failed',
+        );
+        return false;
+      }, (valid) => valid);
+
+      if (!isValid) return;
+
+      // Parse products from CSV
+      final parseResult = await useCases.importFromCsv.call(csvContent);
+      parseResult.fold(
+        (failure) => state = state.copyWith(
+          loadingState: ProductLoadingState.idle,
+          error: failure.message ?? 'Failed to parse CSV content',
+        ),
+        (products) async {
+          // Create products in batches
+          final batchSize = 10;
+          final totalBatches = (products.length / batchSize).ceil();
+
+          for (int i = 0; i < totalBatches; i++) {
+            final start = i * batchSize;
+            final end = (start + batchSize).clamp(0, products.length);
+            final batch = products.sublist(start, end);
+
+            state = state.copyWith(
+              csvImportProgress: start,
+              csvTotalRows: products.length,
+            );
+
+            await createMultipleProducts(batch);
+          }
+
+          state = state.copyWith(
+            loadingState: ProductLoadingState.idle,
+            csvImportProgress: null,
+            csvTotalRows: null,
+          );
+          await fetchAllProducts(); // Refresh the list
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(
+        loadingState: ProductLoadingState.idle,
+        error: 'Unexpected error occurred: $e',
+      );
+    }
+  }
+
+  Future<void> getCsvTemplate() async {
+    state = state.copyWith(
+      loadingState: ProductLoadingState.validating,
+      error: null,
+    );
+
+    try {
+      final result = await useCases.getCsvTemplate.call(null);
+      result.fold(
+        (failure) => state = state.copyWith(
+          loadingState: ProductLoadingState.idle,
+          error: failure.message ?? 'Failed to get CSV template',
+        ),
+        (template) {
+          state = state.copyWith(
+            loadingState: ProductLoadingState.idle,
+            csvTemplate: template,
+            error: null,
+          );
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(
+        loadingState: ProductLoadingState.idle,
+        error: 'Unexpected error occurred: $e',
+      );
+    }
+  }
+
+  Future<bool> validateCsvContent(String csvContent) async {
+    try {
+      final result = await useCases.validateCsv.call(csvContent);
+      return result.fold(
+        (failure) {
+          state = state.copyWith(
+            csvValidationError: failure.message ?? 'CSV validation failed',
+          );
+          return false;
+        },
+        (valid) {
+          state = state.copyWith(csvValidationError: null);
+          return valid;
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(
+        csvValidationError: 'Unexpected error occurred: $e',
+      );
+      return false;
+    }
+  }
+
+  void clearCsvValidationError() {
+    state = state.copyWith(csvValidationError: null);
+  }
+
+  void clearCsvTemplate() {
+    state = state.copyWith(csvTemplate: null);
   }
 
   // Error handling

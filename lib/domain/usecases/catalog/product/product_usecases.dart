@@ -27,6 +27,12 @@ class ProductUseCases {
   final CreateMultipleProductsUseCase createMultiple;
   final DeleteMultipleProductsUseCase deleteMultiple;
 
+  // CSV operations
+  final ExportProductsToCsvUseCase exportToCsv;
+  final ImportProductsFromCsvUseCase importFromCsv;
+  final ValidateCsvFormatUseCase validateCsv;
+  final GetCsvTemplateUseCase getCsvTemplate;
+
   ProductUseCases({
     required this.getAll,
     required this.getById,
@@ -45,5 +51,9 @@ class ProductUseCases {
     required this.isSkuExists,
     required this.createMultiple,
     required this.deleteMultiple,
+    required this.exportToCsv,
+    required this.importFromCsv,
+    required this.validateCsv,
+    required this.getCsvTemplate,
   });
 }
