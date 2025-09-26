@@ -1,7 +1,6 @@
 // domain/usecases/notification/notification_usecases.dart
 import 'package:stocktrack_pro/domain/repositories/notification_repository.dart';
 import 'package:stocktrack_pro/domain/usecases/general/notification/mark_all_as_read.dart';
-import 'package:dartz/dartz.dart';
 
 import 'get_notifications.dart';
 import 'mark_as_read.dart';

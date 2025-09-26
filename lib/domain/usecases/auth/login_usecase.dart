@@ -1,4 +1,3 @@
-import 'package:stocktrack_pro/core/error/failures.dart';
 import 'package:stocktrack_pro/domain/entities/auth/user.dart';
 import 'package:stocktrack_pro/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';

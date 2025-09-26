@@ -4,7 +4,6 @@ import '../../core/constants/strings.dart';
 import '../../core/constants/sizes.dart';
 import '../../core/utils/validators.dart';
 import '../common/widgets/app_button.dart';
-import 'login_view_model.dart';
 import '../../di/injection.dart';
 
 class LoginPage extends ConsumerStatefulWidget {

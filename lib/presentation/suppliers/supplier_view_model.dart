@@ -93,6 +93,27 @@ class SupplierViewModel extends StateNotifier<SupplierState> {
   void clearFilters() {
     loadSuppliers(); // Reload all suppliers
   }
+
+  void updateSearch(String query) {
+    if (query.isEmpty) {
+      loadSuppliers(); // Reload all suppliers if search is empty
+    } else {
+      searchSuppliers(query);
+    }
+  }
+
+  void clearError() {
+    state = state.copyWith(error: null);
+  }
+
+  Future<void> fetchAllSuppliers() async {
+    return loadSuppliers();
+  }
+
+  // Alias methods for consistency with other view models
+  Future<void> addSupplier(Supplier supplier) async {
+    return addNewSupplier(supplier);
+  }
 }
 
 

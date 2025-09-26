@@ -7,6 +7,8 @@ class Supplier extends Equatable {
   final Map<String, String>? contactInfo;
   final double? rating;
   final String? paymentTerms;
+  final bool isActive;
+  final String? address;
 
   const Supplier({
     required this.id,
@@ -14,6 +16,8 @@ class Supplier extends Equatable {
     this.contactInfo,
     this.rating,
     this.paymentTerms,
+    this.isActive = true,
+    this.address,
   });
 
   Supplier copyWith({
@@ -22,6 +26,8 @@ class Supplier extends Equatable {
     Map<String, String>? contactInfo,
     double? rating,
     String? paymentTerms,
+    bool? isActive,
+    String? address,
   }) {
     return Supplier(
       id: id ?? this.id,
@@ -29,9 +35,11 @@ class Supplier extends Equatable {
       contactInfo: contactInfo ?? this.contactInfo,
       rating: rating ?? this.rating,
       paymentTerms: paymentTerms ?? this.paymentTerms,
+      isActive: isActive ?? this.isActive,
+      address: address ?? this.address,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, contactInfo, rating, paymentTerms];
+  List<Object?> get props => [id, name, contactInfo, rating, paymentTerms, isActive, address];
 }

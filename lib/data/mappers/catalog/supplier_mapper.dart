@@ -7,6 +7,11 @@ class SupplierMapper {
     return Supplier(
       id: model.id,
       name: model.name,
+      contactInfo: model.contactInfo,
+      rating: model.rating,
+      paymentTerms: model.paymentTerms,
+      isActive: model.isActive,
+      address: model.address,
     );
   }
 
@@ -14,6 +19,11 @@ class SupplierMapper {
     return SupplierModel(
       id: entity.id,
       name: entity.name,
+      contactInfo: entity.contactInfo,
+      rating: entity.rating,
+      paymentTerms: entity.paymentTerms,
+      isActive: entity.isActive,
+      address: entity.address,
     );
   }
 }

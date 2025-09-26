@@ -60,7 +60,7 @@ class StockFirebaseDatasource {
   /// Update stock
   Future<void> updateStock(Stock stock) async {
     final stockId = stock.id;
-    if (stockId == null) throw Exception("Stock ID is required to update");
+    if (stockId.isEmpty) throw Exception("Stock ID is required to update");
     await _firestore.collection('stocks').doc(stockId).update({
       'name': stock.name,
       'sku': stock.sku,

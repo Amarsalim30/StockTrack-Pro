@@ -1,7 +1,4 @@
-import 'package:stocktrack_pro/core/error/failures.dart';
 import 'package:stocktrack_pro/domain/entities/stock/stock.dart';
-import 'package:stocktrack_pro/domain/repositories/stock_repository.dart';
-import 'package:dartz/dartz.dart';
 class SearchStocksUseCase {
   List<Stock> call(List<Stock> stocks, String query) {
     if (query.isEmpty) return stocks;

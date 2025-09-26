@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
-// import 'di/injection.dart'; // if you're using get_it or manual DI
 import 'firebase_options.dart';
 
 void main() async {
@@ -16,6 +15,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Dependencies now managed by Riverpod providers
 
   final container = ProviderContainer();
 

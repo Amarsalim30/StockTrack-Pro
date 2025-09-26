@@ -2,7 +2,6 @@ import 'package:stocktrack_pro/domain/entities/auth/user.dart';
 import 'package:stocktrack_pro/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../../core/error/failures.dart';
 
 class GetCurrentUserUseCase {
   final AuthRepository _authRepository;

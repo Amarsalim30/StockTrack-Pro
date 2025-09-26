@@ -8,8 +8,8 @@ class AuthViewModel extends StateNotifier<AuthState> {
   AuthViewModel(this._repo) : super(const AuthState());
 
   Future<void> initialize() async {
-    final token = await _repo.loadToken();
-    if (token == null) return;
+    final tokenResult = await _repo.loadToken();
+    if (tokenResult.isLeft()) return;
 
     final userResult = await _repo.getCurrentUser();
     userResult.fold(

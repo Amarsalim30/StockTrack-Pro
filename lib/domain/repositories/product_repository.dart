@@ -1,28 +1,57 @@
 import 'package:dartz/dartz.dart';
 import '../entities/catalog/product.dart';
+import '../../core/error/failures.dart';
 
 abstract class ProductRepository {
-  Future<Either<Exception, List<Product>>> getAllProducts();
+  /// Get all products
+  Future<Either<Failure, List<Product>>> getAllProducts();
 
-  Future<Either<Exception, Product>> getProductById(String id);
+  /// Get product by ID
+  Future<Either<Failure, Product>> getProductById(String id);
 
-  Future<Either<Exception, Product>> createProduct(Product product);
+  /// Create new product
+  Future<Either<Failure, Product>> createProduct(Product product);
 
-  Future<Either<Exception, Product>> updateProduct(Product product);
+  /// Update existing product
+  Future<Either<Failure, Product>> updateProduct(Product product);
 
-  Future<Either<Exception, void>> deleteProduct(String id);
+  /// Delete product by ID
+  Future<Either<Failure, void>> deleteProduct(String id);
 
-  Future<Either<Exception, List<Product>>> searchProducts(String query);
+  /// Search products by name, SKU, or description
+  Future<Either<Failure, List<Product>>> searchProducts(String query);
 
-  Future<Either<Exception, List<Product>>> getProductsByCategory(
-    String category,
-  );
+  /// Get products by category ID
+  Future<Either<Failure, List<Product>>> getProductsByCategory(String categoryId);
 
-  Future<Either<Exception, List<Product>>> getProductsBySupplierId(
-    String supplierId,
-  );
+  /// Get products by supplier ID
+  Future<Either<Failure, List<Product>>> getProductsBySupplierId(String supplierId);
 
-  Future<Either<Exception, List<Product>>> getLowStockProducts();
+  /// Get products by unit ID
+  Future<Either<Failure, List<Product>>> getProductsByUnitId(String unitId);
 
-  Future<Either<Exception, List<Product>>> getOutOfStockProducts();
+  /// Get active products only
+  Future<Either<Failure, List<Product>>> getActiveProducts();
+
+  /// Get inactive products
+  Future<Either<Failure, List<Product>>> getInactiveProducts();
+
+  /// Get products with low stock (requires stock integration)
+  Future<Either<Failure, List<Product>>> getLowStockProducts();
+
+  /// Get products that are out of stock (requires stock integration)
+  Future<Either<Failure, List<Product>>> getOutOfStockProducts();
+
+  /// Get products with price range filter
+  Future<Either<Failure, List<Product>>> getProductsByPriceRange({
+    double? minPrice,
+    double? maxPrice,
+  });
+
+  /// Check if SKU exists
+  Future<Either<Failure, bool>> isSkuExists(String sku, {String? excludeProductId});
+
+  /// Bulk operations
+  Future<Either<Failure, List<Product>>> createMultipleProducts(List<Product> products);
+  Future<Either<Failure, void>> deleteMultipleProducts(List<String> productIds);
 }

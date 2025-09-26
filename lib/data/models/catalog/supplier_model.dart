@@ -11,6 +11,8 @@ class SupplierModel extends Equatable {
   final Map<String, String>? contactInfo; // e.g. {'email': ..., 'phone': ...}
   final double? rating;
   final String? paymentTerms;
+  final bool isActive;
+  final String? address;
 
   const SupplierModel({
     required this.id,
@@ -18,6 +20,8 @@ class SupplierModel extends Equatable {
     this.contactInfo,
     this.rating,
     this.paymentTerms,
+    this.isActive = true,
+    this.address,
   });
 
   factory SupplierModel.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +35,8 @@ class SupplierModel extends Equatable {
     contactInfo: contactInfo,
     rating: rating,
     paymentTerms: paymentTerms,
+    isActive: isActive,
+    address: address,
   );
 
   static SupplierModel fromDomain(Supplier ent) => SupplierModel(
@@ -39,6 +45,8 @@ class SupplierModel extends Equatable {
     contactInfo: ent.contactInfo,
     rating: ent.rating,
     paymentTerms: ent.paymentTerms,
+    isActive: ent.isActive,
+    address: ent.address,
   );
 
   SupplierModel copyWith({
@@ -47,6 +55,8 @@ class SupplierModel extends Equatable {
     Map<String, String>? contactInfo,
     double? rating,
     String? paymentTerms,
+    bool? isActive,
+    String? address,
   }) {
     return SupplierModel(
       id: id ?? this.id,
@@ -54,9 +64,11 @@ class SupplierModel extends Equatable {
       contactInfo: contactInfo ?? this.contactInfo,
       rating: rating ?? this.rating,
       paymentTerms: paymentTerms ?? this.paymentTerms,
+      isActive: isActive ?? this.isActive,
+      address: address ?? this.address,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, contactInfo, rating, paymentTerms];
+  List<Object?> get props => [id, name, contactInfo, rating, paymentTerms, isActive, address];
 }

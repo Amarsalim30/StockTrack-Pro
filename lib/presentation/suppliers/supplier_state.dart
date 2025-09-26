@@ -19,6 +19,7 @@ class SupplierState {
   });
 
   bool get isEmpty => suppliers.isEmpty;
+  bool get hasError => error != null;
 
   SupplierState copyWith({
     List<Supplier>? suppliers,

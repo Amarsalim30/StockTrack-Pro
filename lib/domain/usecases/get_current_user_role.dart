@@ -1,6 +1,5 @@
 import 'package:stocktrack_pro/domain/entities/auth/role.dart';
 import 'package:dartz/dartz.dart';
-import '../entities/auth/user.dart';
 import '../repositories/auth_repository.dart';
 
 class GetCurrentUserRole {

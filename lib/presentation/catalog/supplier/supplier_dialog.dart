@@ -2,7 +2,7 @@ import 'package:stocktrack_pro/domain/entities/catalog/supplier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/utils/validators.dart';
+import '../../../core/utils/validators.dart';
 
 class SupplierDialog extends ConsumerStatefulWidget {
   final Supplier? supplier;
@@ -58,8 +58,7 @@ class _SupplierDialogState extends ConsumerState<SupplierDialog> {
     _postalCodeController = TextEditingController(
       text: widget.supplier?.contactInfo?['postalCode'] ?? '',
     );
-    _isActive =
-    true; // Default to active since Supplier entity doesn't have isActive
+    _isActive = widget.supplier?.isActive ?? true;
   }
 
   @override
@@ -139,6 +138,10 @@ class _SupplierDialogState extends ConsumerState<SupplierDialog> {
         // Preserve existing rating
         paymentTerms: widget.supplier
             ?.paymentTerms, // Preserve existing payment terms
+        isActive: _isActive,
+        address: _addressController.text.trim().isEmpty
+            ? null
+            : _addressController.text.trim(),
       );
 
       await widget.onSave(supplier);

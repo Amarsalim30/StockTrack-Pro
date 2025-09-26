@@ -15,6 +15,8 @@ SupplierModel _$SupplierModelFromJson(Map<String, dynamic> json) =>
       ),
       rating: (json['rating'] as num?)?.toDouble(),
       paymentTerms: json['paymentTerms'] as String?,
+      isActive: json['isActive'] as bool? ?? true,
+      address: json['address'] as String?,
     );
 
 Map<String, dynamic> _$SupplierModelToJson(SupplierModel instance) =>
@@ -24,4 +26,6 @@ Map<String, dynamic> _$SupplierModelToJson(SupplierModel instance) =>
       'contactInfo': instance.contactInfo,
       'rating': instance.rating,
       'paymentTerms': instance.paymentTerms,
+      'isActive': instance.isActive,
+      'address': instance.address,
     };

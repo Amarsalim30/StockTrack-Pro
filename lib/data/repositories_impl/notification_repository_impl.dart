@@ -59,7 +59,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
     }
   }
 
-  @override
   Future<Either<Failure, Unit>> deleteMultipleNotifications(List<String> ids) async {
     try {
       await api.deleteMultipleNotifications({'ids': ids});
@@ -69,7 +68,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
     }
   }
 
-  @override
   Future<Either<Failure, entity.Notification>> createNotification(entity.Notification notification) async {
     try {
       final model = NotificationMapper.fromEntity(notification);

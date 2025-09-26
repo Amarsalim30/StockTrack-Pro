@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/catalog/product.dart';
 import '../../di/injection.dart';
+import 'product/add_product_dialog.dart';
+import 'product/edit_product_dialog.dart';
+import 'product/product_filter_dialog.dart';
+import 'product/product_state.dart';
 
 class ProductsTab extends ConsumerWidget {
   const ProductsTab({super.key});
@@ -11,8 +15,7 @@ class ProductsTab extends ConsumerWidget {
     final productsState = ref.watch(productViewModelProvider);
     final vm = ref.read(productViewModelProvider.notifier);
 
-    final isLoading = productsState.isLoading;
-    final products = productsState.products;
+    final products = productsState.filteredAndSortedProducts;
     final hasError = productsState.hasError;
     final error = productsState.error;
 
@@ -28,7 +31,18 @@ class ProductsTab extends ConsumerWidget {
                   onChanged: vm.updateSearch,
                   decoration: InputDecoration(
                     hintText: 'Search products...',
-                    prefixIcon: const Icon(Icons.search, size: 20),
+                    prefixIcon: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Icon(Icons.search, size: 20),
+                        if (productsState.loadingState == ProductLoadingState.loading)
+                          const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                      ],
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12),
@@ -40,11 +54,36 @@ class ProductsTab extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              IconButton(
-                icon: const Icon(Icons.filter_list_rounded),
-                onPressed: () {
-                  // TODO: open filter modal
-                },
+              Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.filter_list_rounded),
+                    onPressed: () async {
+                      final result = await showDialog<ProductFilterOptions>(
+                        context: context,
+                        builder: (context) => ProductFilterDialog(
+                          currentFilters: productsState.filters,
+                        ),
+                      );
+                      if (result != null) {
+                        vm.applyFilters(result);
+                      }
+                    },
+                  ),
+                  if (productsState.hasFilters)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
@@ -98,7 +137,10 @@ class ProductsTab extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 ),
                 onPressed: () {
-                  // TODO: navigate to add product page/dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AddProductDialog(),
+                  );
                 },
               ),
             ],
@@ -111,7 +153,7 @@ class ProductsTab extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: RefreshIndicator(
               onRefresh: vm.fetchAllProducts,
-              child: isLoading && products.isEmpty
+              child: productsState.loadingState == ProductLoadingState.loading && products.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : products.isEmpty
                   ? _buildEmptyState(context, vm)
@@ -120,7 +162,7 @@ class ProductsTab extends ConsumerWidget {
                 separatorBuilder: (_, __) => const SizedBox(height: 8),
                 itemBuilder: (context, index) {
                   final product = products[index];
-                  return _productCard(context, product, vm);
+                  return _productCard(context, product, vm, productsState);
                 },
               ),
             ),
@@ -130,22 +172,26 @@ class ProductsTab extends ConsumerWidget {
     );
   }
 
-  Widget _productCard(BuildContext context, Product product, dynamic vm) {
+  Widget _productCard(BuildContext context, Product product, dynamic vm, ProductState state) {
+    final isDeleting = state.isProductDeleting(product.id);
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             // Top Row: Product Name + Actions
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    product.name ?? '-',
+                    product.name,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -154,9 +200,12 @@ class ProductsTab extends ConsumerWidget {
                 PopupMenuButton<String>(
                   onSelected: (value) {
                     if (value == 'edit') {
-                      // TODO: edit product
+                      showDialog(
+                        context: context,
+                        builder: (context) => EditProductDialog(product: product),
+                      );
                     } else if (value == 'delete') {
-                      // TODO: delete product
+                      _showDeleteConfirmation(context, product, vm);
                     }
                   },
                   itemBuilder: (_) => const [
@@ -176,8 +225,10 @@ class ProductsTab extends ConsumerWidget {
               children: [
                 _chipLabel('SKU', product.sku),
                 _chipLabel('Category', product.categoryId),
-                // _chipLabel('Unit', product.),
+                _chipLabel('Unit', product.unitId),
                 _chipLabel('Supplier', product.supplierId),
+                if (product.price != null) _chipLabel('Price', '\$${product.price!.toStringAsFixed(2)}'),
+                if (!product.isActive) _chipLabel('Status', 'Inactive'),
               ],
             ),
 
@@ -190,8 +241,25 @@ class ProductsTab extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-          ],
-        ),
+              ],
+            ),
+          ),
+          if (isDeleting)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -243,13 +311,51 @@ class ProductsTab extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
                 onPressed: () {
-                  // TODO: navigate to add product page/dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AddProductDialog(),
+                  );
                 },
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, Product product, dynamic vm) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Product'),
+          content: Text('Are you sure you want to delete "${product.name}"?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                vm.deleteProduct(product.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${product.name} deleted'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

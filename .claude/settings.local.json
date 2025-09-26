@@ -7,7 +7,11 @@
       "Bash(flutter clean:*)",
       "Bash(flutter doctor:*)",
       "Bash(taskkill:*)",
-      "Bash(flutter packages pub run build_runner build:*)"
+      "Bash(flutter packages pub run build_runner build:*)",
+      "Bash(dart run build_runner build:*)",
+      "Bash(flutter pub:*)",
+      "Bash(flutter packages pub run:*)",
+      "Bash(dart pub global activate:*)"
     ],
     "deny": [],
     "ask": []

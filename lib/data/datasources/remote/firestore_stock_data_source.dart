@@ -63,7 +63,7 @@ class FirestoreStockDataSourceImpl implements FirestoreStockDataSource {
   Future<StockModel> updateStock(StockModel stock) async {
     try {
       final stockId = stock.id;
-      if (stockId == null) {
+      if (stockId.isEmpty) {
         throw ServerException('Stock ID is required for update');
       }
 
