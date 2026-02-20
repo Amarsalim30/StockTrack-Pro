@@ -162,7 +162,7 @@ class DashboardPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const [
                   Icon(
-                    LucideIcons.filter,
+                    LucideIcons.list_filter,
                     size: 18,
                     color: Colors.black87,
                   ),

@@ -23,7 +23,6 @@ class CsvImportExportDialog extends ConsumerStatefulWidget {
 
 class _CsvImportExportDialogState extends ConsumerState<CsvImportExportDialog> {
   final TextEditingController _csvController = TextEditingController();
-  String? _selectedFilePath;
 
   @override
   void dispose() {

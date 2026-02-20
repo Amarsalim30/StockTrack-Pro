@@ -27,7 +27,7 @@ android {
         applicationId = "com.stocktrackpro.app"
         // Updated for StockTrack Pro production app
         // Firebase requires minimum SDK 23
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

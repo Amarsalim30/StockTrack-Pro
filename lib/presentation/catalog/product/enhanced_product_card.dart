@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/catalog/product.dart';
 import 'product_state.dart';
 import 'product_view_model.dart';
-import 'edit_product_dialog.dart';
+import 'product_details_page.dart';
+import 'product_form_page.dart';
 
 class EnhancedProductCard extends ConsumerWidget {
   final Product product;
@@ -241,6 +242,24 @@ class EnhancedProductCard extends ConsumerWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
+        // View Details button
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () => _viewProductDetails(context),
+            icon: const Icon(Icons.visibility, size: 16),
+            label: const Text('View'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.blue,
+              side: const BorderSide(color: Colors.blue),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 8),
+
         // Edit button
         Expanded(
           child: OutlinedButton.icon(
@@ -285,10 +304,20 @@ class EnhancedProductCard extends ConsumerWidget {
     );
   }
 
+  void _viewProductDetails(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProductDetailsPage(product: product),
+      ),
+    );
+  }
+
   void _editProduct(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => EditProductDialog(product: product),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            ProductFormPage(product: product, isEditing: true),
+      ),
     );
   }
 
